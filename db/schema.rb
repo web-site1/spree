@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819213374) do
+ActiveRecord::Schema.define(version: 20141022051525) do
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -520,7 +520,7 @@ ActiveRecord::Schema.define(version: 20140819213374) do
   create_table "spree_shipments", force: true do |t|
     t.string   "tracking"
     t.string   "number"
-    t.decimal  "cost",                 precision: 8,  scale: 2
+    t.decimal  "cost",                 precision: 10, scale: 2, default: 0.0
     t.datetime "shipped_at"
     t.integer  "order_id"
     t.integer  "address_id"
