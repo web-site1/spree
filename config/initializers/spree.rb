@@ -12,3 +12,4 @@ Spree.config do |config|
 end
 
 Spree.user_class = "Spree::LegacyUser"
+Spree::Config.set(logo: "artistic-logo-white.png")
