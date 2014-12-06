@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141022051525) do
+ActiveRecord::Schema.define(version: 20141206015734) do
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -174,7 +174,7 @@ ActiveRecord::Schema.define(version: 20141022051525) do
     t.decimal  "additional_tax_total", precision: 10, scale: 2, default: 0.0
     t.decimal  "promo_total",          precision: 10, scale: 2, default: 0.0
     t.decimal  "included_tax_total",   precision: 10, scale: 2, default: 0.0, null: false
-    t.decimal  "pre_tax_amount",       precision: 8,  scale: 2
+    t.decimal  "pre_tax_amount",       precision: 8,  scale: 2, default: 0.0
   end
 
   add_index "spree_line_items", ["order_id"], name: "index_spree_line_items_on_order_id"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 20141022051525) do
     t.boolean  "confirmation_delivered",                                     default: false
     t.boolean  "considered_risky",                                           default: false
     t.string   "guest_token"
+    t.integer  "state_lock_version",                                         default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id"
@@ -266,6 +267,7 @@ ActiveRecord::Schema.define(version: 20141022051525) do
   add_index "spree_orders", ["confirmation_delivered"], name: "index_spree_orders_on_confirmation_delivered"
   add_index "spree_orders", ["considered_risky"], name: "index_spree_orders_on_considered_risky"
   add_index "spree_orders", ["created_by_id"], name: "index_spree_orders_on_created_by_id"
+  add_index "spree_orders", ["guest_token"], name: "index_spree_orders_on_guest_token"
   add_index "spree_orders", ["number"], name: "index_spree_orders_on_number"
   add_index "spree_orders", ["ship_address_id"], name: "index_spree_orders_on_ship_address_id"
   add_index "spree_orders", ["shipping_method_id"], name: "index_spree_orders_on_shipping_method_id"
@@ -532,7 +534,7 @@ ActiveRecord::Schema.define(version: 20141022051525) do
     t.decimal  "additional_tax_total", precision: 10, scale: 2, default: 0.0
     t.decimal  "promo_total",          precision: 10, scale: 2, default: 0.0
     t.decimal  "included_tax_total",   precision: 10, scale: 2, default: 0.0, null: false
-    t.decimal  "pre_tax_amount",       precision: 8,  scale: 2
+    t.decimal  "pre_tax_amount",       precision: 8,  scale: 2, default: 0.0
   end
 
   add_index "spree_shipments", ["address_id"], name: "index_spree_shipments_on_address_id"
