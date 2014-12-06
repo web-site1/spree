@@ -1,8 +1,8 @@
 # REQUIRED: The name of your application
-app_name: your_app_name
+app_name: artspree
 
 # REQUIRED: The system user to run your app servers as
-app_user: app
+app_user: ubuntu
 
 # REQUIRED: Notification emails (e.g. monit) get sent to this address
 #
@@ -18,7 +18,8 @@ timezone: US/Eastern
 
 # REQUIRED: the domain all the instances should be associated with
 #
-domain: foo.com
+# Read from rubber-secret
+# domain: foo.com
 
 # OPTIONAL: See rubber-dns.yml for dns configuration
 # This lets rubber update a dynamic dns service with the instance alias
@@ -29,6 +30,7 @@ domain: foo.com
 # also be pushed to remote host at Rubber.root/config/rubber/rubber-secret.yml
 #
 # rubber_secret: "#{File.expand_path('~') + '/.ec2' + (Rubber.env == 'production' ? '' : '_dev') + '/rubber-secret.yml' rescue 'rubber-secret.yml'}"
+rubber_secret: "#{ENV['EC2_KEYS_HOME']}/rubber-secret.yml"
 
 # OPTIONAL: Encryption key that was used to obfuscate the contents of rubber-secret.yml with "rubber util:obfuscation" 
 # Not that much better when stored in here, but you could use a ruby snippet in here to fetch it from a key server or something
@@ -58,9 +60,10 @@ cloud_providers:
 
     # REQUIRED The amazon keys and account ID (digits only, no dashes) used to access the AWS API
     #
-    access_key: XXX
-    secret_access_key: YYY
-    account: 'ZZZ'
+    # Read from rubber-secret.yml ...Dan
+    #    access_key: XXX
+    #    secret_access_key: YYY
+    #    account: 'ZZZ'
 
     # REQUIRED:  The name of the amazon keypair and location of its private key
     #
@@ -69,8 +72,9 @@ cloud_providers:
     # extension ".pub".  The easiest way to get your hand on this is to create the
     # public key from the private key: ssh-keygen -y -f gsg-keypair > gsg-keypair.pub
     #
-    key_name: gsg-keypair
-    key_file: "#{Dir[(File.expand_path('~') rescue '/root') + '/.ec2/*' + cloud_providers.aws.key_name].first}"
+    # Read from rubber-secret.yml ...Dan
+    # key_name:
+    # key_file:
 
     # OPTIONAL: Needed for bundling a running instance using rubber:bundle
     #
