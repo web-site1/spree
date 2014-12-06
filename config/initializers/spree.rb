@@ -11,5 +11,5 @@ Spree.config do |config|
   # config.track_inventory_levels = false
 end
 
-Spree.user_class = "Spree::LegacyUser"
+Spree.user_class = "Spree::User"
 Spree::Config.set(logo: "artistic-logo-white.png")

@@ -256,6 +256,8 @@ roles:
     assigned_security_groups: [web]
   web_tools:
     assigned_security_groups: [web_tools]
+  db:
+    assigned_security_groups: [mysql]
 
 # OPTIONAL: Automatically create security groups for each host and role
 # EC2 Classic doesn't allow one to change what groups an instance belongs to after
