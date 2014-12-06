@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 
 gem 'annotate'
@@ -48,3 +48,5 @@ gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :bran
 gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '2-3-stable'
 
 gem 'yaml_db'
+gem 'rubber'
+gem 'open4'
