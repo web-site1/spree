@@ -9,6 +9,7 @@ Spree.config do |config|
   # Example:
   # Uncomment to stop tracking inventory levels in the application
   # config.track_inventory_levels = false
+  config.override_actionmailer_config = true
 end
 
 Spree.user_class = "Spree::User"
