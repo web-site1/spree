@@ -12,7 +12,7 @@ default: &default
 
 development:
   <<: *default
-  database: artspree_development
+  database: artspree_staging
   username: root
   password:
   host: localhost
@@ -22,7 +22,7 @@ staging:
   <<: *default
   database: artspree_staging
   username: root
-  password: artec2
+  password: #artec2
   host: staging.artisticribbon.com
 
 # Warning: The database defined as "test" will be erased and

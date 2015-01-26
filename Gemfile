@@ -50,3 +50,4 @@ gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git
 gem 'yaml_db'
 gem 'rubber'
 gem 'open4'
+
