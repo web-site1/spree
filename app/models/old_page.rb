@@ -1,3 +1,3 @@
 class OldPage < ActiveRecord::Base
-  has_one :taxon, :class_name => 'Spree::Taxon'
+  belongs_to :taxon, :class_name => 'Spree::Taxon'
 end

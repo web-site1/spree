@@ -50,13 +50,28 @@ cats.each do |c|
 
   taxon = Spree::Taxon.create(
       parent_id: parent_id,
-      name: name,
+      name: name
   )
 
   OldPage.create(
       taxon_id: taxon.id,
       page: c.page
   )
+
+  subcats =  WebCat.where(cat: c.cat)
+  subcats.each do |sc|
+    next if sc.subcat.nil? || sc.subcat.blank?
+    sub_taxon = Spree::Taxon.create(
+        parent_id: taxon.id,
+        name: sc.subcat
+    )
+
+    OldPage.create(
+        taxon_id: sub_taxon.id,
+        page: sc.page
+    )
+  end
+
 
 end
 
