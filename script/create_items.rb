@@ -8,12 +8,11 @@
 require '../config/environment'
 require 'csv'
 #local run code
-#=begin
+
 Spree::Product.where('id > 23').delete_all
 Spree::Variant.where('id > 51').delete_all
 Spree::ProductProperty.where('id > 17').delete_all
 Spree::Asset.where('id > 6').delete_all
-#=end
 
 
 log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
@@ -131,7 +130,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             next
           end
 
-          is_master = false
+          @is_master = false
 
           if !(previous_page.strip == cur_page.strip)
             # if we are here we have to create a product.
@@ -142,7 +141,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               stand_alone_product = true
             end
 
-            is_master = true
+            #@is_master = true
             @position = 1
 
             @item_type = item_type(rcpbs) ||  ''
@@ -168,7 +167,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 shipping_category_id: 1 ,
                 meta_keywords: wi.keywords,
                 price: rcpbs.rc_price.to_f,
-                sku: rcpbs.new_pbs_desc_1
+                sku: rcpbs.item
               )
 
 
@@ -240,12 +239,24 @@ CSV.open(csv_error_file, "wb") do |csv|
                 @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                 @product.save!
               end
+              #create swatch image if it exsists
+              swatch_image_path = %Q{#{@local_site_path}#{wi.swatch_image_file[/images.*/i,0]}} rescue ''
+              if File.exists?(swatch_image_path)
+                @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
+                @product.save!
+              end
 
               logger.info "Product #{wi.title} created in Spree"
               puts "Product #{wi.title} created in Spree"
               @products_created += 1
             end
+
+            @position += 1
+            create_variant(rcpbs,wi,logger)
           else
+            create_variant(rcpbs,wi,logger)
+
+=begin
             @position += 1
 
 
@@ -255,7 +266,121 @@ CSV.open(csv_error_file, "wb") do |csv|
               v = Spree::Variant.new(
                   sku: rcpbs.new_pbs_desc_1,
                   product_id: @product.id,
-                  is_master: is_master,
+                  @is_master: is_master,
+                  price: rcpbs.rc_price,
+                  cost_currency: "USD",
+                  track_inventory: true,
+                  tax_category_id: 1,
+                  stock_items_count: 1
+              )
+              v.save!
+
+              # set options
+              ot = v.product.option_types
+              if !ot.empty?
+                array_of_type_and_id = ot.map{|o|[o.id,o.name]}
+
+                array_of_type_and_id.each do |av|
+                  val = ''
+                  srcval = ''
+                  if av.last == "ribbon-width"
+                    val = rcpbs.width
+                    srcval = val
+                  elsif av.last == "ribbon-putup"
+                    val = rcpbs.putup_pack
+                    srcval = val.strip.gsub(' ','-')
+                  else
+                    val = rcpbs.new_pbs_desc_3.split(",").last.strip.titlecase rescue ''
+                    srcval = val
+                  end
+
+                  if !val.empty?
+                    sov = Spree::OptionValue.find_by_option_type_id_and_name(
+                        av.first,srcval
+                    )
+                    if sov.nil?
+                      sov = Spree::OptionValue.create(
+                          option_type_id: av.first,
+                          presentation: val,
+                          name: srcval
+                      )
+                    end
+                    v.option_values << sov
+                    v.save!
+                  end
+                end
+
+              end
+              #create product image
+              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}}
+              if File.exists?(image_path)
+                v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                v.save!
+              end
+
+              logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
+              puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
+              @variants_created += 1
+            else
+              logger.info "Variant #{rcpbs.new_pbs_desc_1} exsists"
+              puts "Variant #{rcpbs.new_pbs_desc_1} exsists"
+            end
+=end
+
+
+
+          end
+          previous_page = cur_page.strip
+      rescue Exception => e
+        rcpbs_id =  @rcpbs.id rescue ''
+        logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+        puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+        csv << [rcpbs_id,@wi.id,e.to_s]
+        @error_items += 1
+        next
+      end
+    end
+
+  logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
+  logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
+
+end
+
+
+
+
+
+BEGIN{
+          # functions
+          def item_type(pbs_item_rec)
+            itemtype = ''
+            case
+              when pbs_item_rec.ws_cat =~ /ribbon/i
+                itemtype = "Ribbon"
+              when pbs_item_rec.ws_cat =~ /bow/i
+                itemtype =  "Bow"
+            end
+          end
+
+          def get_formed_cat_name(webcat)
+            webcat.cat.downcase.gsub('ribbon','').gsub('bows','').strip.titlecase rescue ''
+          end
+
+          def get_master_sku(sku)
+            t = sku.split('-')
+            %Q{#{t[0]}-#{t[1]}}
+          end
+
+          def create_variant(rcpbs,wi,logger)
+
+            @position += 1
+            v =  Spree::Variant.find_by_sku(rcpbs.new_pbs_desc_1)
+            if v.nil?
+              # create Variant
+              v = Spree::Variant.new(
+                  sku: rcpbs.new_pbs_desc_1,
+                  product_id: @product.id,
+                  is_master: @is_master,
                   price: rcpbs.rc_price,
                   cost_currency: "USD",
                   track_inventory: true,
@@ -315,45 +440,8 @@ CSV.open(csv_error_file, "wb") do |csv|
               puts "Variant #{rcpbs.new_pbs_desc_1} exsists"
             end
           end
-          previous_page = cur_page.strip
-      rescue Exception => e
-        rcpbs_id =  @rcpbs.id rescue ''
-        logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        csv << [rcpbs_id,@wi.id,e.to_s]
-        @error_items += 1
-        next
-      end
-    end
-
-end
-
-logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
-logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
 
 
-
-
-BEGIN{
-          # functions
-          def item_type(pbs_item_rec)
-            itemtype = ''
-            case
-              when pbs_item_rec.ws_cat =~ /ribbon/i
-                itemtype = "Ribbon"
-              when pbs_item_rec.ws_cat =~ /bow/i
-                itemtype =  "Bow"
-            end
-          end
-
-          def get_formed_cat_name(webcat)
-            webcat.cat.downcase.gsub('ribbon','').gsub('bows','').strip.titlecase rescue ''
-          end
-
-          def get_master_sku(sku)
-            t = sku.split('-')
-            %Q{#{t[0]}-#{t[1]}}
-          end
 
 }
 
