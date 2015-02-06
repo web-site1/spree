@@ -125,8 +125,8 @@ CSV.open(csv_error_file, "wb") do |csv|
           if rcpbs.nil?
             logger.info "Item #{wi.item} not found in Rc_pbs table"
             puts "Item #{wi.item} not found in Rc_pbs table"
-            error_items += 1
-            csv << ['',wi_id,"Item #{wi.item} not found in Rc_pbs table"]
+            @error_items += 1
+            csv << ['',wi.id,"Item #{wi.item} not found in Rc_pbs table"]
             next
           end
 
@@ -160,14 +160,41 @@ CSV.open(csv_error_file, "wb") do |csv|
               logger.info "Product #{wi.title} exsists in Spree"
               puts "Product #{wi.title} exsists in Spree"
             else
+
+              item_with_multiple_variants =  (WebItem.where(page:
+                                       wi.page).count > 1)
+
+               if item_with_multiple_variants
+                width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
+                if (!width.strip.empty? && (wi.item.count('-') > 1)) || (wi.item.count('-') > 1)
+                  item_array = wi.item.split('-')
+                  if item_array.include?(width)
+                    item_array.delete(width)
+                  else
+                    # assume 2nd portion of array is width?
+                    item_array.delete_at(1)
+                  end
+                else
+                  # lost cause log and next
+                  logger.info "Cannot remove size from item for multiple variant web item #{wi.item}"
+                  puts "Cannot remove size from item for multiple variant web item #{wi.item}"
+                  @error_items += 1
+                  csv << [rcpbs.id,wi_id,"Cannot remove size from item for multiple variant web item #{wi.item}"]
+                  next
+                end
+                prod_sku = item_array.join('-')
+               else
+                prod_sku = rcpbs.new_pbs_desc_1
+               end
               @product = Spree::Product.new(
                 name: wi.title.strip.titlecase,
                 description: wi.top_description,
                 available_on: Date.today()-1.day,
                 shipping_category_id: 1 ,
+                meta_description: wi.description,
                 meta_keywords: wi.keywords,
                 price: rcpbs.rc_price.to_f,
-                sku: rcpbs.item
+                sku: prod_sku #rcpbs.item
               )
 
 
@@ -194,14 +221,17 @@ CSV.open(csv_error_file, "wb") do |csv|
                 propval = Spree::ProductProperty.find_by_product_id_and_property_id(
                   @product.id,v.first.id
                 )
+
+                val =  eval(v.last)
+                val = val.strip.titlecase
                 if propval.nil?
                   propval = Spree::ProductProperty.create(
                       product_id:@product.id,
                       property_id: v.first.id,
-                      value: eval(v.last)
+                      value: val
                   )
                 else
-                  propval.update_attribute(:value, eval(v.last) )
+                  propval.update_attribute(:value, val )
                 end
               end
 
@@ -233,12 +263,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 end
               end
 
-              #create product image
-              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
-              if File.exists?(image_path)
-                @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
-                @product.save!
-              end
+
               #create swatch image if it exsists
               swatch_image_path = %Q{#{@local_site_path}#{wi.swatch_image_file[/images.*/i,0]}} rescue ''
               if File.exists?(swatch_image_path)
@@ -246,88 +271,23 @@ CSV.open(csv_error_file, "wb") do |csv|
                 @product.save!
               end
 
+              #create product image
+              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
+              if File.exists?(image_path)
+                @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                @product.save!
+              end
+
+
               logger.info "Product #{wi.title} created in Spree"
               puts "Product #{wi.title} created in Spree"
               @products_created += 1
             end
 
             @position += 1
-            create_variant(rcpbs,wi,logger)
+            create_variant(rcpbs,wi,logger) if item_with_multiple_variants
           else
             create_variant(rcpbs,wi,logger)
-
-=begin
-            @position += 1
-
-
-            v =  Spree::Variant.find_by_sku(rcpbs.new_pbs_desc_1)
-            if v.nil?
-              # create Variant
-              v = Spree::Variant.new(
-                  sku: rcpbs.new_pbs_desc_1,
-                  product_id: @product.id,
-                  @is_master: is_master,
-                  price: rcpbs.rc_price,
-                  cost_currency: "USD",
-                  track_inventory: true,
-                  tax_category_id: 1,
-                  stock_items_count: 1
-              )
-              v.save!
-
-              # set options
-              ot = v.product.option_types
-              if !ot.empty?
-                array_of_type_and_id = ot.map{|o|[o.id,o.name]}
-
-                array_of_type_and_id.each do |av|
-                  val = ''
-                  srcval = ''
-                  if av.last == "ribbon-width"
-                    val = rcpbs.width
-                    srcval = val
-                  elsif av.last == "ribbon-putup"
-                    val = rcpbs.putup_pack
-                    srcval = val.strip.gsub(' ','-')
-                  else
-                    val = rcpbs.new_pbs_desc_3.split(",").last.strip.titlecase rescue ''
-                    srcval = val
-                  end
-
-                  if !val.empty?
-                    sov = Spree::OptionValue.find_by_option_type_id_and_name(
-                        av.first,srcval
-                    )
-                    if sov.nil?
-                      sov = Spree::OptionValue.create(
-                          option_type_id: av.first,
-                          presentation: val,
-                          name: srcval
-                      )
-                    end
-                    v.option_values << sov
-                    v.save!
-                  end
-                end
-
-              end
-              #create product image
-              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}}
-              if File.exists?(image_path)
-                v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
-                v.save!
-              end
-
-              logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
-              puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
-              @variants_created += 1
-            else
-              logger.info "Variant #{rcpbs.new_pbs_desc_1} exsists"
-              puts "Variant #{rcpbs.new_pbs_desc_1} exsists"
-            end
-=end
-
-
 
           end
           previous_page = cur_page.strip
@@ -342,7 +302,7 @@ CSV.open(csv_error_file, "wb") do |csv|
     end
 
   logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
-  logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
+  puts "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
 
 end
 
@@ -359,6 +319,12 @@ BEGIN{
                 itemtype = "Ribbon"
               when pbs_item_rec.ws_cat =~ /bow/i
                 itemtype =  "Bow"
+              when  pbs_item_rec.desc =~ /ribbon/i
+                itemtype = "Ribbon"
+              when pbs_item_rec.desc =~ /bow/i
+                itemtype =  "Bow"
+              else
+                itemtype = pbs_item_rec.ws_cat.strip.titlecase
             end
           end
 
@@ -404,7 +370,7 @@ BEGIN{
                     val = rcpbs.putup_pack
                     srcval = val.strip.gsub(' ','-')
                   else
-                    val = rcpbs.new_pbs_desc_3.split(",").last.strip.titlecase rescue ''
+                    val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
                     srcval = val
                   end
 
