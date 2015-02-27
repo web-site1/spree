@@ -287,7 +287,12 @@ CSV.open(csv_error_file, "wb") do |csv|
             end
 
             @position += 1
-            create_variant(rcpbs,wi,logger) if item_with_multiple_variants
+            if item_with_multiple_variants
+              create_variant(rcpbs,wi,logger)
+            else
+              v  = @product.master
+              v.update_attribute(:item_no,rcpbs.new_pbs_item)
+            end
           else
             create_variant(rcpbs,wi,logger)
 
