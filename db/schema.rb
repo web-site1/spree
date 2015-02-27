@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150123214324) do
+ActiveRecord::Schema.define(version: 20150227190442) do
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -29,6 +29,45 @@ ActiveRecord::Schema.define(version: 20150123214324) do
   create_table "old_pages", force: true do |t|
     t.integer "taxon_id"
     t.string  "page"
+  end
+
+  create_table "rc_pbs", force: true do |t|
+    t.string  "brand",             limit: 20
+    t.string  "item",              limit: 50
+    t.string  "desc",              limit: 100
+    t.decimal "rc_price",                      precision: 8,  scale: 2
+    t.decimal "putup",                         precision: 8,  scale: 2
+    t.string  "ws_cat",            limit: 50
+    t.string  "ws_subcat",         limit: 50
+    t.string  "ws_color",          limit: 50
+    t.string  "pbs_item_no",       limit: 15
+    t.string  "item_prod_cat",     limit: 5
+    t.string  "item_prod_sub_cat", limit: 5
+    t.string  "item_prime_vend",   limit: 6
+    t.string  "offray_sku",        limit: 10
+    t.string  "status",            limit: 25
+    t.string  "new_pbs_item",      limit: 15
+    t.string  "new_pbs_desc_1",    limit: 25
+    t.string  "new_pbs_desc_2",    limit: 25
+    t.string  "new_pbs_desc_3",    limit: 25
+    t.string  "putup_pack",        limit: 20
+    t.decimal "offcost",                       precision: 10, scale: 2
+    t.decimal "cost2015",                      precision: 10, scale: 2
+    t.decimal "QQ2015",                        precision: 10, scale: 2
+    t.decimal "IQ2015",                        precision: 10, scale: 2
+    t.decimal "pbs_prc_2",                     precision: 12, scale: 5
+    t.decimal "pbs_prc_3",                     precision: 12, scale: 5
+    t.decimal "pbs_IQ_spool",                  precision: 10, scale: 2
+    t.decimal "pbs_QQ_spool",                  precision: 10, scale: 2
+    t.decimal "IQ_diff",                       precision: 10, scale: 2
+    t.decimal "IQmarkup",                      precision: 10, scale: 2
+    t.decimal "QQmarkup",                      precision: 10, scale: 2
+    t.decimal "newQQfact",                     precision: 4,  scale: 2
+    t.decimal "newQQspool",                    precision: 10, scale: 2
+    t.decimal "newIQfact",                     precision: 4,  scale: 2
+    t.decimal "newIQspool",                    precision: 10, scale: 2
+    t.decimal "IQpctup",                       precision: 4,  scale: 2
+    t.string  "width",             limit: 10
   end
 
   create_table "spree_addresses", force: true do |t|
@@ -965,25 +1004,27 @@ ActiveRecord::Schema.define(version: 20150123214324) do
   add_index "spree_users", ["spree_api_key"], name: "index_spree_users_on_spree_api_key", using: :btree
 
   create_table "spree_variants", force: true do |t|
-    t.string   "sku",                                        default: "",    null: false
-    t.decimal  "weight",            precision: 8,  scale: 2, default: 0.0
-    t.decimal  "height",            precision: 8,  scale: 2
-    t.decimal  "width",             precision: 8,  scale: 2
-    t.decimal  "depth",             precision: 8,  scale: 2
+    t.string   "sku",                                                   default: "",    null: false
+    t.decimal  "weight",                       precision: 8,  scale: 2, default: 0.0
+    t.decimal  "height",                       precision: 8,  scale: 2
+    t.decimal  "width",                        precision: 8,  scale: 2
+    t.decimal  "depth",                        precision: 8,  scale: 2
     t.datetime "deleted_at"
-    t.boolean  "is_master",                                  default: false
+    t.boolean  "is_master",                                             default: false
     t.integer  "product_id"
-    t.decimal  "cost_price",        precision: 10, scale: 2
+    t.decimal  "cost_price",                   precision: 10, scale: 2
     t.string   "cost_currency"
     t.integer  "position"
-    t.boolean  "track_inventory",                            default: true
+    t.boolean  "track_inventory",                                       default: true
     t.integer  "tax_category_id"
     t.datetime "updated_at"
-    t.integer  "stock_items_count",                          default: 0,     null: false
+    t.integer  "stock_items_count",                                     default: 0,     null: false
+    t.string   "item_no",           limit: 15
   end
 
   add_index "spree_variants", ["deleted_at"], name: "index_spree_variants_on_deleted_at", using: :btree
   add_index "spree_variants", ["is_master"], name: "index_spree_variants_on_is_master", using: :btree
+  add_index "spree_variants", ["item_no"], name: "index_spree_variants_on_item_no", using: :btree
   add_index "spree_variants", ["position"], name: "index_spree_variants_on_position", using: :btree
   add_index "spree_variants", ["product_id"], name: "index_spree_variants_on_product_id", using: :btree
   add_index "spree_variants", ["sku"], name: "index_spree_variants_on_sku", using: :btree

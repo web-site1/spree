@@ -9,10 +9,12 @@ require '../config/environment'
 require 'csv'
 #local run code
 
+=begin
 Spree::Product.where('id > 23').delete_all
 Spree::Variant.where('id > 51').delete_all
 Spree::ProductProperty.where('id > 17').delete_all
 Spree::Asset.where('id > 6').delete_all
+=end
 
 
 log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
@@ -351,7 +353,8 @@ BEGIN{
                   cost_currency: "USD",
                   track_inventory: true,
                   tax_category_id: 1,
-                  stock_items_count: 1
+                  stock_items_count: 1,
+                  item_no: rcpbs.new_pbs_item
               )
               v.save!
 
