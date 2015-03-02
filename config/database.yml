@@ -12,7 +12,7 @@ default: &default
 
 development:
   <<: *default
-  database: artspree_staging
+  database: artspree_development
   username: root
   password:
   host: localhost
@@ -28,9 +28,9 @@ staging:
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
-test:
-  <<: *default
-  database: db/test.sqlite3
+#test:
+#  <<: *default
+#  database: db/test.sqlite3
 
 #production:
 #  <<: *default
