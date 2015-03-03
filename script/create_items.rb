@@ -34,7 +34,7 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 @variants_created = 0
 @error_items = 0
 
-@local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+@local_site_path = "~/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 
 
 # Properties
