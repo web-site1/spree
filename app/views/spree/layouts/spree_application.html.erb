@@ -22,6 +22,7 @@
   <!-- Custom styles for this template
   <link href="assets/dist/css/style.css" rel="stylesheet">
   -->
+
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', media: 'all' %>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -39,7 +40,7 @@
 <%= render partial: 'spree/shared/header' %>
 <%= render partial: 'spree/shared/ribbon_quick_srch' %>
 
-
+<%= render partial: 'spree/products/breadcrumbs' if (@product) %>
 <div class="main-content">
     <%= yield %>
 </div>

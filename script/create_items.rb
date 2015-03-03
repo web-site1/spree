@@ -14,6 +14,10 @@ Spree::Product.where('id > 23').delete_all
 Spree::Variant.where('id > 51').delete_all
 Spree::ProductProperty.where('id > 17').delete_all
 Spree::Asset.where('id > 6').delete_all
+Spree::Price.delete_all
+Spree::ProductTaxon.delete_all
+Spree::spree_option_values.delete_all
+spree_option_values_variants
 =end
 
 
@@ -151,7 +155,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             # find taxon record
             srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
             maincat = get_formed_cat_name(wi.cat)
-            subcat = wi.subcat.downcase.strip.titlecase
+            subcat = wi.subcat.downcase.strip.titlecase.gsub(' ','%')
 
             perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 

@@ -14,3 +14,4 @@ end
 
 Spree.user_class = "Spree::User"
 Spree::Config.set(logo: "artistic-logo-white.png")
+Spree::Config.set(:products_per_page => 10)

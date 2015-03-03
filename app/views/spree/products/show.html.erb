@@ -1,0 +1,222 @@
+<div class="main-content search-results-content">
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-display">
+
+        <div id="homepage-carousel" class="carousel slide" data-interval="false">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
+          </ol>
+          <!-- Wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="item active">
+              <%= render :partial => 'image' %>
+            </div>
+            <div class="item">
+              <%= render :partial => 'image' %>
+            </div>
+            <div class="item">
+              <%= render :partial => 'image' %>
+            </div>
+          </div>
+          <!-- Controls -->
+          <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
+          <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-12">
+
+            <div class="jcarousel-wrapper hide hidden">
+              <div class="jcarousel multiplex-items" id="multiplex-items">
+                <ul>
+                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
+                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
+                </ul>
+              </div>
+
+              <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+              <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+              <p class="jcarousel-pagination"></p>
+            </div>
+
+            <div class="jcarousel-wrapper">
+              <div class="jcarousel multiple-items" id="multiple-items">
+                <ul>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %> </a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                </ul>
+              </div>
+
+              <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+              <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+              <p class="jcarousel-pagination"></p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="social-icons">
+          <label>Share</label>
+
+          <a href="#fakelink" class="btn btn-default btn-sm btn-social-pinterest">
+            <span class="fui-pinterest"></span>
+            Pin It
+            <span class="btn-tip">100</span>
+          </a>
+          <a href="#fakelink" class="btn btn-default btn-sm btn-social-facebook">
+            <span class="fui-facebook"></span>
+            Like
+            <span class="btn-tip">91</span>
+          </a>
+          <a href="#fakelink" class="btn btn-default btn-sm btn-social-twitter">
+            <span class="fui-twitter"></span>
+            Tweet
+            <span class="btn-tip">45</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-information">
+
+        <div><span class="label label-danger">New</span></div>
+
+        <h1><%= @product.name %></h1>
+
+        <p>
+          <%= product_description(@product) rescue Spree.t(:product_has_no_description) %>
+        </p>
+
+        <div class="product-details">
+
+          <h2>Product details</h2>
+          <% unless @product_properties.empty? %>
+              <ul>
+                <% @product_properties.each do |product_property| %>
+                <li><strong><%= product_property.property.presentation %></strong> :
+                  <%= product_property.value %>
+                </li>
+                <% end %>
+              </ul>
+          <% end %>
+        </div> <!-- product details -->
+
+        <div class="product-settings">
+
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+              <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+              <h3>Width</h3>
+              <div id="width-slider">
+                <div class="labels"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+              <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+              <h3>Length</h3>
+              <div id="length-slider">
+                <div class="labels"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+              <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+              <h3>Color</h3>
+              <select class="form-control select select-primary" data-toggle="select">
+                <option value="2">Grey</option>
+                <option value="3">Red</option>
+                <option value="4">Blue</option>
+              </select>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
+              <h3>Quantity</h3>
+              <input type="text" id="spinner-05" value="0" class="form-control input-sm spinner" />
+            </div>
+
+          </div>
+
+          <div class="row bottom-row">
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 price columns left">
+              <span>$15.00</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 add-col right">
+              <button type="submit" class="btn btn-lg btn-info btn-embossed add-to-cart">Add To Cart</button>
+            </div>
+
+          </div> <!-- row -->
+
+        </div> <!-- product settings -->
+
+      </div> <!-- col -->
+
+    </div> <!-- row -->
+
+    <div class="row">
+
+      <div class="col-lg-12">
+
+        <div class="jcarousel-wrapper">
+          <div class="headline"><h3>Related Products</h3></div>
+          <div class="jcarousel related-items" id="related-items">
+            <ul>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+            </ul>
+          </div>
+
+          <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+          <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+          <p class="jcarousel-pagination"></p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div> <!-- container -->
+
+</div> <!-- main content -->
