@@ -1,47 +1,18 @@
-<% content_for :subheader do %>
-    <%= render 'slider' %>
-<% end %>
-
-<div id="welcome-message">
-  <div class="container">
-    <h1><i>
-      Welcome to Artistic Ribbon
-        </i>
-    </h1>
-    <h3>
-      Since 1928 Artistic Ribbon has been the leading supplier of quality ribbon, stocking the most complete line
-      of the finest ribbons on the market.
-    </h3>
-    <ul>
-      <li>We ship from our own stock warehouse -- no waiting, no delays.</li>
-      <li>We offer same day shipping at the lowest wholesale ribbon prices.</li>
-      <li>Our ribbons are perfect for any decorative project.</li>
-    </ul>
-  </div>
-</div>
-
 <div class="container">
-  <% if @featured_products %>
-      <div id="featured-products" class="row">
-        <h3>Featured Products</h3>
-        <hr>
-        <ul class="carousel">
-          <% @featured_products.each do |product| %>
-              <%= render 'product', :product => product %>
-          <% end %>
-        </ul>
-      </div>
-  <% end %>
 
-  <% if @latest_products %>
-      <div id="latest-products" class="row">
-        <h3>Latest Products</h3>
-        <hr>
-        <ul class="carousel">
-          <% @latest_products.sort_by{ |product| product.created_at }.reverse.each do |product| %>
-              <%= render 'product', :product => product %>
-          <% end %>
-        </ul>
+    <div class="row">
+        <%= render partial: 'spree/shared/side_search' %>
+      <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+        <%= render partial: 'spree/shared/homepage_slider' %>
+
+        <div class="row">
+          <%= render partial: 'spree/shared/featured_items' %>
+        </div>
+        <div class="row">
+          <%= render partial: 'spree/shared/new_arrivals' %>
+        </div>
+        <%= render partial: 'spree/shared/why_shop' %>
       </div>
-  <% end %>
+    </div>
+
 </div>
