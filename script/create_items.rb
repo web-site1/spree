@@ -133,7 +133,7 @@ if flower_color_option.nil?
   )
 end
 
-@flower_option_hash.merge!(width: flower_color_option)
+@flower_option_hash.merge!(color: flower_color_option)
 
 
 
