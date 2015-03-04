@@ -22,7 +22,7 @@ log_file =  %Q{#{Rails.root}/log/#{log_file_name}}
 logger = Logger.new(log_file)
 logger.info "Starting to create Items"
 puts "Starting to create Items"
-
+puts Spree::Image.attachment_definitions[:attachment].inspect
 
 csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 
@@ -34,7 +34,7 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 @variants_created = 0
 @error_items = 0
 
-@local_site_path = "~/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 
 
 # Properties
@@ -116,7 +116,7 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
       WebItem.all.order(:page).all.each do |wi|
-        begin
+        # begin
           cur_page = wi.page
           stand_alone_product = false
 
@@ -159,8 +159,8 @@ CSV.open(csv_error_file, "wb") do |csv|
             #
             @product = Spree::Product.find_by_name(wi.title)
             if !@product.nil?
-              logger.info "Product #{wi.title} exsists in Spree"
-              puts "Product #{wi.title} exsists in Spree"
+              logger.info "Product #{wi.title} exists in Spree"
+              puts "Product #{wi.title} exists in Spree"
             else
 
               item_with_multiple_variants =  (WebItem.where(page:
@@ -298,14 +298,15 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           end
           previous_page = cur_page.strip
-      rescue Exception => e
-        rcpbs_id =  @rcpbs.id rescue ''
-        logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        csv << [rcpbs_id,@wi.id,e.to_s]
-        @error_items += 1
-        next
-      end
+
+      # rescue Exception => e
+      #   rcpbs_id =  @rcpbs.id rescue ''
+      #   logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+      #   puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+      #   csv << [rcpbs_id,@wi.id,e.to_s]
+      #   @error_items += 1
+      #   next
+      # end
     end
 
   logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
@@ -410,8 +411,8 @@ BEGIN{
               puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
               @variants_created += 1
             else
-              logger.info "Variant #{rcpbs.new_pbs_desc_1} exsists"
-              puts "Variant #{rcpbs.new_pbs_desc_1} exsists"
+              logger.info "Variant #{rcpbs.new_pbs_desc_1} exists"
+              puts "Variant #{rcpbs.new_pbs_desc_1} exists"
             end
           end
 

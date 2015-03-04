@@ -3,7 +3,9 @@ source 'http://rubygems.org'
 
 gem 'annotate'
 gem 'rmagick'
-gem 'aws-sdk'
+
+# c.f. http://ruby.awsblog.com/post/TxFKSK2QJE6RPZ/Upcoming-Stable-Release-of-AWS-SDK-for-Ruby-Version-2
+gem 'aws-sdk', '< 2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
