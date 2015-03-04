@@ -116,7 +116,7 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
       WebItem.all.order(:page).all.each do |wi|
-        # begin
+        begin
           cur_page = wi.page
           stand_alone_product = false
 
@@ -299,14 +299,14 @@ CSV.open(csv_error_file, "wb") do |csv|
           end
           previous_page = cur_page.strip
 
-      # rescue Exception => e
-      #   rcpbs_id =  @rcpbs.id rescue ''
-      #   logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-      #   puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-      #   csv << [rcpbs_id,@wi.id,e.to_s]
-      #   @error_items += 1
-      #   next
-      # end
+      rescue Exception => e
+        rcpbs_id =  @rcpbs.id rescue ''
+        logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+        puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
+        csv << [rcpbs_id,@wi.id,e.to_s]
+        @error_items += 1
+        next
+      end
     end
 
   logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
