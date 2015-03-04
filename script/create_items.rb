@@ -213,7 +213,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
               prod_sku =  item_array.join('-')
             else
-              prod_sku = rcpbs.subcat
+              prod_sku = subcat
             end
 
             if @wi
@@ -379,9 +379,9 @@ BEGIN{
                 itemtype = "Ribbon"
               when pbs_item_rec.desc =~ /bow/i
                 itemtype =  "Bow"
-              when  pbs_item_rec.desc =~ /flowers/i
+              when  pbs_item_rec.desc =~ /flower/i
                 itemtype = "Flower"
-              when pbs_item_rec.desc =~ /flowers/i
+              when pbs_item_rec.ws_cat =~ /flowers/i
                 itemtype =  "Flower"
               else
                 itemtype = pbs_item_rec.ws_cat.strip.titlecase
@@ -431,6 +431,15 @@ BEGIN{
                   elsif av.last == "ribbon-putup"
                     val = rcpbs.putup_pack
                     srcval = val.strip.gsub(' ','-')
+                  elsif av.last == 'bow-size'
+                    val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
+                    srcval = val
+                  elsif av.last == 'width'
+                    val = rcpbs.width rescue ''
+                    srcval = val
+                  elsif av.last == 'color'
+                    val = rcpbs.ws_color.tilecase rescue ''
+                    srcval = val
                   else
                     val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
                     srcval = val
