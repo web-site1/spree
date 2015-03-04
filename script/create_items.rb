@@ -110,6 +110,34 @@ end
 @bow_option_hash.merge!(size: bow_size_option)
 @bow_option_hash.merge!(putup: ribbon_putup_option)
 
+
+#Flower Options
+@flower_option_hash = {}
+flower_width_option = Spree::OptionType.find_by_name('width')
+
+if flower_width_option.nil?
+  flower_width_option = Spree::OptionType.create(
+      name: 'width',
+      presentation: 'Width'
+  )
+end
+
+@flower_option_hash.merge!(width: flower_width_option)
+
+flower_color_option = Spree::OptionType.find_by_name('color')
+
+if flower_color_option.nil?
+  flower_color_option = Spree::OptionType.create(
+      name: 'color',
+      presentation: 'Color'
+  )
+end
+
+@flower_option_hash.merge!(width: flower_color_option)
+
+
+
+
 sorted_web_items =
 
 previous_page = " "
@@ -154,13 +182,18 @@ CSV.open(csv_error_file, "wb") do |csv|
           if !@wi.nil?
             @product = Spree::Product.find_by_name(@wi.title)
           else
-            @product = nil
+            p_var = Spree::Variant.find_by_sku(subcat)
+            if p_var
+              @product = p_var.product
+            else
+              @product = nil
+            end
           end
 
           if !@product.nil?
             create_variant(rcpbs,@wi,logger)
           else
-            if item_with_multiple_variants
+            if @wi #item_with_multiple_variants
               width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
               if (!width.strip.empty? && (@wi.item.count('-') > 1)) || (@wi.item.count('-') > 1)
                 item_array = @wi.item.split('-')
@@ -180,7 +213,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
               prod_sku =  item_array.join('-')
             else
-              prod_sku = rcpbs.new_pbs_desc_1
+              prod_sku = rcpbs.subcat
             end
 
             if @wi
@@ -253,6 +286,8 @@ CSV.open(csv_error_file, "wb") do |csv|
               option_hash = @ribbon_option_hash
             elsif @item_type == "Bow"
               option_hash = @bow_option_hash
+            elsif @item_type == "Flower"
+              option_hash = @flower_option_hash
             end
 
             option_hash.each do |k,v|
@@ -296,12 +331,14 @@ CSV.open(csv_error_file, "wb") do |csv|
             @products_created += 1
 
             @position += 1
-            if item_with_multiple_variants
+
+
+            #if item_with_multiple_variants
               create_variant(rcpbs,@wi,logger)
-            else
-              v  = @product.master
-              v.update_attribute(:item_no,rcpbs.new_pbs_item)
-            end
+            #else
+              #v = @product.master
+              #v.update_attribute(:item_no,rcpbs.new_pbs_item)
+            #end
 
           end
 
@@ -342,13 +379,17 @@ BEGIN{
                 itemtype = "Ribbon"
               when pbs_item_rec.desc =~ /bow/i
                 itemtype =  "Bow"
+              when  pbs_item_rec.desc =~ /flowers/i
+                itemtype = "Flower"
+              when pbs_item_rec.desc =~ /flowers/i
+                itemtype =  "Flower"
               else
                 itemtype = pbs_item_rec.ws_cat.strip.titlecase
             end
           end
 
           def get_formed_cat_name(webcat)
-            webcat.cat.downcase.gsub('ribbon','').gsub('bows','').strip.titlecase rescue ''
+            webcat.cat.downcase.gsub('ribbon','').gsub('bows','').gsub('flowers','').strip.titlecase rescue ''
           end
 
           def get_master_sku(sku)
