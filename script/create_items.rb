@@ -438,7 +438,7 @@ BEGIN{
                     val = rcpbs.width rescue ''
                     srcval = val
                   elsif av.last == 'color'
-                    val = rcpbs.ws_color.tilecase rescue ''
+                    val = rcpbs.ws_color.titlecase rescue ''
                     srcval = val
                   else
                     val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
