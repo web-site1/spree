@@ -4,8 +4,8 @@
 # Run from scripts directory  ruby
 
 
-
-require '../config/environment'
+require File.expand_path('../../config/environment', __FILE__)
+#require '../config/environment'
 require 'csv'
 #local run code
 
@@ -38,8 +38,8 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 @variants_created = 0
 @error_items = 0
 
-@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 
+@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 
 # Properties
 @properties_hash = {}
@@ -119,157 +119,162 @@ previous_page = " "
 
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
-      WebItem.all.order(:page).all.each do |wi|
-        begin
-          cur_page = wi.page
-          stand_alone_product = false
 
-          #check for link to rc_pbs table if none log error and skip
-          rcpbs = RcPbs.find_by_item(wi.item)
+    r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
+
+    r.each do |rcpbs|
+
+      web_item = WebItem.find_by_item(rcpbs.item)
+      item_with_multiple_variants = false
+      product_created = false
+
+      if !web_item.nil?
+        item_with_multiple_variants =  (WebItem.where(page: web_item.page).count > 1)
+     end
+
+        begin
           @rcpbs = rcpbs
-          @wi = wi
-          if rcpbs.nil?
-            logger.info "Item #{wi.item} not found in Rc_pbs table"
-            puts "Item #{wi.item} not found in Rc_pbs table"
-            @error_items += 1
-            csv << ['',wi.id,"Item #{wi.item} not found in Rc_pbs table"]
-            next
-          end
+          @wi = web_item
 
           @is_master = false
 
-          if !(previous_page.strip == cur_page.strip)
-            # if we are here we have to create a product.
-            # if the page ends with *-description.* we have an item with varients
-            # otherwise we have just a product.
-            if !( cur_page =~ /^.*-description\..*/i)
-              # standalone product
-              stand_alone_product = true
+          @position = 1
+
+          @item_type = item_type(rcpbs) ||  ''
+
+          # find taxon record
+          srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
+          maincat = get_formed_cat_name(@rcpbs.ws_cat)
+          subcat = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
+
+          perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
+
+          taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
+          #
+          if !@wi.nil?
+            @product = Spree::Product.find_by_name(@wi.title)
+          else
+            @product = nil
+          end
+
+          if !@product.nil?
+            create_variant(rcpbs,@wi,logger)
+          else
+            if item_with_multiple_variants
+              width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
+              if (!width.strip.empty? && (@wi.item.count('-') > 1)) || (@wi.item.count('-') > 1)
+                item_array = @wi.item.split('-')
+                if item_array.include?(width)
+                  item_array.delete(width)
+                else
+                  # assume 2nd portion of array is width?
+                  item_array.delete_at(1)
+                end
+              else
+                # lost cause log and next
+                logger.info "Cannot remove size from item for multiple variant web item #{@wi.item}"
+                puts "Cannot remove size from item for multiple variant web item #{@wi.item}"
+                @error_items += 1
+                csv << [rcpbs.id,@wi.id,"Cannot remove size from item for multiple variant web item #{@wi.item}"]
+                next
+              end
+              prod_sku =  item_array.join('-')
+            else
+              prod_sku = rcpbs.new_pbs_desc_1
             end
 
-            #@is_master = true
-            @position = 1
-
-            @item_type = item_type(rcpbs) ||  ''
-
-            # find taxon record
-            srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
-            maincat = get_formed_cat_name(wi.cat)
-            subcat = wi.subcat.downcase.strip.titlecase.gsub(' ','%')
-
-            perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
-
-            taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
-            #
-            @product = Spree::Product.find_by_name(wi.title)
-            if !@product.nil?
-              logger.info "Product #{wi.title} exists in Spree"
-              puts "Product #{wi.title} exists in Spree"
+            if @wi
+              p_title = @wi.title.strip.titlecase
+              p_des = @wi.top_description
+              p_meta = @wi.description
+              p_key = @wi.keywords
             else
-
-              item_with_multiple_variants =  (WebItem.where(page:
-                                       wi.page).count > 1)
-
-               if item_with_multiple_variants
-                width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
-                if (!width.strip.empty? && (wi.item.count('-') > 1)) || (wi.item.count('-') > 1)
-                  item_array = wi.item.split('-')
-                  if item_array.include?(width)
-                    item_array.delete(width)
-                  else
-                    # assume 2nd portion of array is width?
-                    item_array.delete_at(1)
-                  end
-                else
-                  # lost cause log and next
-                  logger.info "Cannot remove size from item for multiple variant web item #{wi.item}"
-                  puts "Cannot remove size from item for multiple variant web item #{wi.item}"
-                  @error_items += 1
-                  csv << [rcpbs.id,wi_id,"Cannot remove size from item for multiple variant web item #{wi.item}"]
-                  next
-                end
-                prod_sku = item_array.join('-')
-               else
-                prod_sku = rcpbs.new_pbs_desc_1
-               end
-              @product = Spree::Product.new(
-                name: wi.title.strip.titlecase,
-                description: wi.top_description,
-                available_on: Date.today()-1.day,
-                shipping_category_id: 1 ,
-                meta_description: wi.description,
-                meta_keywords: wi.keywords,
-                price: rcpbs.rc_price.to_f,
-                sku: prod_sku #rcpbs.item
-              )
+              p_title = @rcpbs.item
+              p_des = @rcpbs.desc
+              p_meta = @rcpbs.desc
+              p_key = ' '
+            end
 
 
+            @product = Spree::Product.new(
+              name: p_title,
+              description: p_des,
+              available_on: Date.today()-1.day,
+              shipping_category_id: 1 ,
+              meta_description: p_meta,
+              meta_keywords: p_key,
+              price: rcpbs.rc_price.to_f,
+              sku: prod_sku #rcpbs.item
+            )
+
+
+            @product.save!
+            #create taxon for product
+            existing_taxon_array = @product.taxons.map{|t| t.id}
+            if !taxonrec.nil? && !existing_taxon_array.include?(taxonrec.id)
+              @product.taxons << taxonrec
               @product.save!
-              #create taxon for product
-              existing_taxon_array = @product.taxons.map{|t| t.id}
-              if !taxonrec.nil? && !existing_taxon_array.include?(taxonrec.id)
-                @product.taxons << taxonrec
+            end
+
+
+
+            array_of_properties = @product.properties.map{|p| p.name}
+
+            @properties_hash.each do |k,v|
+
+
+              if !array_of_properties.include?(v.first.name)
+                @product.properties << v.first
                 @product.save!
               end
 
+              propval = Spree::ProductProperty.find_by_product_id_and_property_id(
+                @product.id,v.first.id
+              )
 
-
-              array_of_properties = @product.properties.map{|p| p.name}
-
-              @properties_hash.each do |k,v|
-
-
-                if !array_of_properties.include?(v.first.name)
-                  @product.properties << v.first
-                  @product.save!
-                end
-
-                propval = Spree::ProductProperty.find_by_product_id_and_property_id(
-                  @product.id,v.first.id
+              val =  eval(v.last)
+              val = val.strip.titlecase
+              if propval.nil?
+                propval = Spree::ProductProperty.create(
+                    product_id:@product.id,
+                    property_id: v.first.id,
+                    value: val
                 )
+              else
+                propval.update_attribute(:value, val )
+              end
+            end
 
-                val =  eval(v.last)
-                val = val.strip.titlecase
-                if propval.nil?
-                  propval = Spree::ProductProperty.create(
-                      product_id:@product.id,
-                      property_id: v.first.id,
-                      value: val
-                  )
-                else
-                  propval.update_attribute(:value, val )
-                end
+            array_of_options = @product.option_types.map{|ot|ot.name}
+
+            option_hash = {}
+
+            if @item_type == "Ribbon"
+              option_hash = @ribbon_option_hash
+            elsif @item_type == "Bow"
+              option_hash = @bow_option_hash
+            end
+
+            option_hash.each do |k,v|
+
+              if !array_of_options.include?(v.name)
+                @product.option_types << v
+                @product.save!
               end
 
-              array_of_options = @product.option_types.map{|ot|ot.name}
-
-              option_hash = {}
-
-              if @item_type == "Ribbon"
-                option_hash = @ribbon_option_hash
-              elsif @item_type == "Bow"
-                option_hash = @bow_option_hash
-              end
-
-              option_hash.each do |k,v|
-
-                if !array_of_options.include?(v.name)
-                  @product.option_types << v
-                  @product.save!
-                end
-
-                opval = Spree::ProductOptionType.find_by_product_id_and_option_type_id(
-                    @product.id,v.id
+              opval = Spree::ProductOptionType.find_by_product_id_and_option_type_id(
+                  @product.id,v.id
+              )
+              if opval.nil?
+                opval = Spree::ProductOptionType.create(
+                    product_id:@product.id,
+                    option_type_id: v.id
                 )
-                if opval.nil?
-                  opval = Spree::ProductOptionType.create(
-                      product_id:@product.id,
-                      option_type_id: v.id
-                  )
-                end
               end
+            end
 
 
+            if @wi
               #create swatch image if it exsists
               swatch_image_path = %Q{#{@local_site_path}#{wi.swatch_image_file[/images.*/i,0]}} rescue ''
               if File.exists?(swatch_image_path)
@@ -283,34 +288,36 @@ CSV.open(csv_error_file, "wb") do |csv|
                 @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                 @product.save!
               end
-
-
-              logger.info "Product #{wi.title} created in Spree"
-              puts "Product #{wi.title} created in Spree"
-              @products_created += 1
             end
+
+
+            logger.info "Product #{@rcpbs.item} created in Spree"
+            puts "Product #{@rcpbs.item} created in Spree"
+            @products_created += 1
 
             @position += 1
             if item_with_multiple_variants
-              create_variant(rcpbs,wi,logger)
+              create_variant(rcpbs,@wi,logger)
             else
               v  = @product.master
               v.update_attribute(:item_no,rcpbs.new_pbs_item)
             end
-          else
-            create_variant(rcpbs,wi,logger)
 
           end
-          previous_page = cur_page.strip
 
-      rescue Exception => e
-        rcpbs_id =  @rcpbs.id rescue ''
-        logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{@wi.id}"
-        csv << [rcpbs_id,@wi.id,e.to_s]
-        @error_items += 1
-        next
-      end
+        rescue Exception => e
+          rcpbs_id =  @rcpbs.id rescue ''
+          wiid = ''
+          if @wi
+            wiid = @wi.id
+          end
+          logger.info "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{wiid}"
+          puts "Error:#{e.to_s} rcpbs_id #{rcpbs_id rescue ''} Web_item_id #{wiid}"
+          csv << [rcpbs_id,wiid,e.to_s]
+          @error_items += 1
+          next
+        end
+
     end
 
   logger.info "Job Done Products Added #{@products_created} , Varients Added #{@variants_created} and Erros #{@error_items}"
@@ -348,6 +355,7 @@ BEGIN{
             t = sku.split('-')
             %Q{#{t[0]}-#{t[1]}}
           end
+
 
           def create_variant(rcpbs,wi,logger)
 
@@ -404,11 +412,14 @@ BEGIN{
                 end
 
               end
-              #create product image
-              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}}
-              if File.exists?(image_path)
-                v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
-                v.save!
+
+              if wi
+                #create product image
+                image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}}
+                if File.exists?(image_path)
+                  v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                  v.save!
+                end
               end
 
               logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
