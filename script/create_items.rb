@@ -40,9 +40,13 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 
 
 #@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+if Rails.env == 'staging'
+  @local_site_path =   "/var/www/artspree3/"
+else
+  @local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+end
 
-@local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
-
+puts "Local image directory is #{@local_site_path}"
 # Properties
 @properties_hash = {}
 # color
@@ -196,8 +200,9 @@ CSV.open(csv_error_file, "wb") do |csv|
           else
             if @wi
               @product = Spree::Product.find_by_name(@wi.title)
-            else
-
+              if @product.nil?
+                @product = Spree::Variant.find_by_sku(prod_sku)
+              end
             end
           end
 
