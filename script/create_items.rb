@@ -39,7 +39,9 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 @error_items = 0
 
 
-@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+#@local_site_path = "/Users/dsadaka/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+
+@local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 
 # Properties
 @properties_hash = {}
@@ -148,8 +150,8 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
-
+    #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
+    r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
     r.each do |rcpbs|
 
       web_item = WebItem.find_by_item(rcpbs.item)
@@ -158,7 +160,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
       if !web_item.nil?
         item_with_multiple_variants =  (WebItem.where(page: web_item.page).count > 1)
-     end
+      end
 
         begin
           @rcpbs = rcpbs
@@ -182,7 +184,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           #
 
 
-          prod_sku = suggest_sku(@rcpbs,logger)
+          prod_sku = suggest_sku(@rcpbs,logger,flow_sub,csv)
 
           if @item_type == 'Flower'
             p_var = Spree::Variant.find_by_sku(flow_sub)
@@ -300,14 +302,14 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             if @wi
               #create swatch image if it exsists
-              swatch_image_path = %Q{#{@local_site_path}#{wi.swatch_image_file[/images.*/i,0]}} rescue ''
+              swatch_image_path = %Q{#{@local_site_path}#{@wi.swatch_image_file[/images.*/i,0]}} rescue ''
               if File.exists?(swatch_image_path)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
                 @product.save!
               end
 
               #create product image
-              image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
+              image_path = %Q{#{@local_site_path}#{@wi.image_file[/images.*/i,0]}} rescue ''
               if File.exists?(image_path)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                 @product.save!
@@ -387,7 +389,7 @@ BEGIN{
           end
 
 
-          def suggest_sku(rcpbs,logger)
+          def suggest_sku(rcpbs,logger,flow_sub,csv)
             if !(@item_type == 'Flower') #@wi
               width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
               if (!width.strip.empty? && (rcpbs.item.count('-') > 1))
@@ -400,12 +402,12 @@ BEGIN{
                 end
               else
                 # lost cause log and next
-                wid = (@wi) ? @wi.id:''
+                wid = (@wi) ? @wi.id : ''
                 logger.info "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
                 puts "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
                 @error_items += 1
                 csv << [rcpbs.id,wid,"Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"]
-                item_array << [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
+                item_array = [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
               end
               prod_sku =  item_array.join('-')
             else
