@@ -173,27 +173,43 @@ CSV.open(csv_error_file, "wb") do |csv|
           # find taxon record
           srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
           maincat = get_formed_cat_name(@rcpbs.ws_cat)
+          flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase
           subcat = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
 
           perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
           taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
           #
+=begin
           if !@wi.nil?
-            @product = Spree::Product.find_by_name(@wi.title)
+              @product = Spree::Product.find_by_name(@wi.title)
           else
-            p_var = Spree::Variant.find_by_sku(subcat)
+            p_var = Spree::Variant.find_by_sku(flow_sub)
             if p_var
               @product = p_var.product
             else
               @product = nil
             end
           end
+=end
+
+          if @item_type == 'Flower'
+            p_var = Spree::Variant.find_by_sku(flow_sub)
+            if p_var
+              @product = p_var.product
+            else
+              @product = nil
+            end
+          else
+            @product = Spree::Product.find_by_name(@wi.title)
+          end
+
+
 
           if !@product.nil?
             create_variant(rcpbs,@wi,logger)
           else
-            if @wi #item_with_multiple_variants
+            if !(@item_type == 'Flower') #@wi
               width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
               if (!width.strip.empty? && (@wi.item.count('-') > 1)) || (@wi.item.count('-') > 1)
                 item_array = @wi.item.split('-')
@@ -205,15 +221,15 @@ CSV.open(csv_error_file, "wb") do |csv|
                 end
               else
                 # lost cause log and next
-                logger.info "Cannot remove size from item for multiple variant web item #{@wi.item}"
-                puts "Cannot remove size from item for multiple variant web item #{@wi.item}"
+                logger.info "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
+                puts "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
                 @error_items += 1
-                csv << [rcpbs.id,@wi.id,"Cannot remove size from item for multiple variant web item #{@wi.item}"]
-                next
+                csv << [rcpbs.id,@wi.id,"Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"]
+                item_array << [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
               end
               prod_sku =  item_array.join('-')
             else
-              prod_sku = subcat
+              prod_sku = flow_sub
             end
 
             if @wi
