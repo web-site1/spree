@@ -201,7 +201,12 @@ CSV.open(csv_error_file, "wb") do |csv|
             if @wi
               @product = Spree::Product.find_by_name(@wi.title)
               if @product.nil?
-                @product = Spree::Variant.find_by_sku(prod_sku)
+                pv =  Spree::Variant.find_by_sku(prod_sku)
+                if pv
+                  @product = pv.product
+                else
+                  @product = nil
+                end
               end
             end
           end
