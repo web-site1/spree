@@ -180,18 +180,9 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
           #
-=begin
-          if !@wi.nil?
-              @product = Spree::Product.find_by_name(@wi.title)
-          else
-            p_var = Spree::Variant.find_by_sku(flow_sub)
-            if p_var
-              @product = p_var.product
-            else
-              @product = nil
-            end
-          end
-=end
+
+
+          prod_sku = suggest_sku(@rcpbs,logger)
 
           if @item_type == 'Flower'
             p_var = Spree::Variant.find_by_sku(flow_sub)
@@ -201,7 +192,11 @@ CSV.open(csv_error_file, "wb") do |csv|
               @product = nil
             end
           else
-            @product = Spree::Product.find_by_name(@wi.title)
+            if @wi
+              @product = Spree::Product.find_by_name(@wi.title)
+            else
+
+            end
           end
 
 
@@ -209,28 +204,6 @@ CSV.open(csv_error_file, "wb") do |csv|
           if !@product.nil?
             create_variant(rcpbs,@wi,logger)
           else
-            if !(@item_type == 'Flower') #@wi
-              width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
-              if (!width.strip.empty? && (@wi.item.count('-') > 1)) || (@wi.item.count('-') > 1)
-                item_array = @wi.item.split('-')
-                if item_array.include?(width)
-                  item_array.delete(width)
-                else
-                  # assume 2nd portion of array is width?
-                  item_array.delete_at(1)
-                end
-              else
-                # lost cause log and next
-                logger.info "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
-                puts "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
-                @error_items += 1
-                csv << [rcpbs.id,@wi.id,"Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"]
-                item_array << [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
-              end
-              prod_sku =  item_array.join('-')
-            else
-              prod_sku = flow_sub
-            end
 
             if @wi
               p_title = @wi.title.strip.titlecase
@@ -413,6 +386,33 @@ BEGIN{
             %Q{#{t[0]}-#{t[1]}}
           end
 
+
+          def suggest_sku(rcpbs,logger)
+            if !(@item_type == 'Flower') #@wi
+              width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
+              if (!width.strip.empty? && (rcpbs.item.count('-') > 1))
+                item_array = rcpbs.item.split('-')
+                if item_array.include?(width)
+                  item_array.delete(width)
+                else
+                  # assume 2nd portion of array is width?
+                  item_array.delete_at(1)
+                end
+              else
+                # lost cause log and next
+                wid = (@wi) ? @wi.id:''
+                logger.info "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
+                puts "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
+                @error_items += 1
+                csv << [rcpbs.id,wid,"Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"]
+                item_array << [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
+              end
+              prod_sku =  item_array.join('-')
+            else
+              prod_sku = flow_sub
+            end
+
+          end
 
           def create_variant(rcpbs,wi,logger)
 
