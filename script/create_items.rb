@@ -179,7 +179,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           # find taxon record
           srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
           maincat = get_formed_cat_name(@rcpbs.ws_cat)
-          flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase
+          flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
           subcat = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
 
           perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
