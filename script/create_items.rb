@@ -154,8 +154,8 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
-    r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
+    r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
+    #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
     r.each do |rcpbs|
 
       web_item = WebItem.find_by_item(rcpbs.item)
@@ -334,7 +334,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             @position += 1
 
 
-            #if item_with_multiple_variants
+            #if item_with_mu.ltiple_variants
               create_variant(rcpbs,@wi,logger)
             #else
               #v = @product.master
@@ -493,7 +493,7 @@ BEGIN{
 
               if wi
                 #create product image
-                image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}}
+                image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
                 if File.exists?(image_path)
                   v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                   v.save!
