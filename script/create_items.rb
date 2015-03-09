@@ -317,9 +317,14 @@ CSV.open(csv_error_file, "wb") do |csv|
                 @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
                 @product.save!
               end
-
               #create product image
               image_path = %Q{#{@local_site_path}#{@wi.image_file[/images.*/i,0]}} rescue ''
+              if File.exists?(image_path)
+                @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                @product.save!
+              end
+            else
+              image_path = %Q{#{@local_site_path}images/#{@rcpbs.new_pbs_item}} rescue ''
               if File.exists?(image_path)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                 @product.save!

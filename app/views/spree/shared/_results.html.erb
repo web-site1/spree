@@ -9,7 +9,7 @@
 <% else %>
 
     <%
-       paginated_products = @searcher.retrieve_products if params.key?(:keywords)
+       paginated_products = @searcher.retrieve_products #if params.key?(:keywords)
        paginated_products ||= products
     %>
         <div class="display_results_stats">

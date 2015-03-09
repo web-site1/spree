@@ -10,11 +10,14 @@ Spree.config do |config|
   # Uncomment to stop tracking inventory levels in the application
   # config.track_inventory_levels = false
   #config.override_actionmailer_config = true
+  config.searcher_class = Spree::Search::Solr
 end
 
 Spree.user_class = "Spree::User"
 Spree::Config.set(logo: "artistic-logo-white.png")
 Spree::Config.set(:products_per_page => 10)
+
+
 
 # Use S3 for product images
 
