@@ -12,24 +12,24 @@ module Spree::Search
 
             fulltext params[:keywords] unless params[:keywords].blank?
 
-            if params.has_key?(:color) && !(params[:color] == 'place-holder')
-              with(:color,params[:color])
+            if params.has_key?(:color) && !(params[:color].include?('place-holder'))
+              with(:color).any_of(params[:color])
             end
 
-            if params.has_key?(:color) && !(params[:type] == 'place-holder')
-              with(:type,params[:type])
+            if params.has_key?(:type) && !(params[:type].include?('place-holder'))
+              with(:type).any_of(params[:type])
             end
 
-            if params.has_key?(:width) && !(params[:width] == 'place-holder')
-              with(:width,params[:width])
+            if params.has_key?(:width) && !(params[:width].include?('place-holder'))
+              with(:widths).any_of(params[:width])
             end
 
-            if params.has_key?(:put_up) && !(params[:put_up] == 'place-holder')
-              with(:put_up,params[:put_up])
+            if params.has_key?(:put_up) && !(params[:put_up].include?('place-holder'))
+              with(:ribbon_putups).any_of(params[:put_up])
             end
 
-            if params.has_key?(:pattern) && !(params[:pattern] == 'place-holder')
-              with(:pattern,params[:pattern])
+            if params.has_key?(:pattern) && !(params[:pattern].include?('place-holder'))
+              with(:pattern).any_of(params[:pattern])
             end
             facet :pattern
             facet :wired

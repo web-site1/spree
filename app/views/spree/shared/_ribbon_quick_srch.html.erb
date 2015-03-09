@@ -10,48 +10,48 @@
       <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 quick-search-form">
 
         <%= form_tag spree.products_path,class: "form-inline", method: 'get' %>
-            <%= hidden_field_tag :keywords,'' %>
+          <%= hidden_field_tag :quick_search,"Y" %>
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select type='search' name='color' class="form-control select select-primary select-block mbl">
+            <select type='search' name='color[]' class="form-control select select-primary select-block mbl">
               <option value="place-holder">Color</option>
               <% @color_array.each do |c| %>
-                  <option value="<%= c %>"><%= c %></option>
+                  <option value="<%= c %>" <%=quick_src_selected('color',c)%> ><%= c %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name='type' class="form-control select select-primary select-block mbl">
+            <select name='type[]' class="form-control select select-primary select-block mbl">
               <option value="place-holder">Type</option>
               <% @type_array.each do |t| %>
-                  <option value="<%= t %>"><%= t %></option>
+                  <option value="<%= t %>" <%=quick_src_selected('type',t)%> ><%= t %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name="width" class="form-control select select-primary select-block mbl">
+            <select name="width[]" class="form-control select select-primary select-block mbl">
               <option value="place-holder">Width</option>
-              <% @width_array.each do |t| %>
-                  <option value="<%= t %>"><%= t %></option>
+              <% @width_array.each do |w| %>
+                  <option value="<%= w %>" <%=quick_src_selected('width',w)%> ><%= w %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name="put_up" class="form-control select select-primary select-block mbl">
+            <select name="put_up[]" class="form-control select select-primary select-block mbl">
               <option value="place-holder">Put Up</option>
-              <% @put_up_array.each do |t| %>
-                  <option value="<%= t %>"><%= t %></option>
+              <% @put_up_array.each do |p| %>
+                  <option value="<%= p %>" <%=quick_src_selected('put_up',p) %> ><%= p %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name='pattern' class="form-control select select-primary select-block mbl">
+            <select name='pattern[]' class="form-control select select-primary select-block mbl">
               <option value="place-holder">Pattern</option>
-              <% @pattern_array.each do |t| %>
-                  <option value="<%= t %>"><%= t %></option>
+              <% @pattern_array.each do |pa| %>
+                  <option value="<%= pa %>" <%=quick_src_selected('pattern',pa)%> ><%= pa %></option>
               <% end %>
             </select>
           </div>
