@@ -1,124 +1,150 @@
 
 
 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 sidebar left-sidebar">
-
+  <%= form_tag spree.products_path,id: 'ref_srch_frm', method: 'get' %>
   <h3>Refine Search</h3>
 
+  <% type_opts = srch_opts('type')
+     sec_cnt = type_opts.map{|i|i.last}.inject(:+) rescue 0
+  %>
   <div class="panel-group search" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingType">
         <h4 class="panel-title">
           <a class="top-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseType" aria-expanded="false" aria-controls="collapseType">
-            Type
+            Type (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapseType" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingType">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox1"><input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">Satin</label></li>
-            <li><label class="checkbox" for="checkbox2"><input type="checkbox" value="" id="checkbox2" data-toggle="checkbox">Grosgrain</label></li>
-            <li><label class="checkbox" for="checkbox3"><input type="checkbox" value="" id="checkbox3" data-toggle="checkbox">Velvet</label></li>
-            <li><label class="checkbox" for="checkbox4"><input type="checkbox" value="" id="checkbox4" data-toggle="checkbox">Sheer</label></li>
-            <li><label class="checkbox" for="checkbox5"><input type="checkbox" value="" id="checkbox5" data-toggle="checkbox">Metallic</label></li>
+            <% type_opts.each_with_index do |opt,i| %>
+                <li>
+                  <label class="checkbox" for="checkbox<%=i%>"><input name="type[]" type="checkbox" value="<%= opt.first %>" id="checkbox<%=i%>" data-toggle="checkbox" <%=src_selected('type',opt.first,'checked',true)%>>
+                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </div> <!-- panel -->
+
+
+
+    <% widths_opts = srch_opts('widths')
+       sec_cnt = widths_opts.map{|i|i.last}.inject(:+) rescue 0
+    %>
+
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchWidth">
         <h4 class="panel-title">
-          <a class="collapsedx" data-toggle="collapse" data-parent="#accordion" href="#collapseWidth" aria-expanded="false" aria-controls="collapseWidth">
-            Width
+          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseWidth" aria-expanded="false" aria-controls="collapseWidth">
+            Width (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapseWidth" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchWidth">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox2-1"><input type="checkbox" value="" id="checkbox2-1" data-toggle="checkbox">1/16"</label></li>
-            <li><label class="checkbox" for="checkbox2-2"><input type="checkbox" value="" id="checkbox2-2" data-toggle="checkbox">1/4"</label></li>
-            <li><label class="checkbox" for="checkbox2-3"><input type="checkbox" value="" id="checkbox2-3" data-toggle="checkbox">3/8"</label></li>
-            <li><label class="checkbox" for="checkbox2-4"><input type="checkbox" value="" id="checkbox2-4" data-toggle="checkbox">5/8"</label></li>
-            <li><label class="checkbox" for="checkbox2-5"><input type="checkbox" value="" id="checkbox2-5" data-toggle="checkbox">7/8"</label></li>
-            <li><label class="checkbox" for="checkbox2-6"><input type="checkbox" value="" id="checkbox2-6" data-toggle="checkbox">1.5"</label></li>
-            <li><label class="checkbox" for="checkbox2-7"><input type="checkbox" value="" id="checkbox2-7" data-toggle="checkbox">2.25"</label></li>
-            <li><label class="checkbox" for="checkbox2-8"><input type="checkbox" value="" id="checkbox2-8" data-toggle="checkbox">3"</label></li>
-            <li><label class="checkbox" for="checkbox2-9"><input type="checkbox" value="" id="checkbox2-9" data-toggle="checkbox">4"</label></li>
+              <% widths_opts.each_with_index do |opt,i| %>
+                  <li>
+                    <label class="checkbox" for="checkbox2-<%=i%>"><input name="widths[]" type="checkbox" value="<%= opt.first %>" id="checkbox2-<%=i%>" data-toggle="checkbox" <%=src_selected('widths',opt.first,'checked',true)%>>
+                      <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                  </li>
+              <% end %>
           </ul>
         </div>
       </div>
     </div> <!-- panel -->
+
+
+
+
+
+    <% put_up_opts = srch_opts('ribbon_putups')
+       sec_cnt = put_up_opts.map{|i|i.last}.inject(:+) rescue 0
+    %>
+
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchWidth">
         <h4 class="panel-title">
-          <a class="collapsedx" data-toggle="collapse" data-parent="#accordion" href="#collapseLength" aria-expanded="false" aria-controls="collapseLength">
-            Length
+          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseLength" aria-expanded="false" aria-controls="collapseLength">
+            Put-Up (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapseLength" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchLength">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox3-1"><input type="checkbox" value="" id="checkbox3-1" data-toggle="checkbox">1/16"</label></li>
-            <li><label class="checkbox" for="checkbox3-2"><input type="checkbox" value="" id="checkbox3-2" data-toggle="checkbox">1/4"</label></li>
-            <li><label class="checkbox" for="checkbox3-3"><input type="checkbox" value="" id="checkbox3-3" data-toggle="checkbox">3/8"</label></li>
-            <li><label class="checkbox" for="checkbox3-4"><input type="checkbox" value="" id="checkbox3-4" data-toggle="checkbox">5/8"</label></li>
+            <% put_up_opts.each_with_index do |opt,i| %>
+                <li>
+                  <label class="checkbox" for="checkbox3-<%=i%>"><input name="ribbon_putups[]" type="checkbox" value="<%= opt.first %>" id="checkbox3-<%=i%>" data-toggle="checkbox" <%=src_selected('ribbon_putups',opt.first,'checked',true)%>>
+                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </div> <!-- panel -->
+
+
+    <% color_opts = srch_opts('color')
+       sec_cnt = color_opts.map{|i|i.last}.inject(:+) rescue 0
+    %>
+
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchColor">
         <h4 class="panel-title">
-          <a class="collapsedx" data-toggle="collapse" data-parent="#accordion" href="#collapseColor" aria-expanded="false" aria-controls="collapseColor">
-            Color
+          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseColor" aria-expanded="false" aria-controls="collapseColor">
+            Color (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapseColor" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchColor">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox4-1"><input type="checkbox" value="" id="checkbox4-1" data-toggle="checkbox">Red</label></li>
-            <li><label class="checkbox" for="checkbox4-2"><input type="checkbox" value="" id="checkbox4-2" data-toggle="checkbox">Blue</label></li>
-            <li><label class="checkbox" for="checkbox4-3"><input type="checkbox" value="" id="checkbox4-3" data-toggle="checkbox">Yellow</label></li>
-            <li><label class="checkbox" for="checkbox4-4"><input type="checkbox" value="" id="checkbox4-4" data-toggle="checkbox">Green</label></li>
-            <li><label class="checkbox" for="checkbox4-5"><input type="checkbox" value="" id="checkbox4-5" data-toggle="checkbox">Orange</label></li>
-            <li><label class="checkbox" for="checkbox4-6"><input type="checkbox" value="" id="checkbox4-6" data-toggle="checkbox">Purple</label></li>
-            <li><label class="checkbox" for="checkbox4-7"><input type="checkbox" value="" id="checkbox4-7" data-toggle="checkbox">Beige</label></li>
-            <li><label class="checkbox" for="checkbox4-8"><input type="checkbox" value="" id="checkbox4-8" data-toggle="checkbox">Brown</label></li>
-            <li><label class="checkbox" for="checkbox4-9"><input type="checkbox" value="" id="checkbox4-9" data-toggle="checkbox">Black</label></li>
-            <li><label class="checkbox" for="checkbox4-10"><input type="checkbox" value="" id="checkbox4-10" data-toggle="checkbox">White</label></li>
-            <li><label class="checkbox" for="checkbox4-11"><input type="checkbox" value="" id="checkbox4-11" data-toggle="checkbox">Grey</label></li>
+            <% color_opts.each_with_index do |opt,i| %>
+                <li>
+                  <label class="checkbox" for="checkbox4-<%=i%>"><input name="color[]" type="checkbox" value="<%= opt.first %>" id="checkbox4-<%=i%>" data-toggle="checkbox" <%=src_selected('color',opt.first,'checked',true)%>>
+                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </div> <!-- panel -->
+
+    <% pattern_opts = srch_opts('pattern')
+       sec_cnt = pattern_opts.map{|i|i.last}.inject(:+) rescue 0
+    %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchPattern">
         <h4 class="panel-title">
-          <a class="collapsedx" data-toggle="collapse" data-parent="#accordion" href="#collapsePattern" aria-expanded="false" aria-controls="collapsePattern">
-            Pattern
+          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePattern" aria-expanded="false" aria-controls="collapsePattern">
+            Pattern (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapsePattern" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchColor">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox5-1"><input type="checkbox" value="" id="checkbox5-1" data-toggle="checkbox">Solid</label></li>
-            <li><label class="checkbox" for="checkbox5-2"><input type="checkbox" value="" id="checkbox5-2" data-toggle="checkbox">Dots</label></li>
-            <li><label class="checkbox" for="checkbox5-3"><input type="checkbox" value="" id="checkbox5-3" data-toggle="checkbox">Stripes</label></li>
-            <li><label class="checkbox" for="checkbox5-4"><input type="checkbox" value="" id="checkbox5-4" data-toggle="checkbox">Check &amp; Plaid</label></li>
-            <li><label class="checkbox" for="checkbox5-5"><input type="checkbox" value="" id="checkbox5-5" data-toggle="checkbox">Floral</label></li>
-            <li><label class="checkbox" for="checkbox5-6"><input type="checkbox" value="" id="checkbox5-6" data-toggle="checkbox">Chevron</label></li>
+            <% color_opts.each_with_index do |opt,i| %>
+                <li>
+                  <label class="checkbox" for="checkbox5-<%=i%>"><input name="pattern[]" type="checkbox" value="<%= opt.first %>" id="checkbox5-<%=i%>" data-toggle="checkbox" <%=src_selected('pattern',opt.first,'checked',true)%>>
+                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                </li>
+            <% end %>
           </ul>
         </div>
       </div>
     </div> <!-- panel -->
+
+
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchWired">
         <h4 class="panel-title">
-          <a class="collapsedx" data-toggle="collapse" data-parent="#accordion" href="#collapseWired" aria-expanded="false" aria-controls="collapseWired">
+          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseWired" aria-expanded="false" aria-controls="collapseWired">
             Wired / Non-Wired
           </a>
         </h4>
@@ -133,5 +159,9 @@
       </div>
     </div> <!-- panel -->
   </div> <!-- panel group -->
+
+  <button id="" type="submit" class="btn btn-lg btn-info btn-embossed mlm">Refine</button>
+
+  </form>
 
 </div>

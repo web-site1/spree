@@ -9,55 +9,55 @@
       </div>
       <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 quick-search-form">
 
-        <%= form_tag spree.products_path,class: "form-inline", method: 'get' %>
+        <%= form_tag spree.products_path,id: 'quick_srch_frm',class: "form-inline", method: 'get' %>
           <%= hidden_field_tag :quick_search,"Y" %>
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select type='search' name='color[]' class="form-control select select-primary select-block mbl">
-              <option value="place-holder">Color</option>
-              <% @color_array.each do |c| %>
-                  <option value="<%= c %>" <%=quick_src_selected('color',c)%> ><%= c %></option>
+              <option class="mblo" value="place-holder">All Colors</option>
+              <% srch_opts('color').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('color',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select name='type[]' class="form-control select select-primary select-block mbl">
-              <option value="place-holder">Type</option>
-              <% @type_array.each do |t| %>
-                  <option value="<%= t %>" <%=quick_src_selected('type',t)%> ><%= t %></option>
+              <option class="mblo" value="place-holder">All Types</option>
+              <% srch_opts('type').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name="width[]" class="form-control select select-primary select-block mbl">
-              <option value="place-holder">Width</option>
-              <% @width_array.each do |w| %>
-                  <option value="<%= w %>" <%=quick_src_selected('width',w)%> ><%= w %></option>
+            <select name="widths[]" class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Widths</option>
+              <% srch_opts('widths').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('widths',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
-            <select name="put_up[]" class="form-control select select-primary select-block mbl">
-              <option value="place-holder">Put Up</option>
-              <% @put_up_array.each do |p| %>
-                  <option value="<%= p %>" <%=quick_src_selected('put_up',p) %> ><%= p %></option>
+            <select name="ribbon_putups[]" class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Put Ups</option>
+              <% srch_opts('ribbon_putups').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('ribbon_putups',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
               <% end %>
             </select>
           </div>
 
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select name='pattern[]' class="form-control select select-primary select-block mbl">
-              <option value="place-holder">Pattern</option>
-              <% @pattern_array.each do |pa| %>
-                  <option value="<%= pa %>" <%=quick_src_selected('pattern',pa)%> ><%= pa %></option>
+              <option class="mblo" value="place-holder">All Patterns</option>
+              <% srch_opts('pattern').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('pattern',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
               <% end %>
             </select>
           </div>
 
-          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 submit-form-col">
-            <button type="submit" class="btn btn-lg btn-info btn-embossed mlm">Go!</button>
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 ">
+            <button id="quickclear" type="" class="btn btn-lg btn-info btn-embossed mlm">Clear</button>
           </div>
 
         </form>

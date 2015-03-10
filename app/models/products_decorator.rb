@@ -91,10 +91,6 @@ Spree::Product.class_eval do
       widths
     end
 
-    string :colors, :multiple => true do
-      colors
-    end
-
 
     boolean :wired do
       wired_product?

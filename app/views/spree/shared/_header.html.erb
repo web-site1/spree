@@ -40,7 +40,7 @@
       <div class="col-lg-12">
 
         <ul class="nav navbar-nav navbar-right main-nav-right" id="main-nav">
-          <li class="nav-home active"><a href="/">Home</a></li>
+          <li class="nav-home active"><%= link_to Spree.t(:home), spree.root_path,data: { no_turbolink: true } %></li>
           <li class="nav-ribbons"><a href="#">Ribbons</a></li>
           <li class="nav-new-items"><a href="#">New Items</a></li>
           <li class="nav-specials"><a href="#">Specials</a></li>

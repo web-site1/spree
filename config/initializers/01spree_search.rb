@@ -20,12 +20,12 @@ module Spree::Search
               with(:type).any_of(params[:type])
             end
 
-            if params.has_key?(:width) && !(params[:width].include?('place-holder'))
-              with(:widths).any_of(params[:width])
+            if params.has_key?(:widths) && !(params[:widths].include?('place-holder'))
+              with(:widths).any_of(params[:widths])
             end
 
-            if params.has_key?(:put_up) && !(params[:put_up].include?('place-holder'))
-              with(:ribbon_putups).any_of(params[:put_up])
+            if params.has_key?(:ribbon_putups) && !(params[:ribbon_putups].include?('place-holder'))
+              with(:ribbon_putups).any_of(params[:ribbon_putups])
             end
 
             if params.has_key?(:pattern) && !(params[:pattern].include?('place-holder'))
@@ -36,16 +36,23 @@ module Spree::Search
             facet :type
             facet :widths
             facet :ribbon_putups
-            facet :colors
+            facet :color
             facet :pattern
             facet :wired
 
-            paginate page: page, per_page: Spree::Config[:products_per_page]
+            per_page = (params.has_key?(:per_page)) ? params[:per_page] : Spree::Config[:products_per_page]
+
+            paginate page: page, per_page: per_page
           end
     end
 
     def retrieve_products
       @search_result.results
     end
+
+    def get_search_obj
+      return @search_result
+    end
+
   end
 end
