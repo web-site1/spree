@@ -31,6 +31,11 @@ module Spree::Search
             if params.has_key?(:pattern) && !(params[:pattern].include?('place-holder'))
               with(:pattern).any_of(params[:pattern])
             end
+
+            if params.has_key?(:wired) && !(params[:wired].include?('place-holder'))
+              with(:wired).any_of(params[:wired])
+            end
+
             facet :pattern
             facet :wired
             facet :type
