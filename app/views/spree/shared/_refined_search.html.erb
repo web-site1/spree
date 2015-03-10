@@ -129,7 +129,7 @@
       <div id="collapsePattern" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchColor">
         <div class="panel-body">
           <ul>
-            <% color_opts.each_with_index do |opt,i| %>
+            <% pattern_opts.each_with_index do |opt,i| %>
                 <li>
                   <label class="checkbox" for="checkbox5-<%=i%>"><input name="pattern[]" type="checkbox" value="<%= opt.first %>" id="checkbox5-<%=i%>" data-toggle="checkbox" <%=src_selected('pattern',opt.first,'checked',true)%>>
                     <%= %Q{#{opt.first} (#{opt.last})}%></label>
@@ -141,19 +141,27 @@
     </div> <!-- panel -->
 
 
+    <% wired_opts = srch_opts('wired')
+       sec_cnt = wired_opts.map{|i|i.last}.inject(:+) rescue 0
+    %>
+
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="searchWired">
         <h4 class="panel-title">
           <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseWired" aria-expanded="false" aria-controls="collapseWired">
-            Wired / Non-Wired
+            Wired / Non-Wired (<%= sec_cnt %>)
           </a>
         </h4>
       </div>
       <div id="collapseWired" class="panel-collapse collapse" role="tabpanel" aria-labelledby="searchWired">
         <div class="panel-body">
           <ul>
-            <li><label class="checkbox" for="checkbox6-1"><input type="checkbox" value="" id="checkbox6-1" data-toggle="checkbox">Wired</label></li>
-            <li><label class="checkbox" for="checkbox6-2"><input type="checkbox" value="" id="checkbox6-2" data-toggle="checkbox">Non-Wired</label></li>
+            <% wired_opts.each_with_index do |opt,i| %>
+                <li>
+                  <label class="checkbox" for="checkbox6-<%=i%>"><input name="wired[]" type="checkbox" value="<%= opt.first %>" id="checkbox6-<%=i%>" data-toggle="checkbox" <%=src_selected('pattern',opt.first,'checked',true)%>>
+                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                </li>
+            <% end %>
           </ul>
         </div>
       </div>

@@ -13,11 +13,17 @@ module ApplicationHelper
     solr_search_obj.facet(opt_name.to_sym).rows.each do |facet|
       if facet.count.to_i > 0
         if !(opt_name.to_sym == :ribbon_putups && !(facet.value[0] =~ /[0-9]/))
-          opts_array << [facet.value,facet.count]
+          fv = facet.value
+          if opt_name.to_sym == :wired
+            fv = (facet.value == false) ? 'Non-wired' : 'Wired'
+          end
+          opts_array << [fv,facet.count]
         end
       end
     end rescue ''
-    return opts_array.sort!
+    opts_array.sort! if  !(opt_name.to_sym == :wired)
+    return opts_array
+
   end
 
   def src_selected(name='',val='',opt='selected',skip_quick=false)
