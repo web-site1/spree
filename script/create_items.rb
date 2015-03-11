@@ -44,6 +44,7 @@ if Rails.env == 'staging'
   @local_site_path =   "/var/www/artspree3/"
 else
   @local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+  @local_site_path = "/tmp/t/"
 end
 
 puts "Local image directory is #{@local_site_path}"
@@ -172,8 +173,9 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
+    #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
     #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
+    r = RcPbs.where(ws_subcat: "CQA-62.")
     r.each do |rcpbs|
 
       web_item = WebItem.find_by_item(rcpbs.item)
@@ -532,19 +534,23 @@ BEGIN{
 
               end
 
+
+              found_image = false
               if wi
                 #create product image
                 begin
                   image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
                   if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank?)
+                    found_image = true
                     v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                     v.save!
                   end
                 rescue Exception => e
                   puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                 end
-              else
+              end
 
+              if found_image == false
                 begin
                   # lets try an image with sku as the name
                   src_sku_image = %Q{#{@local_site_path}/images/#{rcpbs.new_pbs_desc_1.strip}*} rescue ''
@@ -556,7 +562,6 @@ BEGIN{
                 rescue Exception => e
                   puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                 end
-
               end
 
               logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
