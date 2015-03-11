@@ -57,7 +57,7 @@ Spree::Product.class_eval do
       colors
     end
 
-    text widths do
+    text :widths do
       widths
     end
 
