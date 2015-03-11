@@ -346,8 +346,10 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             if found_image == false
               # try directory for sku named file
-              if File.exists?(image_path)
-                @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+              src_sku_image = %Q{#{@local_site_path}/images/#{@rcpbs.new_pbs_desc_1.strip}*} rescue ''
+              array_of_found_sku_images = Dir.glob(src_sku_image)
+              if !array_of_found_sku_images.empty?
+                @product.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
                 @product.save!
               end
            end
@@ -522,6 +524,14 @@ BEGIN{
                 image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
                 if File.exists?(image_path)
                   v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                  v.save!
+                end
+              else
+                # lets try an image with sku as the name
+                src_sku_image = %Q{#{@local_site_path}/images/#{rcpbs.new_pbs_desc_1.strip}*} rescue ''
+                array_of_found_sku_images = Dir.glob(src_sku_image)
+                if !array_of_found_sku_images.empty?
+                  v.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
                   v.save!
                 end
               end
