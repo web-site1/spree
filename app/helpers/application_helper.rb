@@ -36,4 +36,9 @@ module ApplicationHelper
     return selected
   end
 
+  def position_sort(array_facet_count = [],type = '')
+
+    return array_facet_count
+  end
+
 end

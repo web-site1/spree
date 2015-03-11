@@ -2,10 +2,20 @@ Spree::Product.class_eval do
 
 
   # if we want to reject type to get in another manner .reject{|t| t.downcase == 'type'}
-  Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.each do |p|
+  #Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.each do |p|
+  Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.reject{|t| t.downcase == 'type'}.each do |p|
     define_method(%Q{product_#{p}}) do
       self.product_properties.select{|pp| pp.property.name.downcase == p.gsub('_',' ')}.first.value rescue ''
     end
+  end
+
+  def product_type
+    type = ''
+    t = self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }
+    if !t.empty?
+      type = t.first.permalink.split('/')[1]
+    end
+    return type
   end
 
   {ribbon_widths: 'ribbon9width',ribbon_putups: 'ribbon9putup',bow_sizes: 'bow9size',
@@ -40,7 +50,7 @@ Spree::Product.class_eval do
     end
 
     text :product_item_no do
-      self.variants.map{|s| s.sku}.reject{|e| e.nil?}
+      self.variants.map{|s| s.item_no}.reject{|e| e.nil?}
     end
 
     text :color do
