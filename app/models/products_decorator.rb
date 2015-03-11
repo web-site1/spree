@@ -3,7 +3,7 @@ Spree::Product.class_eval do
 
   # if we want to reject type to get in another manner .reject{|t| t.downcase == 'type'}
   #Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.each do |p|
-  Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.reject{|t| t.downcase == 'type'}.each do |p|
+  Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.reject{|t| t.downcase == 'type' || t.downcase == 'color'}.each do |p|
     define_method(%Q{product_#{p}}) do
       self.product_properties.select{|pp| pp.property.name.downcase == p.gsub('_',' ')}.first.value rescue ''
     end
@@ -54,10 +54,12 @@ Spree::Product.class_eval do
     end
 
     text :color do
-      product_color
+      colors
     end
 
-
+    text widths do
+      widths
+    end
 
     string :name, :stored => true
 
@@ -73,8 +75,8 @@ Spree::Product.class_eval do
       self.variants.map{|s| s.item_no}.reject{|e| e.nil?}
     end
 
-    string :color do
-      product_color
+    string :color, :multiple => true do
+      colors
     end
 
     string :brand do
