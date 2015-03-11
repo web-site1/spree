@@ -6,11 +6,11 @@ Spree::Variant.class_eval do
   end
 
   def variant_width
-    self.option_values.select{|ov| ov.option_type.name.downcase == 'width'}.first.name rescue ''
+    self.option_values.select{|ov| ov.option_type.name.downcase == 'width'}.first.name rescue ' '
   end
 
   def variant_color
-    self.option_values.select{|ov| ov.option_type.name.downcase == 'color'}.first.name rescue ''
+    self.option_values.select{|ov| ov.option_type.name.downcase == 'color'}.first.name rescue ' '
   end
 
 

@@ -38,7 +38,13 @@ module ApplicationHelper
 
   def position_sort(array_facet_count = [],type = '')
 
-    return array_facet_count
+    position_sorted_array = []
+    option = Spree::OptionType.find_by_name(type)
+    ov = Spree::OptionValue.where(option_type_id: option.id)
+    array_of_vals = array_facet_count.map{|f| f.first}
+    position_sorted_array = ov.select{|ovs| array_of_vals.include?(ovs.name)}.map{|v| v.name}
+
+    return position_sorted_array
   end
 
 end

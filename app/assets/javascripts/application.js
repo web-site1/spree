@@ -12,5 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+// removed gem = require turbolinks
 //= require_tree .

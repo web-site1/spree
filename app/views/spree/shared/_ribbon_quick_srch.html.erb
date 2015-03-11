@@ -14,8 +14,8 @@
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select type='search' name='color[]' class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Colors</option>
-              <% srch_opts('color').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('color',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
+              <% position_sort(srch_opts('color'),'color').each do |o| %>
+                  <option class="mblo" value="<%= o %>" <%=src_selected('color',o)%> ><%= %Q{#{o}} %></option>
               <% end %>
             </select>
           </div>
@@ -24,7 +24,7 @@
             <select name='type[]' class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Types</option>
               <% srch_opts('type').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first}} %></option>
               <% end %>
             </select>
           </div>
@@ -32,8 +32,8 @@
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select name="widths[]" class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Widths</option>
-              <% srch_opts('widths').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('widths',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
+              <% position_sort(srch_opts('widths'),'width').each do |o| %>
+                  <option class="mblo" value="<%= o %>" <%=src_selected('widths',o)%> ><%= %Q{#{o}} %></option>
               <% end %>
             </select>
           </div>
@@ -41,8 +41,8 @@
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select name="ribbon_putups[]" class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Put Ups</option>
-              <% srch_opts('ribbon_putups').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('ribbon_putups',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
+              <% position_sort(srch_opts('ribbon_putups'),'ribbon-putup').each do |o| %>
+                  <option class="mblo" value="<%= o %>" <%=src_selected('ribbon_putups',o)%> ><%= %Q{#{o}} %></option>
               <% end %>
             </select>
           </div>
@@ -51,7 +51,7 @@
             <select name='pattern[]' class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Patterns</option>
               <% srch_opts('pattern').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('pattern',o.first)%> ><%= %Q{#{o.first} (#{o.last})} %></option>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('pattern',o.first)%> ><%= %Q{#{o.first}} %></option>
               <% end %>
             </select>
           </div>

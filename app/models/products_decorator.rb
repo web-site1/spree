@@ -5,12 +5,12 @@ Spree::Product.class_eval do
   #Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.each do |p|
   Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.reject{|t| t.downcase == 'type' || t.downcase == 'color'}.each do |p|
     define_method(%Q{product_#{p}}) do
-      self.product_properties.select{|pp| pp.property.name.downcase == p.gsub('_',' ')}.first.value rescue ''
+      self.product_properties.select{|pp| pp.property.name.downcase == p.gsub('_',' ')}.first.value rescue ' '
     end
   end
 
   def product_type
-    type = ''
+    type = ' '
     t = self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }
     if !t.empty?
       type = t.first.permalink.split('/')[1]
@@ -26,7 +26,7 @@ Spree::Product.class_eval do
   end
 
   def pattern
-    self.taxons.first.name rescue ''
+    self.taxons.first.name rescue ' '
   end
 
 
