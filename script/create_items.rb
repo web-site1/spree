@@ -82,6 +82,16 @@ end
 # ----------------------------------------------------------------------
 # options
 
+all_color_option = Spree::OptionType.find_by_name('color')
+if all_color_option.nil?
+  all_color_option = Spree::OptionType.create(
+      name: 'color',
+      presentation: 'Color'
+  )
+end
+
+
+
 #Ribbon Options
 @ribbon_option_hash = {}
 ribbon_width_option = Spree::OptionType.find_by_name('ribbon-width')
@@ -101,6 +111,7 @@ if ribbon_putup_option.nil?
   )
 end
 @ribbon_option_hash.merge!(putup: ribbon_putup_option)
+@ribbon_option_hash.merge!(color: all_color_option)
 
 
 #Bow Options
@@ -115,6 +126,8 @@ if bow_size_option.nil?
 end
 @bow_option_hash.merge!(size: bow_size_option)
 @bow_option_hash.merge!(putup: ribbon_putup_option)
+@bow_option_hash.merge!(color: all_color_option)
+
 
 
 #Flower Options
@@ -129,6 +142,10 @@ if flower_width_option.nil?
 end
 
 @flower_option_hash.merge!(width: flower_width_option)
+@flower_option_hash.merge!(color: all_color_option)
+
+=begin
+
 
 flower_color_option = Spree::OptionType.find_by_name('color')
 
@@ -140,6 +157,7 @@ if flower_color_option.nil?
 end
 
 @flower_option_hash.merge!(color: flower_color_option)
+=end
 
 
 
@@ -309,7 +327,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
             end
 
-
+            found_image = false
             if @wi
               #create swatch image if it exsists
               swatch_image_path = %Q{#{@local_site_path}#{@wi.swatch_image_file[/images.*/i,0]}} rescue ''
@@ -320,16 +338,21 @@ CSV.open(csv_error_file, "wb") do |csv|
               #create product image
               image_path = %Q{#{@local_site_path}#{@wi.image_file[/images.*/i,0]}} rescue ''
               if File.exists?(image_path)
-                @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
-                @product.save!
-              end
-            else
-              image_path = %Q{#{@local_site_path}images/#{@rcpbs.new_pbs_item}} rescue ''
-              if File.exists?(image_path)
+                found_image = true
                 @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                 @product.save!
               end
             end
+
+            if found_image == false
+              # try directory for sku named file
+              src_sku_image = %Q{#{@local_site_path}/images/#{@rcpbs.new_pbs_desc_1.strip}*} rescue ''
+              array_of_found_sku_images = Dir.glob(src_sku_image)
+              if !array_of_found_sku_images.empty?
+                @product.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
+                @product.save!
+              end
+           end
 
 
             logger.info "Product #{@rcpbs.item} created in Spree"
@@ -395,7 +418,7 @@ BEGIN{
           end
 
           def get_formed_cat_name(webcat)
-            webcat.cat.downcase.gsub('ribbon','').gsub('bows','').gsub('flowers','').strip.titlecase rescue ''
+            webcat.downcase.gsub('ribbon','').gsub('bows','').gsub('flowers','').strip.titlecase rescue ''
           end
 
           def get_master_sku(sku)
@@ -501,6 +524,14 @@ BEGIN{
                 image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
                 if File.exists?(image_path)
                   v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                  v.save!
+                end
+              else
+                # lets try an image with sku as the name
+                src_sku_image = %Q{#{@local_site_path}/images/#{rcpbs.new_pbs_desc_1.strip}*} rescue ''
+                array_of_found_sku_images = Dir.glob(src_sku_image)
+                if !array_of_found_sku_images.empty?
+                  v.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
                   v.save!
                 end
               end
