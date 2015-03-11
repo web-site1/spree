@@ -333,7 +333,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               begin
                 #create swatch image if it exsists
                 swatch_image_path = %Q{#{@local_site_path}#{@wi.swatch_image_file[/images.*/i,0]}} rescue ''
-                if File.exists?(swatch_image_path)
+                if File.exists?(swatch_image_path) && (!@wi.swatch_image_file.nil? && !@wi.swatch_image_file.blank)
                   @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
                   @product.save!
                 end
@@ -345,7 +345,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               begin
               #create product image
                 image_path = %Q{#{@local_site_path}#{@wi.image_file[/images.*/i,0]}} rescue ''
-                if File.exists?(image_path)
+                if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank)
                   found_image = true
                   @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                   @product.save!
@@ -536,7 +536,7 @@ BEGIN{
                 #create product image
                 begin
                   image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
-                  if File.exists?(image_path)
+                  if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank)
                     v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                     v.save!
                   end
