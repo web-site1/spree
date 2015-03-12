@@ -3,6 +3,8 @@
 # the directory of images is the first argument
 # Call example  ruby script/load_images_from_path.rb #{dir}
 
+require File.expand_path('../../config/environment', __FILE__)
+
 images_path = ARGV[0]
 
 puts images_path

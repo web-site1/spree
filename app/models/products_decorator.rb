@@ -1,5 +1,9 @@
 Spree::Product.class_eval do
 
+  scope :no_taxons , ->{
+    where('id NOT in (?)',Spree::ProductsTaxon.all.map{|pt| pt.product_id}.uniq )
+  }
+
 
   # if we want to reject type to get in another manner .reject{|t| t.downcase == 'type'}
   #Spree::Property.all.map{|p| p.name.downcase.gsub(' ','_')}.each do |p|
