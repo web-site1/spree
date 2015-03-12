@@ -6,10 +6,9 @@
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
-
-    <h3 class="hidden-sm hidden-xs"><%= k %></h3>
+    <h3 class="hidden-sm hidden-xs"> <%= k %> </h3>
       <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
-        <% v.each do |sk,sv| %>
+        <% v.last.each do |sk,sv| %>
             <% uniq_id = cntr %>
                     <div class="panel panel-default">
                       <div class="panel-heading" role="tab" id="headingOne<%=uniq_id%>">
@@ -22,8 +21,8 @@
                       <div id="collapseOne<%=uniq_id%>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne<%=uniq_id%>">
                         <div class="panel-body">
                           <ul>
-                           <% sv.each do |ocv| %>
-                                <li><a href="#"><%= ocv %></a></li>
+                           <% sv.last.each do |ocv| %>
+                                <li><a href="#"><%= ocv.last %></a></li>
                            <% end %>
                           </ul>
                         </div>

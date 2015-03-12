@@ -57,11 +57,14 @@ module ApplicationHelper
         subopt = Spree::Taxon.where(parent_id: eo.id)
         sub_opts=[]
         subopt.each do |so|
-          sub_opts << so.name
+          perma_link = so.permalink
+          sub_opts << [perma_link,so.name]
         end
-        opts.merge!(eo.name => sub_opts)
+        perma_link = eo.permalink
+        opts.merge!(eo.name => [perma_link,sub_opts])
       end
-      type_hash.merge!(t.name => opts)
+      perma_link = t.permalink
+      type_hash.merge!(t.name => [perma_link,opts])
     end
     return type_hash
   end
