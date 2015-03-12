@@ -416,6 +416,8 @@ BEGIN{
           def item_type(pbs_item_rec)
             itemtype = ''
             case
+              when pbs_item_rec.item.strip[0..1].downcase == 'cq'
+                itemtype = "Flower"
               when pbs_item_rec.ws_cat =~ /ribbon/i
                 itemtype = "Ribbon"
               when pbs_item_rec.ws_cat =~ /bow/i

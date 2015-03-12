@@ -19,6 +19,8 @@ Spree::Product.no_taxons.all.each do |p|
       rcpbs = rcpbs.first
       item_type = item_type(rcpbs) ||  ''
       srchtype = (item_type.blank?) ? item_type.strip : %Q{#{item_type.downcase.strip}s}
+      srchtype = srchtype.gsub(' ','%')
+      srchtype = srchtype.gsub('&','')
       maincat = get_formed_cat_name(rcpbs.ws_cat).titlecase.gsub(' ','%')
       maincat = maincat.gsub('&','')
 
@@ -46,6 +48,8 @@ BEGIN{
   def item_type(pbs_item_rec)
     itemtype = ''
     case
+      when pbs_item_rec.item.strip[0..1].downcase == 'cq'
+        itemtype = "Flower"
       when pbs_item_rec.ws_cat =~ /ribbon/i
         itemtype = "Ribbon"
       when pbs_item_rec.ws_cat =~ /bow/i
