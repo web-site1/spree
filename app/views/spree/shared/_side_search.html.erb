@@ -2,264 +2,41 @@
 
 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 sidebar left-sidebar">
 
-    <h3 class="hidden-sm hidden-xs">Ribbons</h3>
 
-    <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
+  <% side_cats = side_search_cats %>
+  <%cntr = 0%>
+  <% side_cats.each do |k,v| %>
 
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingOne">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                Satin
-              </a>
-            </h4>
-          </div>
-          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingTwo">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Grosgrain
-              </a>
-            </h4>
-          </div>
-          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingThree">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                Velvet
-              </a>
-            </h4>
-          </div>
-          <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingSheer">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSheer" aria-expanded="false" aria-controls="collapseSheer">
-                Sheer
-              </a>
-            </h4>
-          </div>
-          <div id="collapseSheer" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSheer">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingDots">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseDots" aria-expanded="false" aria-controls="collapseDots">
-                Dots
-              </a>
-            </h4>
-          </div>
-          <div id="collapseDots" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingDots">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingStripes">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseStripes" aria-expanded="false" aria-controls="collapseStripes">
-                Stripes
-              </a>
-            </h4>
-          </div>
-          <div id="collapseStripes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingStripes">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingCheckPlaid">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseCheckPlaid" aria-expanded="false" aria-controls="collapseCheckPlaid">
-                Check &amp; Plaid
-              </a>
-            </h4>
-          </div>
-          <div id="collapseCheckPlaid" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCheckPlaid">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingMetallic">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseMetallic" aria-expanded="false" aria-controls="collapseMetallic">
-                Metallic
-              </a>
-            </h4>
-          </div>
-          <div id="collapseMetallic" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMetallic">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingDesigner">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseDesigner" aria-expanded="false" aria-controls="collapseDesigner">
-                Designer
-              </a>
-            </h4>
-          </div>
-          <div id="collapseDesigner" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingDesigner">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingPackaging">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapsePackaging" aria-expanded="false" aria-controls="collapsePackaging">
-                Packaging Ribbon
-              </a>
-            </h4>
-          </div>
-          <div id="collapsePackaging" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPackaging">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingChevron">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseChevron" aria-expanded="false" aria-controls="collapseChevron">
-                Chevron
-              </a>
-            </h4>
-          </div>
-          <div id="collapseChevron" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingChevron">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingBaby">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseBaby" aria-expanded="false" aria-controls="collapseBaby">
-                Baby
-              </a>
-            </h4>
-          </div>
-          <div id="collapseBaby" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBaby">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingCelebration">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseCelebration" aria-expanded="false" aria-controls="collapseCelebration">
-                Celebration
-              </a>
-            </h4>
-          </div>
-          <div id="collapseCelebration" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCelebration">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingNatural">
-            <h4 class="panel-title">
-              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseNatural" aria-expanded="false" aria-controls="collapseNatural">
-                Natural
-              </a>
-            </h4>
-          </div>
-          <div id="collapseNatural" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingNatural">
-            <div class="panel-body">
-              <ul>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-                <li><a href="#">Option One</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-    </div>
+    <h3 class="hidden-sm hidden-xs"><%= k %></h3>
+      <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
+        <% v.each do |sk,sv| %>
+            <% uniq_id = cntr %>
+                    <div class="panel panel-default">
+                      <div class="panel-heading" role="tab" id="headingOne<%=uniq_id%>">
+                        <h4 class="panel-title">
+                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%=uniq_id%>" aria-expanded="false" aria-controls="collapseOne<%=uniq_id%>">
+                            <%= sk %>
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="collapseOne<%=uniq_id%>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne<%=uniq_id%>">
+                        <div class="panel-body">
+                          <ul>
+                           <% sv.each do |ocv| %>
+                                <li><a href="#"><%= ocv %></a></li>
+                           <% end %>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+            <% cntr += 1 %>
+        <% end %>
+      </div>
 
-    <%= render partial: 'spree/shared/ads' %>
+  <% end %>
+
+
+
+  <%= render partial: 'spree/shared/ads' %>
 
 </div>

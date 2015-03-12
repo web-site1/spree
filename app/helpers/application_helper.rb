@@ -47,4 +47,24 @@ module ApplicationHelper
     return position_sorted_array
   end
 
+  def side_search_cats
+    type_hash = {}
+    types = Spree::Taxon.where(parent_id: 1)
+    types.each do |t|
+      eopt = Spree::Taxon.where(parent_id: t.id)
+      opts ={}
+      eopt.each do |eo|
+        subopt = Spree::Taxon.where(parent_id: eo.id)
+        sub_opts=[]
+        subopt.each do |so|
+          sub_opts << so.name
+        end
+        opts.merge!(eo.name => sub_opts)
+      end
+      type_hash.merge!(t.name => opts)
+    end
+    return type_hash
+  end
+
+
 end
