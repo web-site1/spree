@@ -11,8 +11,8 @@ Spree::Product.no_taxons.all.each do |p|
   if p.taxons.empty?
     logger.info %Q{Product id #{p.id} has empty Taxon. Attempting Add}
     puts %Q{Product id #{p.id} has empty Taxon. Attempting Add}
-    rcpbs = RcPbs.where(new_pbs_item: p.variants.first.item_no)
-    if rcpbs.empty?
+    rcpbs = RcPbs.where(new_pbs_item: p.variants.first.item_no) rescue nil
+    if (rcpbs.nil? || rcpbs.empty?)
       logger.info %Q{Product id #{p.id} No Pbs Item no}
       puts %Q{Product id #{p.id} No Pbs Item no}
     else
@@ -20,10 +20,14 @@ Spree::Product.no_taxons.all.each do |p|
       item_type = item_type(rcpbs) ||  ''
       srchtype = (item_type.blank?) ? item_type.strip : %Q{#{item_type.downcase.strip}s}
       maincat = get_formed_cat_name(rcpbs.ws_cat).titlecase.gsub(' ','%')
+      maincat = maincat.gsub('&','')
+
       subcat = rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
+      subcat = subcat.gsub('&','')
+
       perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
       taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
-      if taxonrec.empty?
+      if ( taxonrec.nil?)
         logger.info %Q{Product id #{p.id} No taxon found for search #{perma_srch}}
         puts %Q{Product id #{p.id} No taxon found for search #{perma_srch}}
       else
