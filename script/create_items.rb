@@ -225,7 +225,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           subcat = subcat.gsub('&','')
           perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
-          if srchtype == maincat
+          if srchtype.upcase == maincat.upcase
             maincat = '%'
           end
 

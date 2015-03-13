@@ -30,7 +30,7 @@ Spree::Product.all.each do |p|
 
       perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
-      if srchtype == maincat
+      if srchtype.upcase == maincat.upcase
         maincat = '%'
       end
 
