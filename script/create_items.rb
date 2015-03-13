@@ -218,6 +218,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           srchtype = srchtype.gsub(' ','%')
           srchtype = srchtype.gsub('&','')
           srchtype = srchtype.gsub('trimss','trims')
+          srchtype = srchtype.gsub('closeoutss','closeouts')
           maincat = get_formed_cat_name(@rcpbs.ws_cat).titlecase.gsub(' ','%')
           maincat = maincat.gsub('&','')
           flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')

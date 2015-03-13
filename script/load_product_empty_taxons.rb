@@ -22,6 +22,7 @@ Spree::Product.all.each do |p|
       srchtype = srchtype.gsub(' ','%')
       srchtype = srchtype.gsub('&','')
       srchtype = srchtype.gsub('trimss','trims')
+      srchtype = srchtype.gsub('closeoutss','closeouts')
       maincat = get_formed_cat_name(rcpbs.ws_cat).titlecase.gsub(' ','%')
       maincat = maincat.gsub('&','')
 
