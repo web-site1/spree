@@ -60,4 +60,37 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  # Take care of exceptions
+  # get '/1-dotted-ribbon-category.htm', to: redirect('/t/categories/ribbons/dot-ribbon')
+
+  # Redirect category ribbon requests
+
+  # Redirect correctly formatted sub category ribbon requests to new url
+  # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
+  # get '/1-*subcat-*cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}-ribbon/%{subcat}')
+
+  # Redirect correctly formatted CATEGORY  pages:
+  # get '1-*cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}-ribbon')
+
+  # Redirect all old product requests to new url
+  # #Ex: Old: /1-venetian-blue-nyvalour-velvet-ribbon-description.htm
+  #      New: /products/venetian-blue-nyvalour-velvet-ribbon
+  # get '/1-*product-description', to: redirect('/products/%{product}')
+
+
+  get '1-*prod-description', to: redirect  { |path_params|
+          Rails.logger.debug "!!! /products/#{path_params[:prod]}"
+          "/products/#{path_params[:prod]}"
+        }
+
+  # get '/1-black-stitches-grosgrain-ribbon-description', to: redirect { |path_params|
+  #                                                       Rails.logger.debug "!!! /products/eatme"
+  #                                                       '/products/black-stitches-grosgrain-ribbon'
+  #                                                     }
+  # get '1-*anything', :to => redirect  { |path_params|
+  #                  Rails.logger.debug "!!! /1-*product-description #{path_params.inspect}"
+  #                  "#{path_params[:anything]}"
+  #                }
+
 end
