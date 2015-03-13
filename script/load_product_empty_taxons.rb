@@ -28,12 +28,11 @@ Spree::Product.all.each do |p|
       subcat = rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
       subcat = subcat.gsub('&','')
 
-      perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
-
       if srchtype.upcase == maincat.upcase
         maincat = '%'
       end
 
+      perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
       taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
 
