@@ -1,0 +1,35 @@
+#   All SQL
+#
+default: &default
+  adapter: sqlserver
+  mode: dblib
+  timeout: 5000
+
+development:
+  <<: *default
+#  host: ec2-54-172-199-213.compute-1.amazonaws.com
+#  database: spree
+#  username: sa
+#  password: Artistic14
+  host: pbs.artisticribbon.com
+  database: spree99
+  username: sa
+  password: Artistic1
+  port: 4526
+
+#staging:
+#  <<: *development
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+
+
+production:
+  <<: *default
+  host: pbs.artisticribbon.com
+  database: spree00
+  username: sa
+  password: Artistic1

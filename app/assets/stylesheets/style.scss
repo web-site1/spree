@@ -44,15 +44,21 @@
 }
 
 @font-face {
-    font-family:'Flat-UI-Pro-Icons';
-    src:url('../assets/glyphicons/flat-ui-pro-icons-regular.eot');
-    src:url('../assets/glyphicons/flat-ui-pro-icons-regular.eot?#iefix') format("embedded-opentype"),url('../assets/glyphicons/flat-ui-pro-icons-regular.woff') format("woff"),url('../assets/glyphicons/flat-ui-pro-icons-regular.ttf') format("truetype"),url('../assets/glyphicons/flat-ui-pro-icons-regular.svg#flat-ui-pro-icons-regular') format("svg")
+  font-family:'Flat-UI-Pro-Icons';
+  src:  font-url('glyphicons/flat-ui-pro-icons-regular.eot');
+  src:  font-url('glyphicons/flat-ui-pro-icons-regular.eot?#iefix') format("embedded-opentype"),
+  font-url('glyphicons/flat-ui-pro-icons-regular.woff') format("woff"),
+  font-url('glyphicons/flat-ui-pro-icons-regular.ttf') format("truetype"),
+  font-url('glyphicons/flat-ui-pro-icons-regular.svg#flat-ui-pro-icons-regular') format("svg")
 }
 
 @font-face {
-    font-family:'Glyphicons Halflings';
-    src:url('../assets/glyphicons-halflings-regular.eot');
-    src:url('../assets/glyphicons-halflings-regular.eot?#iefix') format("embedded-opentype"),url('../assets/glyphicons-halflings-regular.woff') format("woff"),url('../assets/glyphicons-halflings-regular.ttf') format("truetype"),url('../assets/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format("svg")
+  font-family:'Glyphicons Halflings';
+  src:  font-url('glyphicons/glyphicons-halflings-regular.eot');
+  src:  font-url('glyphicons/glyphicons-halflings-regular.eot?#iefix') format("embedded-opentype"),
+  font-url('glyphicons/glyphicons-halflings-regular.woff') format("woff"),
+  font-url('glyphicons/glyphicons-halflings-regular.ttf') format("truetype"),
+  font-url('glyphicons/glyphicons-halflings-regular.svg#glyphicons-halflings-regular') format("svg")
 }
 
 body {
@@ -726,6 +732,15 @@ footer .footer-column.about a {
     width:100%
 }
 
+// Dan for product page
+.pcarousel {
+  margin-bottom:25px
+}
+
+.pcarousel .item img {
+  text-align: center;
+}
+
 .why-shop-row {
     margin-bottom:30px
 }
@@ -1188,7 +1203,7 @@ body.home .sidebar {
 }
 
 .product-settings #width-slider.ui-slider.ui-slider-horizontal .labels {
-    background:image-url('labels-slider-width.png') no-repeat;
+    background:image-url('product-page/labels-slider-width.png') no-repeat;
     width:100%;
     min-width:484px;
     height:22px;
@@ -1203,7 +1218,7 @@ body.home .sidebar {
 }
 
 .product-settings #length-slider.ui-slider.ui-slider-horizontal .labels {
-    background:image-url('labels-slider-length.png') no-repeat;
+    background:image-url('product-page/labels-slider-length.png') no-repeat;
     width:100%;
     min-width:484px;
     height:22px;
@@ -1332,7 +1347,7 @@ body.home .sidebar {
     }
 
     .product-settings #width-slider.ui-slider.ui-slider-horizontal .labels {
-        background:image-url('labels-slider-width-2.png') no-repeat;
+        background:image-url('product-page/labels-slider-width-2.png') no-repeat;
         width:100%;
         height:22px;
         top:17px;
@@ -1364,7 +1379,7 @@ body.home .sidebar {
     }
 
     .product-settings #width-slider.ui-slider.ui-slider-horizontal .labels {
-        background:image-url('labels-slider-width.png') no-repeat;
+        background:image-url('product-page/labels-slider-width.png') no-repeat;
         width:100%;
         min-width:484px;
         height:22px;
@@ -1379,7 +1394,7 @@ body.home .sidebar {
     }
 
     .product-settings #length-slider.ui-slider.ui-slider-horizontal .labels {
-        background:image-url('labels-slider-length.png') no-repeat;
+        background:image-url('product-page/labels-slider-length.png') no-repeat;
         width:100%;
         min-width:484px;
         height:22px;
@@ -1396,7 +1411,7 @@ body.home .sidebar {
     }
 
     .product-settings #width-slider.ui-slider.ui-slider-horizontal .labels {
-        background:image-url('labels-slider-width-2.png') no-repeat;
+        background:image-url('product-page/labels-slider-width-2.png') no-repeat;
         width:100%;
         overflow:hidden;
         height:22px;
