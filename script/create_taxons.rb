@@ -13,13 +13,14 @@ log_file =  %Q{#{Rails.root}/log/#{log_file_name}}
 logger = Logger.new(log_file)
 logger.info "Starting to create taxons"
 puts "Starting to create taxons"
-bwc = WebCat.all.select{|wc| wc.cat.nil? }
 
-bwc.each{|b| logger.info "Null category on ID #{b.id} }" }
+#bwc = WebCat.all.select{|wc| wc.cat.nil? }
+
+#bwc.each{|b| logger.info "Null category on ID #{b.id} }" }
 
 # setup main categories
 cats = WebCat.all.select{|wc| !wc.cat.nil? && wc.subcat.nil?}
-
+#cats = WebCat.where(cat: "chevron")
 
 created_ids = []
 
@@ -28,24 +29,38 @@ top_parent_taxon = Spree::Taxon.find_by_name('Categories')
 cats.each do |c|
   name = get_formed_cat_name(c)
 
+  # need to find by item type and name if possible
+  mct = main_cat_type(c.cat,c.title)
+  parent_id = top_parent_taxon.id
+
+  if mct == "B" || mct == "R"
+    main_cat_name = 'Ribbons'
+    if mct == "B"
+      main_cat_name = 'Bows'
+    end
+    main_cat_taxon = Spree::Taxon.find_by_parent_id_and_name(top_parent_taxon.id,main_cat_name)
+    if main_cat_taxon
+      taxon_main_cat =  Spree::Taxon.find_by_parent_id_and_name(main_cat_taxon.id,name)
+    else
+      taxon_main_cat = nil
+    end
+  else
+    taxon_main_cat = Spree::Taxon.find_by_name(name)
+  end
+
+
   # do not skip create subcats if exsists
-  taxon_main_cat =  Spree::Taxon.find_by_name(name)
+
   main_cat_exists = false
+
   if !taxon_main_cat.nil?
     main_cat_exists = true
     taxon = taxon_main_cat
     logger.info "Category Taxon #{name} exsists."
     puts "Category Taxon #{name} exsists."
   else
-    mct = main_cat_type(c.cat,c.title)
-    parent_id = top_parent_taxon.id
 
     if mct == "B" || mct == "R"
-      main_cat_name = 'Ribbons'
-      if mct == "B"
-        main_cat_name = 'Bows'
-      end
-      main_cat_taxon = Spree::Taxon.find_by_name(main_cat_name)
       if main_cat_taxon.nil?
         main_cat_taxon = Spree::Taxon.create(parent_id: parent_id,name: main_cat_name )
       end
@@ -139,21 +154,21 @@ BEGIN{
     # will return "B" "R" or "S"
     parent_type = "S"
 
-    if cat =~ /RIBBON/
+    if cat =~ /RIBBON/i
       parent_type = "R"
-    elsif cat =~ /BOWS/
+    elsif cat =~ /BOWS/i
       parent_type = "B"
     end
 
     case cat
-      when cat =~ /RIBBON/
+      when cat =~ /RIBBON/i
         parent_type = "R"
-      when cat =~ /BOWS/
+      when cat =~ /BOWS/i
         parent_type = "B"
       else
-        if title =~ /RIBBON/
+        if title =~ /RIBBON/i
           parent_type = "R"
-        elsif title =~ /BOWS/
+        elsif title =~ /BOWS/i
           parent_type = "B"
         end
     end

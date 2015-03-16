@@ -95,6 +95,8 @@ end
 
 #Ribbon Options
 @ribbon_option_hash = {}
+
+=begin
 ribbon_width_option = Spree::OptionType.find_by_name('ribbon-width')
 if ribbon_width_option.nil?
   ribbon_width_option = Spree::OptionType.create(
@@ -103,6 +105,21 @@ if ribbon_width_option.nil?
   )
 end
 @ribbon_option_hash.merge!(width: ribbon_width_option)
+=end
+
+width_option = Spree::OptionType.find_by_name('width')
+
+if width_option.nil?
+  width_option = Spree::OptionType.create(
+      name: 'width',
+      presentation: 'Width'
+  )
+end
+
+@ribbon_option_hash.merge!(width: width_option)
+
+
+
 
 ribbon_putup_option = Spree::OptionType.find_by_name('ribbon-putup')
 if ribbon_putup_option.nil?
@@ -133,7 +150,7 @@ end
 
 #Flower Options
 @flower_option_hash = {}
-flower_width_option = Spree::OptionType.find_by_name('width')
+flower_width_option = width_option # Spree::OptionType.find_by_name('width')
 
 if flower_width_option.nil?
   flower_width_option = Spree::OptionType.create(
@@ -198,11 +215,19 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           # find taxon record
           srchtype = (@item_type.blank?) ? @item_type.strip : %Q{#{@item_type.downcase.strip}s}
+          srchtype = srchtype.gsub(' ','%')
+          srchtype = srchtype.gsub('&','')
+          srchtype = srchtype.gsub('trimss','trims')
+          srchtype = srchtype.gsub('closeoutss','closeouts')
           maincat = get_formed_cat_name(@rcpbs.ws_cat).titlecase.gsub(' ','%')
           maincat = maincat.gsub('&','')
           flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
           subcat = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
           subcat = subcat.gsub('&','')
+
+          if srchtype.upcase == maincat.upcase
+            maincat = '%'
+          end
           perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
           taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first

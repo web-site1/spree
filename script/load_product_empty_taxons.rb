@@ -7,7 +7,7 @@ log_file_name = %Q{redo_empty_taxons-#{Time.now.strftime("%m%d%y%I%M")}.log}
 log_file =  %Q{#{Rails.root}/log/#{log_file_name}}
 logger = Logger.new(log_file)
 
-Spree::Product.no_taxons.all.each do |p|
+Spree::Product.all.each do |p|
   if p.taxons.empty?
     logger.info %Q{Product id #{p.id} has empty Taxon. Attempting Add}
     puts %Q{Product id #{p.id} has empty Taxon. Attempting Add}
@@ -21,14 +21,27 @@ Spree::Product.no_taxons.all.each do |p|
       srchtype = (item_type.blank?) ? item_type.strip : %Q{#{item_type.downcase.strip}s}
       srchtype = srchtype.gsub(' ','%')
       srchtype = srchtype.gsub('&','')
+      srchtype = srchtype.gsub('trimss','trims')
+      srchtype = srchtype.gsub('closeoutss','closeouts')
       maincat = get_formed_cat_name(rcpbs.ws_cat).titlecase.gsub(' ','%')
       maincat = maincat.gsub('&','')
 
       subcat = rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
       subcat = subcat.gsub('&','')
 
+      if srchtype.upcase == maincat.upcase
+        maincat = '%'
+      end
+
       perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
+
       taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
+
+      if item_type == 'Flower'
+
+
+      end
+
       if ( taxonrec.nil?)
         logger.info %Q{Product id #{p.id} No taxon found for search #{perma_srch}}
         puts %Q{Product id #{p.id} No taxon found for search #{perma_srch}}
