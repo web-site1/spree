@@ -51,6 +51,8 @@ puts "Local image directory is #{@local_site_path}"
 # Properties
 @properties_hash = {}
 # color
+
+=begin
 @color_prop = Spree::Property.find_by_name('color')
 if @color_prop.nil?
   @color_prop = Spree::Property.create(
@@ -59,6 +61,10 @@ if @color_prop.nil?
   )
 end
 @properties_hash.merge!(color: [@color_prop,"rcpbs.ws_color"] )
+=end
+
+
+
 # type
 @type_prop = Spree::Property.find_by_name('type')
 if @type_prop.nil?
@@ -210,7 +216,8 @@ CSV.open(csv_error_file, "wb") do |csv|
 
     #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
     #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
-    r = RcPbs.where(ws_subcat: "CQA-62.")
+    #r = RcPbs.where(ws_subcat: "CQA-62.")
+     r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
     r.each do |rcpbs|
 
       web_item = WebItem.find_by_item(rcpbs.item)
@@ -301,15 +308,25 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             if @wi
               p_title = @wi.title.strip.titlecase
-              p_des = @wi.top_description
+
+              if @wi.top_description && !@wi.top_description.empty?
+                p_des = @wi.top_description
+              else
+                p_des = @wi.description
+              end
               p_meta = @wi.description
               p_key = @wi.keywords
             else
+              logger.info "Product #{@rcpbs.item} Has no web item record!"
+              puts "Product #{@rcpbs.item} Has no web item record!"
               p_title = @rcpbs.item
-              p_des = @rcpbs.desc
-              p_meta = @rcpbs.desc
+              p_des = ' ' #@rcpbs.desc
+              p_meta = ' ' #@rcpbs.desc
               p_key = ' '
             end
+
+
+
 
             p_title = %Q{#{@rcpbs.ws_cat.titlecase} (#{prod_sku})} if (@item_type == 'Flower')
 
@@ -675,6 +692,21 @@ BEGIN{
               logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
               puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
               @variants_created += 1
+
+
+              # At this point check if the product has an empty description and if
+              # it does attempt to fill it if a Web item exsists
+              var_prod = v.product
+              if var_prod && var_prod.description.blank?  && !wi.nil?
+                if wi.top_description && !wi.top_description.empty?
+                  var_prod.description = wi.top_description
+                else
+                  var_prod.description = wi.description
+                end
+                var_prod.save
+              end
+
+
             else
               logger.info "Variant #{rcpbs.new_pbs_desc_1} exists"
               puts "Variant #{rcpbs.new_pbs_desc_1} exists"

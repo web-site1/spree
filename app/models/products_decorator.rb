@@ -30,7 +30,9 @@ Spree::Product.class_eval do
   end
 
   def pattern
-    self.taxons.first.name rescue ' '
+    if !(self.product_type == 'flowers')
+      self.taxons.first.name rescue ' '
+    end
   end
 
 
