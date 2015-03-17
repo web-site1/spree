@@ -26,13 +26,13 @@ attachment_config = {
     s3_credentials: {
         access_key_id:     ENV['AWS_ACCESS_KEY_ID'],
         secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
-        bucket:            "artspree-#{Rails.env}"
+        bucket:            ENV['AWS_BUCKET']
     },
 
     storage:        :s3,
     s3_headers:     { "Cache-Control" => "max-age=315576000" },
     s3_protocol:    "http",
-    bucket:         "artspree-#{Rails.env}",
+    bucket:         ENV['AWS_BUCKET'],
     url:            ":s3_domain_url",
 
     styles: {
