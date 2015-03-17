@@ -6,7 +6,7 @@
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
-    <h3 class="hidden-sm hidden-xs"> <%= k %> </h3>
+    <h3 class="hidden-sm hidden-xs"> <%= link_to(k,"/t/#{v.first}") %> </h3>
       <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
         <% v.last.each do |sk,sv| %>
             <% uniq_id = cntr %>
@@ -22,7 +22,7 @@
                         <div class="panel-body">
                           <ul>
                            <% sv.last.each do |ocv| %>
-                                <li><a href="#"><%= ocv.last %></a></li>
+                                <li><a href="/t/<%=ocv.first%>"><%= ocv.last %></a></li>
                            <% end %>
                           </ul>
                         </div>

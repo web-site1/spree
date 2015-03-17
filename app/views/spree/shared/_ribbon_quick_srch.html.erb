@@ -14,8 +14,8 @@
           <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
             <select type='search' name='color[]' class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Colors</option>
-              <% position_sort(srch_opts('color'),'color').each do |o| %>
-                  <option class="mblo" value="<%= o %>" <%=src_selected('color',o)%> ><%= %Q{#{o}} %></option>
+              <% srch_opts('color').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('color',o.first)%> ><%= %Q{#{o.first}} %></option>
               <% end %>
             </select>
           </div>

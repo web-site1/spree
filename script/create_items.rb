@@ -221,7 +221,8 @@ CSV.open(csv_error_file, "wb") do |csv|
           srchtype = srchtype.gsub('closeoutss','closeouts')
           maincat = get_formed_cat_name(@rcpbs.ws_cat).titlecase.gsub(' ','%')
           maincat = maincat.gsub('&','')
-          flow_sub = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
+
+          flow_sub =  @rcpbs.item.split('-')[0..1].join('-')  #@rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
           subcat = @rcpbs.ws_subcat.downcase.strip.titlecase.gsub(' ','%')
           subcat = subcat.gsub('&','')
 
@@ -274,6 +275,8 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_meta = @rcpbs.desc
               p_key = ' '
             end
+
+            p_title = @rcpbs.ws_cat.titlecase if (@item_type == 'Flower')
 
 
             @product = Spree::Product.new(
@@ -563,32 +566,34 @@ BEGIN{
               end
 
 
-              found_image = false
-              if wi
-                #create product image
-                begin
-                  image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
-                  if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank?)
-                    found_image = true
-                    v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
-                    v.save!
+              if (@item_type == 'Flower')
+                found_image = false
+                if wi
+                  #create product image
+                  begin
+                    image_path = %Q{#{@local_site_path}#{wi.image_file[/images.*/i,0]}} rescue ''
+                    if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank?)
+                      found_image = true
+                      v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
+                      v.save!
+                    end
+                  rescue Exception => e
+                    puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
-                rescue Exception => e
-                  puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                 end
-              end
 
-              if found_image == false
-                begin
-                  # lets try an image with sku as the name
-                  src_sku_image = %Q{#{@local_site_path}/images/#{rcpbs.new_pbs_desc_1.strip}*} rescue ''
-                  array_of_found_sku_images = Dir.glob(src_sku_image)
-                  if !array_of_found_sku_images.empty?
-                    v.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
-                    v.save!
+                if found_image == false
+                  begin
+                    # lets try an image with sku as the name
+                    src_sku_image = %Q{#{@local_site_path}/images/#{rcpbs.new_pbs_desc_1.strip}*} rescue ''
+                    array_of_found_sku_images = Dir.glob(src_sku_image)
+                    if !array_of_found_sku_images.empty?
+                      v.images <<  Spree::Image.create!(:attachment => File.open(array_of_found_sku_images.first))
+                      v.save!
+                    end
+                  rescue Exception => e
+                    puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
-                rescue Exception => e
-                  puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                 end
               end
 
