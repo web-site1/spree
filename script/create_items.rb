@@ -162,6 +162,24 @@ end
 @flower_option_hash.merge!(width: flower_width_option)
 @flower_option_hash.merge!(color: all_color_option)
 
+
+
+
+@flower_taxon_sizes = {
+    '4.5 - 5.5 Inches' => (4.5..5.5),
+    '4 - 4.5 Inches' => (4..4.5),
+    '3.5 - 4 Inches' => (3.5..4),
+    '2.5 - 3 Inches' => (2.5..3),
+    '2 - 2.5 Inches' => (2..2.5),
+    '1.5 - 2 Inches' => (1.5..2),
+    '1 - 1.5 Inches' => (1..1.5),
+    'under 1 inch ' => (0..0.9999999)
+}
+
+
+
+
+
 =begin
 
 
@@ -232,6 +250,23 @@ CSV.open(csv_error_file, "wb") do |csv|
           perma_srch = %Q{'%#{srchtype}%#{maincat}%#{subcat}%'}
 
           taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
+
+          if (@item_type == 'Flower' && taxonrec.nil?)
+            flower_taxon = get_flower_taxon(@rcpbs)
+            perma_srch = %Q{'%#{srchtype}%#{flower_taxon.gsub(' ','%')}%'}
+            taxonrec = Spree::Taxon.where("permalink like #{perma_srch} ").first
+            if taxonrec.nil?
+              taxonrec = create_flower_taxon(@item_type,flower_taxon)
+            end
+          end
+
+
+
+          if taxonrec.nil?
+            logger.info "Product #{@rcpbs.item} cannot determine taxon"
+            puts "Product #{@rcpbs.item} cannot determine taxon"
+          end
+
           #
 
 
@@ -294,6 +329,8 @@ CSV.open(csv_error_file, "wb") do |csv|
             @product.save!
             #create taxon for product
             existing_taxon_array = @product.taxons.map{|t| t.id}
+
+
             if !taxonrec.nil? && !existing_taxon_array.include?(taxonrec.id)
               @product.taxons << taxonrec
               @product.save!
@@ -502,6 +539,40 @@ BEGIN{
             end
 
           end
+
+          def get_flower_taxon(rcpbs)
+            cat = ''
+            @flower_taxon_sizes.each do |k,v|
+              if (v.include?(rcpbs.width.to_dec))
+                cat = k
+                break
+              end
+            end
+            return cat
+          end
+
+          def create_main_type_taxon(item_type)
+            top_parent_taxon = Spree::Taxon.find_by_name('Categories')
+            main_cat_taxon = Spree::Taxon.find_by_parent_id_and_name(top_parent_taxon.id,item_type)
+            if main_cat_taxon.nil?
+              main_cat_taxon = Spree::Taxon.create(parent_id: top_parent_taxon.id,name: item_type.titlecase )
+            end
+            return main_cat_taxon
+          end
+
+          def create_flower_taxon(item_type,flower_taxon)
+            top_parent_taxon = Spree::Taxon.find_by_name('Categories')
+            main_cat_taxon = Spree::Taxon.find_by_parent_id_and_name(top_parent_taxon.id,item_type)
+            if main_cat_taxon.nil?
+              main_cat_taxon = create_main_type_taxon(item_type)
+            end
+            item_taxon = Spree::Taxon.find_by_parent_id_and_name(main_cat_taxon.id,flower_taxon)
+            if item_taxon.nil?
+              item_taxon = Spree::Taxon.create(parent_id: main_cat_taxon.id,name: flower_taxon )
+            end
+            return item_taxon
+          end
+
 
           def create_variant(rcpbs,wi,logger)
 
