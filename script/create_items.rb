@@ -562,6 +562,7 @@ BEGIN{
 
           def create_flower_taxon(item_type,flower_taxon)
             top_parent_taxon = Spree::Taxon.find_by_name('Categories')
+            item_type = %Q{#{item_type}s}
             main_cat_taxon = Spree::Taxon.find_by_parent_id_and_name(top_parent_taxon.id,item_type)
             if main_cat_taxon.nil?
               main_cat_taxon = create_main_type_taxon(item_type)
