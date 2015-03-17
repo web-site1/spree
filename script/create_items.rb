@@ -276,7 +276,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_key = ' '
             end
 
-            p_title = %Q{#{@rcpbs.ws_cat.titlecase}(#{prod_sku})} if (@item_type == 'Flower')
+            p_title = %Q{#{@rcpbs.ws_cat.titlecase} (#{prod_sku})} if (@item_type == 'Flower')
 
 
             @product = Spree::Product.new(
@@ -362,18 +362,6 @@ CSV.open(csv_error_file, "wb") do |csv|
             if @wi
 
               begin
-                #create swatch image if it exsists
-                swatch_image_path = %Q{#{@local_site_path}#{@wi.swatch_image_file[/images.*/i,0]}} rescue ''
-                if File.exists?(swatch_image_path) && (!@wi.swatch_image_file.nil? && !@wi.swatch_image_file.blank?)
-                  @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
-                  @product.save!
-                end
-              rescue Exception => e
-                puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
-              end
-
-
-              begin
               #create product image
                 image_path = %Q{#{@local_site_path}#{@wi.image_file[/images.*/i,0]}} rescue ''
                 if File.exists?(image_path) && (!@wi.image_file.nil? && !@wi.image_file.blank?)
@@ -384,6 +372,21 @@ CSV.open(csv_error_file, "wb") do |csv|
               rescue Exception => e
                 puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
               end
+
+
+              if (@wi.image_file.nil? || @wi.image_file.blank?)
+                begin
+                  #create swatch image if it exsists
+                  swatch_image_path = %Q{#{@local_site_path}#{@wi.swatch_image_file[/images.*/i,0]}} rescue ''
+                  if File.exists?(swatch_image_path) && (!@wi.swatch_image_file.nil? && !@wi.swatch_image_file.blank?)
+                    @product.images <<  Spree::Image.create!(:attachment => File.open(swatch_image_path))
+                    @product.save!
+                  end
+                rescue Exception => e
+                  puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
+                end
+              end
+
 
 
             end
