@@ -276,7 +276,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_key = ' '
             end
 
-            p_title = @rcpbs.ws_cat.titlecase if (@item_type == 'Flower')
+            p_title = %Q{#{@rcpbs.ws_cat.titlecase}(#{prod_sku})} if (@item_type == 'Flower')
 
 
             @product = Spree::Product.new(
