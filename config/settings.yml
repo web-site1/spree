@@ -1,0 +1,13 @@
+# Environment specific settings.
+# to use these:
+development:
+  pbs_db: 'pbsdata99'
+  comp_id: '99'
+
+staging:
+  pbs_db: 'pbsdata99'
+  comp_id: '99'
+
+production:
+  pbs_db: 'pbsdata00'
+  comp_id: '00'

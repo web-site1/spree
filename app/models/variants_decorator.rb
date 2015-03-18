@@ -1,6 +1,7 @@
 Spree::Variant.class_eval do
 
   has_one :rcpbs,class_name: RcPbs ,foreign_key: :new_pbs_item, primary_key: :item_no
+  has_one :itmfil, foreign_key: :item_no, primary_key: :item_no
 
   Spree::OptionType.all.map{|p| p.name.downcase.gsub(' ','_').gsub('-','9')}.reject{|vn| vn == 'color'|| vn == 'width'}.each do |p|
     define_method(%Q{variant_#{p}}) do
