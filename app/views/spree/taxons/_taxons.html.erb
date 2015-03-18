@@ -1,0 +1,44 @@
+<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+  <div class="well well-lg">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <% if @taxon.products.first
+            @product = @taxon.products.first
+        %>
+
+            <%= render :partial => 'spree/products/image' %>
+        <% end %>
+       <!-- <img src="assets/dist/images/placeholders/misc-2.jpg" alt="" class="img-responsive" /> -->
+      </div>
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+        <h3 class="headline drill-down-headline"><%= @taxon.name %></h3>
+        <p><%= @taxon.description%></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="results row">
+    <ul>
+      <% if @taxon.products.empty? || @taxon.parent_id < 2 %>
+        <% subcats = get_taxons_subcats(@taxon) %>
+        <% subcats.each do |sct| %>
+          <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+            <%= link_to sct.name,%Q{/t/#{sct.permalink}} %>
+          </li>
+        <% end %>
+
+      <% else %>
+          <% @taxon.products.each do |product| %>
+              <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
+              <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                <%= link_to small_image(product, :itemprop => "image",class: "img-responsive"), url, :itemprop => 'url' %>
+                <!-- <img src="assets/dist/images/placeholders/misc-2.jpg" alt="" class="img-responsive" /> -->
+                <div class="item-label"><%= truncate(product.name, :length => 50) %></div>
+              </li>
+          <% end %>
+      <% end %>
+    </ul>
+  </section>
+
+</div> <!-- row -->

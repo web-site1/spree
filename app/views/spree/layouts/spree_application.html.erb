@@ -43,7 +43,7 @@
 <%= render partial: 'spree/shared/header' %>
 <%= render partial: 'spree/shared/ribbon_quick_srch' %>
 
-<%= render partial: 'spree/products/breadcrumbs' if (@product) %>
+<%= render partial: 'spree/products/breadcrumbs' if (@product||@taxon) %>
 <div class="main-content">
     <%= yield %>
 </div>

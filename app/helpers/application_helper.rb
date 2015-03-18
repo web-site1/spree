@@ -69,5 +69,9 @@ module ApplicationHelper
     return type_hash
   end
 
+  def get_taxons_subcats(taxon)
+    Spree::Taxon.where(parent_id: taxon.id)
+  end
+
 
 end

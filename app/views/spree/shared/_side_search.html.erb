@@ -2,23 +2,32 @@
 
 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 sidebar left-sidebar">
 
+  <%
+    permalink_array = []
+    if params.has_key?(:id)
+      permalink_array = params[:id].split("/")
+    end
+  %>
 
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
     <h3 class="hidden-sm hidden-xs"> <%= link_to(k,"/t/#{v.first}") %> </h3>
       <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
+
         <% v.last.each do |sk,sv| %>
             <% uniq_id = cntr %>
+                <% is_selected = permalink_array.include?(sv.first.split('/').last) %>
+
                     <div class="panel panel-default">
                       <div class="panel-heading" role="tab" id="headingOne<%=uniq_id%>">
                         <h4 class="panel-title">
-                          <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%=uniq_id%>" aria-expanded="false" aria-controls="collapseOne<%=uniq_id%>">
+                          <a class="<%= "collapsed" if !is_selected%>" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%=uniq_id%>" aria-expanded="<%=is_selected %>" aria-controls="collapseOne<%=uniq_id%>">
                             <%= sk %>
                           </a>
                         </h4>
                       </div>
-                      <div id="collapseOne<%=uniq_id%>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne<%=uniq_id%>">
+                      <div id="collapseOne<%=uniq_id%>" class="panel-collapse collapse <%= "in" if is_selected %>" role="tabpanel" aria-labelledby="headingOne<%=uniq_id%>" <%= 'aria-expanded="true"' if is_selected %> >
                         <div class="panel-body">
                           <ul>
                            <% sv.last.each do |ocv| %>
