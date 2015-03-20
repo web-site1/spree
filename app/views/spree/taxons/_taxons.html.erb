@@ -3,12 +3,12 @@
   <div class="well well-lg">
     <div class="row">
       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-        <% if @taxon.products.first
-            @product = @taxon.products.first
-        %>
-
-            <%= render :partial => 'spree/products/image' %>
-        <% end %>
+            <%# if @taxon.products.first
+                @product = @taxon.products.first
+            %>
+            <%# render :partial => 'spree/products/image' %>
+            <%= image_tag(@taxon.icon(:normal)) %>
+        <%# end %>
        <!-- <img src="assets/dist/images/placeholders/misc-2.jpg" alt="" class="img-responsive" /> -->
       </div>
       <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
@@ -24,6 +24,7 @@
         <% subcats = get_taxons_subcats(@taxon) %>
         <% subcats.each do |sct| %>
           <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+            <%= image_tag(@taxon.icon(:normal)) %>
             <%= link_to sct.name,%Q{/t/#{sct.permalink}} %>
           </li>
         <% end %>
