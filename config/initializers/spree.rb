@@ -51,4 +51,15 @@ attachment_config.each do |key, value|
   Spree::Image.attachment_definitions[:attachment][key.to_sym] = value
 end
 
+
+Spree::Taxon.class_eval do
+  Spree::Taxon.attachment_definitions[:icon][:storage] = attachment_config[:storage]
+  Spree::Taxon.attachment_definitions[:icon][:s3_credentials] = attachment_config[:s3_credentials]
+  Spree::Taxon.attachment_definitions[:icon][:s3_headers] = attachment_config[:s3_headers]
+  Spree::Taxon.attachment_definitions[:icon][:bucket] = attachment_config[:bucket]
+end
+
+
+
+
 puts "!!! #{Spree::Image.attachment_definitions[:attachment].inspect}"
