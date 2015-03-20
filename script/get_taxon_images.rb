@@ -18,7 +18,7 @@ image_path = site_path+'/images'
 
 
 Spree::Taxon.all.each do |t|
-#Spree::Taxon.where(name: 'Gum Drops').each do |t|
+#Spree::Taxon.where(name: 'baby').each do |t|
   next if !(t.root.id == 1)
   srch_name = t.name.downcase.gsub(' ','*')
 
@@ -29,6 +29,9 @@ Spree::Taxon.all.each do |t|
     uri = URI.parse(f_path)
     page=Nokogiri::HTML(open(f_path))
 
+
+
+=begin
     alt_src = t.name.downcase.split(' ').first
     all_images = page.xpath("//img")
     im = []
@@ -39,14 +42,26 @@ Spree::Taxon.all.each do |t|
         break
       end
     end
+=end
 
-    #im = page.xpath("//td//font//img")
-    #pic_tab = page.xpath("//table")[2]
-    #new_noko = Nokogiri::HTML(pic_tab.to_s)
-    #im = new_noko.xpath("//img")
+    all_tables = page.xpath("//table")
 
-    if !im.empty?
+    page1=Nokogiri::HTML(all_tables[2].to_s)
+    im = page1.xpath('//img')
+
+
+    if im && !im.empty?
+
       image_src = im.first[:src]
+      if (!t.icon_file_name.nil? && t.icon_file_name == image_src.split('/').last)
+        puts "alreay exists skipped"
+        next
+      elsif (!t.icon_file_name.nil? && !(t.icon_file_name == image_src.split('/').last))
+        t.icon = nil
+        t.save
+      end
+
+
       if File.file?(%Q{#{site_path}/#{image_src[/images.*/i,0]}})
         t.icon = File.open(%Q{#{site_path}/#{image_src[/images.*/i,0]}})
         t.save
@@ -54,6 +69,7 @@ Spree::Taxon.all.each do |t|
         puts %Q{Cant find image: page #{f_path} image: #{image_src}}
         logger.info %Q{Cant find image: page #{f_path} image: #{image_src}}
       end
+
     else
       puts %Q{Cant get image for page #{f_path}}
       logger.info %Q{Cant get image for page #{f_path}}
