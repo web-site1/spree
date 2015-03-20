@@ -1,0 +1,240 @@
+Itmfil:
+  item_desc_1: 'YOU SHOULD NOT SEE THIS'
+  bs_acct_pc1: '00000000'
+  bs_acct_pc2: '00000000'
+  bs_acct_main: '60000000'
+  bs_acct_sub: '00000000'
+  item_status: A
+  item_typ: '1'
+  item_vend_min_ord: !ruby/object:BigDecimal 18:0.0
+  item_prc_cod: '05'
+  commis_cod:
+  item_prod_cat: ''
+  item_prod_sub_cat: ''
+  item_prime_vend: ''
+  item_vend_prod_no: ''
+  item_prc_1: !ruby/object:BigDecimal 18:0.0
+  item_prc_2: !ruby/object:BigDecimal 18:0.0
+  item_prc_3: !ruby/object:BigDecimal 18:0.0
+  item_prc_4: !ruby/object:BigDecimal 18:0.0
+  item_prc_5: !ruby/object:BigDecimal 18:0.0
+  item_avg_cost: !ruby/object:BigDecimal 18:0.0
+  item_standard_cost: !ruby/object:BigDecimal 18:0.0
+  replacement_cost: !ruby/object:BigDecimal 18:0.0
+  txbl_cod_1: N
+  txbl_cod_2: N
+  txbl_cod_3: N
+  txbl_cod_4: N
+  txbl_cod_5: N
+  item_abc_cod:
+  back_ord_cod: B
+  sls_acct_pc1: '00000000'
+  sls_acct_pc2: '00000000'
+  sls_acct_main: '40000000'
+  sls_acct_sub: '00000000'
+  expense_acct_pc1: '00000000'
+  expense_acct_pc2: '00000000'
+  expense_acct_main: '50000000'
+  expense_acct_sub: '00000000'
+  cr_memo_acct_pc1: '00000000'
+  cr_memo_acct_pc2: '00000000'
+  cr_memo_acct_main: '72200000'
+  cr_memo_acct_sub: '00000000'
+  qty_on_hand: !ruby/object:BigDecimal 18:0.0
+  cur_prd_qty_on_hnd: !ruby/object:BigDecimal 18:0.0
+  qty_commitd: !ruby/object:BigDecimal 18:0.0
+  qty_on_ord: !ruby/object:BigDecimal 18:0.0
+  qty_on_bk_ord: !ruby/object:BigDecimal 18:0.0
+  qty_on_work_ord: !ruby/object:BigDecimal 18:0.0
+  warty_grace_prd: 0
+  item_prefer_unit: 0
+  weight: !ruby/object:BigDecimal 18:0.0
+  height: !ruby/object:BigDecimal 18:0.0
+  width: !ruby/object:BigDecimal 18:0.0
+  depth: !ruby/object:BigDecimal 18:0.0
+  jc_cat_no: 0
+  item_track_flg: N
+  lst_sls_dat: <%= Time.now %>
+  item_dat_created: <%= Time.now %>
+  usr_def_qty_1: !ruby/object:BigDecimal 18:0.0
+  usr_def_qty_2: !ruby/object:BigDecimal 18:0.0
+
+Stafil:
+  whs: "  "
+  whs_alt: "  "
+  item_location_cod:
+  qty_on_hand: !ruby/object:BigDecimal 18:0.0
+  cur_prd_qty_on_hnd: !ruby/object:BigDecimal 18:0.0
+  avg_qty_on_hand: !ruby/object:BigDecimal 18:0.0
+  qty_commitd: !ruby/object:BigDecimal 18:0.0
+  qty_on_ord: !ruby/object:BigDecimal 18:0.0
+  max_qty: !ruby/object:BigDecimal 18:0.0
+  reord_lev: !ruby/object:BigDecimal 18:0.0
+  qty_sold_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_sold_nxt_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_sold_ytd: !ruby/object:BigDecimal 18:0.0
+  qty_ret_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_ret_nxt_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_ret_ytd: !ruby/object:BigDecimal 18:0.0
+  qty_used_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_used_nxt_ptd: !ruby/object:BigDecimal 18:0.0
+  qty_used_ytd: !ruby/object:BigDecimal 18:0.0
+  sls_ptd: !ruby/object:BigDecimal 18:0.0
+  sls_nxt_ptd: !ruby/object:BigDecimal 18:0.0
+  sls_ytd: !ruby/object:BigDecimal 18:0.0
+  cost_ptd: !ruby/object:BigDecimal 18:0.0
+  cost_nxt_ptd: !ruby/object:BigDecimal 18:0.0
+  cost_ytd: !ruby/object:BigDecimal 18:0.0
+  qty_on_bk_ord: !ruby/object:BigDecimal 18:0.0
+  qty_on_work_ord: !ruby/object:BigDecimal 18:0.0
+  item_stock_status:
+  lst_sls_dat: <%= Time.now %>
+  lst_used_dat:
+  clsd_prd_run_flg:
+  prior_prd_qty_sold_1: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_2: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_3: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_4: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_5: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_6: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_7: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_8: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_9: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_10: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_11: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_12: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_13: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_14: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_15: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_16: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_17: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_18: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_19: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_20: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_21: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_22: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_23: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_sold_24: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_1: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_2: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_3: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_4: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_5: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_6: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_7: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_8: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_9: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_10: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_11: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_12: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_13: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_14: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_15: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_16: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_17: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_18: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_19: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_20: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_21: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_22: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_23: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_rtrn_24: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_1: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_2: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_3: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_4: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_5: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_6: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_7: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_8: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_9: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_10: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_11: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_12: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_13: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_14: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_15: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_16: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_17: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_18: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_19: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_20: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_21: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_22: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_23: !ruby/object:BigDecimal 18:0.0
+  prior_prd_qty_used_24: !ruby/object:BigDecimal 18:0.0
+  lst_received_dat:
+  creation_dat: <%= Time.now %>
+  qty_on_hand_phys: !ruby/object:BigDecimal 18:0.0
+
+Prcfil:
+#  prc_rec_typ: A
+#  prc_key_flds: 'K-000110                           '
+#  prc_alt_item_no: 'K-000110       '
+#  prc_alt_1_conv_fac: !ruby/object:BigDecimal 18:0.6E-2
+#  prc_alt_1_prc_cod: '05'
+#  prc_alt_1_prc_1: !ruby/object:BigDecimal 18:0.65E0
+#  prc_alt_1_prc_2: !ruby/object:BigDecimal 18:0.65E0
+#  prc_alt_1_prc_3: !ruby/object:BigDecimal 18:0.51E0
+  prc_alt_1_prc_4: !ruby/object:BigDecimal 18:0.0
+  prc_alt_1_prc_5: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_conv_fac: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_prc_cod:
+  prc_alt_2_prc_1: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_prc_2: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_prc_3: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_prc_4: !ruby/object:BigDecimal 18:0.0
+  prc_alt_2_prc_5: !ruby/object:BigDecimal 18:0.0
+  prc_whs_item_no:
+  prc_whs_whs_cod:
+  prc_whs_prc_1:
+  prc_whs_prc_2:
+  prc_whs_prc_3:
+  prc_whs_prc_4:
+  prc_whs_prc_5:
+  prc_whs_1_prc_1:
+  prc_whs_1_prc_2:
+  prc_whs_1_prc_3:
+  prc_whs_1_prc_4:
+  prc_whs_1_prc_5:
+  prc_whs_2_prc_1:
+  prc_whs_2_prc_2:
+  prc_whs_2_prc_3:
+  prc_whs_2_prc_4:
+  prc_whs_2_prc_5:
+  spc_prc_item_no:
+  spc_prc_whs:
+  spc_prc_end_dat:
+  spc_prc_start_dat:
+  spc_prc_prc:
+  spc_prc_alt_1_prc:
+  spc_prc_alt_2_prc:
+  disc_prod_cat:
+  disc_prod_sub_cat:
+  disc_whs_cod:
+  disc_end_dat:
+  disc_start_dat:
+  disc_basis:
+  disc_pct:
+  disc_alt_1_pct:
+  disc_alt_2_pct:
+  con_prc_cust_no:
+  con_prc_item_no:
+  con_prc_end_dat:
+  con_prc_start_dat:
+  con_prc_contrac_no:
+  con_prc_or_low_flg:
+  con_prc_prc:
+  con_prc_alt_1_prc:
+  con_prc_alt_2_prc:
+  cd_disc_cust_no:
+  cd_disc_prod_cat:
+  cd_disc_sub_cat:
+  cd_disc_end_dat:
+  cd_disc_start_dat:
+  cd_disc_con_no:
+  cd_disc_or_low_flg:
+  cd_disc_basis:
+  cd_disc_pct:
+  cd_disc_alt_1_pct:
+  cd_disc_alt_2_pct:
