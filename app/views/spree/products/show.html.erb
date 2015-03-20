@@ -131,7 +131,41 @@
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
               <h3>Width</h3>
               <div id="width-slider">
-                <div class="labels"></div>
+                <ol class="labels">
+                  
+                  <% #TODO: Move sort method to helper %>
+
+                  <% @sorted_widths = @product.widths.uniq.sort{ |a,b| 
+                    
+                    aa = a.split('-')
+                    na=0
+                    if(aa.length>1)
+                      na = aa[0].to_f
+                      aal = aa[1].split('/')
+                    else
+                      aal = aa[0].split('/')
+                    end
+                    na += aal[0].to_f/aal[1].to_f
+                    
+                    bb = b.split('-')
+                    nb=0
+                    if(bb.length>1)
+                      nb = bb[0].to_f
+                      bbl = bb[1].split('/')
+                    else
+                      bbl = bb[0].split('/')
+                    end
+                    nb+= bbl[0].to_f/bbl[1].to_f
+                    
+                    na <=> nb
+
+                  } %>
+
+                  <% @sorted_widths.each do |width| %>
+                  
+                    <li><%= width %></li>
+                  <% end %>
+                </ol>
               </div>
             </div>
           </div>
@@ -143,41 +177,59 @@
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
               <h3>Length</h3>
               <div id="length-slider">
-                <div class="labels"></div>
+                <ol class="labels">
+                  <% @sorted_putups = @product.ribbon_putups.uniq.sort{|a,b| 
+                    a.to_f <=> b.to_f
+                    }%>
+                  <% @sorted_putups.each do |putup| %>
+                    <li><%= putup %></li>
+                  <% end %>
+                </ol>
               </div>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-              <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-            </div>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-              <h3>Color</h3>
-              <select class="form-control select select-primary" data-toggle="select">
-                <option value="2">Grey</option>
-                <option value="3">Red</option>
-                <option value="4">Blue</option>
-              </select>
-            </div>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
-              <h3>Quantity</h3>
-              <input type="text" id="spinner-05" value="0" class="form-control input-sm spinner" />
-            </div>
+          <%= form_for :order, :url => populate_orders_path do |f| %>
 
-          </div>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                <h3>Color</h3>
+                <select class="form-control select select-primary" data-toggle="select">
+                  <option value="2">Grey</option>
+                  <option value="3">Red</option>
+                  <option value="4">Blue</option>
+                </select>
+              </div>
+              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
+                <h3>Quantity</h3>
+                <%= text_field_tag :quantity, 1, :class => 'input-sm spinner form-control', :min => 1 %>
 
-          <div class="row bottom-row">
+                <!-- <input type="text" id="spinner-05" value="0" class="form-control input-sm spinner" /> -->
+              </div>
 
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 price columns left">
-              <span>$15.00</span>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 add-col right">
-              <button type="submit" class="btn btn-lg btn-info btn-embossed add-to-cart">Add To Cart</button>
-            </div>
+            <%= hidden_field_tag "variant_id", @product.master.id %>
+            <div class="row bottom-row">
 
-          </div> <!-- row -->
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 price columns left">
+                <span>$15.00</span>
+              </div>
+                
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 add-col right">
+                  <%= button_tag :class => 'btn btn-lg btn-info btn-embossed add-to-cart', :id => 'add-to-cart-button', :type => :submit do %>
+                    <%= Spree.t(:add_to_cart) %>
+                  <% end %>
 
+                  <!-- <button type="submit" class="btn btn-lg btn-info btn-embossed add-to-cart">Add To Cart</button> -->
+                </div>
+            </div> <!-- row -->
+
+          <% end %>
+
+        
         </div> <!-- product settings -->
 
       </div> <!-- col -->
@@ -220,3 +272,95 @@
   </div> <!-- container -->
 
 </div> <!-- main content -->
+
+
+<!-- Non Reusable page specific Javascript -->
+  
+<script type="text/Javascript">
+  out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
+  variants = [];
+  <% @product.variants.each do |variant| %>
+    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>]);
+  <% end %>
+
+  widths = [];
+  <% @sorted_widths.each do |width| %>
+    widths.push("<%= width %>");
+  <% end %>
+
+  putups = [];
+  <% @sorted_putups.each do |putup| %>
+    putups.push("<%= putup.gsub('-',' ') %>");
+  <% end %>
+
+
+  witems = $('#width-slider .labels li').length;
+  litems = $('#length-slider .labels li').length;
+  // calculate value from default product below.
+
+  wslider = $("#width-slider");
+  if (wslider.length > 0) {
+    wslider.slider({
+      min: 1,
+      max: witems,
+      value: 1,
+      orientation: "horizontal",
+      range: "min",
+      change: change_variant
+    }).addSliderSegments(wslider.slider("option").max);
+  }
+
+  lslider = $("#length-slider");
+  if (lslider.length > 0) {
+    lslider.slider({
+      min: 1,
+      max: litems,
+      value: 1,
+      orientation: "horizontal",
+      range: "min",
+      change: change_variant
+    }).addSliderSegments(lslider.slider("option").max);
+  }
+
+  function change_variant(event,ui){
+    var width_index = $("#width-slider").slider("value")*1-1;
+    var putup_index = $("#length-slider").slider("value")*1-1;
+    selected_width = widths[width_index];
+    selected_putup = putups[putup_index];
+    console.log('selected_width: '+selected_width);
+    console.log('selected_putup: '+selected_putup);
+    selected_variant = -1;
+    $.each(variants,function(index,value){
+      if(value[1]==selected_width && value[2]==selected_putup){
+        selected_variant = index;
+      }
+    });
+    if(selected_variant==-1){
+      $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
+      $('#add-to-cart-button').hide();
+    }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
+      $('#variant_id').val(variants[selected_variant][0]);
+      $('.price span').html(variants[selected_variant][3]);
+      $('#add-to-cart-button').show();
+      console.log("variant_found");
+    }else{ // out of stock
+      $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
+      $('#add-to-cart-button').hide();
+    }
+
+  }
+
+  wparentWidth = $('#width-slider').width();
+  witemWidth = witems>0 ? parseInt(wparentWidth / witems) : 0;
+  wlabelsWidth = wparentWidth+witemWidth;
+  $('#width-slider ol.labels').css("width",wlabelsWidth); // set width of labels div for widhts options
+  $('#width-slider ol.labels').css("left", "-" + witemWidth/2 +"px"); // adjust to bring label to center
+
+
+  lparentWidth = $('#length-slider').width();
+  litemWidth = litems>0 ? parseInt(lparentWidth / litems) : 0;
+  llabelsWidth = lparentWidth+litemWidth;
+  $('#length-slider ol.labels').css("width",llabelsWidth); // set width of labels for length options
+  $('#length-slider ol.labels').css("left", "-" + litemWidth/2 +"px"); // adjust labels to bring to center
+
+</script>
