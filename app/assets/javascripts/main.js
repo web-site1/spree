@@ -26,28 +26,6 @@ jQuery(document).ready(function ($) {
 
 	var spinner = $( ".spinner" ).spinner();
 
-	var $slider = $("#width-slider");
-	if ($slider.length > 0) {
-	  $slider.slider({
-	    min: 1,
-	    max: 9,
-	    value: 1,
-	    orientation: "horizontal",
-	    range: "min"
-	  }).addSliderSegments($slider.slider("option").max);
-	}
-
-	var $lengthslider = $("#length-slider");
-	if ($lengthslider.length > 0) {
-	  $lengthslider.slider({
-	    min: 1,
-	    max: 4,
-	    value: 1,
-	    orientation: "horizontal",
-	    range: "min"
-	  }).addSliderSegments($lengthslider.slider("option").max);
-	}
-
 });
 
 // Add segments to a slider
