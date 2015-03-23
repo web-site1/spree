@@ -74,3 +74,5 @@ gem 'capistrano-rvm'
 gem 'capistrano-passenger'
 gem 'sshkit', '~> 1.4.0'
 gem 'progress_bar'
+
+#gem 'activemerchant', '~> 1.47'

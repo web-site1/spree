@@ -49,7 +49,7 @@
           <li class="nav-search">
             <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
                 <div id="search">
-                    <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search) %>
+                    <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
                       <button type="submit">
                         <i class="fa fa-search"></i>
                       </button>

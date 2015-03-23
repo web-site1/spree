@@ -17,8 +17,8 @@ site_path = ARGV[0]
 image_path = site_path+'/images'
 
 
-Spree::Taxon.all.each do |t|
-#Spree::Taxon.where(name: 'baby').each do |t|
+#Spree::Taxon.all.each do |t|
+Spree::Taxon.where(name: 'Crushed Velvet').each do |t|
   next if !(t.root.id == 1)
   srch_name = t.name.downcase.gsub(' ','*')
 
