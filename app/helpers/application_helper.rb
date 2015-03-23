@@ -28,11 +28,11 @@ module ApplicationHelper
 
   def src_selected(name='',val='',opt='selected',skip_quick=false)
     selected=''
-    if ((params.has_key?(:quick_search) && params[:quick_search] == 'Y')||skip_quick)
+    #if ((params.has_key?(:quick_search) && params[:quick_search] == 'Y')||skip_quick)
       if params.has_key?(name.to_sym) && params[name.to_sym].include?(val)
-        selected = opt
+        selected = opt unless (skip_quick==false)&&(params[name.to_sym].count > 1)
       end
-    end
+    #end
     return selected
   end
 

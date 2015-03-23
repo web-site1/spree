@@ -63,14 +63,24 @@
         </form>
 
         <div class="nav-search hidden-lg hidden-md hidden-sm col-xs-12 mbl">
-          <form class="alt-form" role="search" action="#" method="post">
+          <!-- <form class="alt-form" role="search" action="#" method="post">
             <div id="search">
               <input type="text" placeholder="Search" />
               <button type="submit">
                 <i class="fa fa-search"></i>
               </button>
             </div>
-          </form>
+          </form> -->
+          <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
+              <div id="search">
+                <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
+                <button type="submit">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+
+          <% end %>
+
         </div>
 
       </div>
