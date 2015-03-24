@@ -1,0 +1,219 @@
+.select-primary {
+	.select2-choice {
+		background-color: #e1f2fe;
+		color: #138cce;
+		border: 2px solid #138cce;
+		.select2-arrow {
+			border-top-color: #138cce;
+		}
+	}
+
+}
+.select2-drop .select2-highlighted > .select2-result-label {
+	background-color: #ccc;
+}
+.form-group.focus .form-control, .form-control:focus, .form-group.focus .select2-search input[type="text"], .select2-search input[type="text"]:focus {
+	border-color: #ccc;
+}
+
+#myCarousel.carousel {
+	.col-lg-3 {
+		width: 20%;
+		padding-left: 0;
+		padding-right: 0;
+		max-width: 20%;
+		background-color: #ccc;
+		a {
+			img {
+				max-width: 100%;
+			}
+		}
+	}
+	.item > div:last-child {
+
+	}
+}
+
+#accordion.ribbons {
+	.panel-heading {
+		padding: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+	.panel-title {
+		font-size: 14px;
+		line-height: 14px;
+		a {
+			padding: 12px 15px;
+			display: block;
+			background-color: #3498db;
+			color: #fff;
+		}
+		a.collapsed {
+			background-color: #ecf0f1;
+			color: #2c3e50;
+		}
+		a.collapsed:hover {
+			color: #138cce;
+		}
+	}
+	.panel {
+		margin: 0;
+		border-radius: 0;
+		border: 0;
+		
+	}
+	.panel-body {
+		padding: 0;
+		border: 0;
+		background-color: #3498db;
+		ul {
+			margin: 0;
+			list-style: none;
+			padding: 0;
+			font-size: 14px;
+			line-height: 14px;
+		}
+		a {
+			padding: 12px 15px;
+			display: block;
+			color: #fff;
+			background-color: #3498db;
+		}
+		a:hover {
+			background-color: #7796aa;
+		}
+	}
+}
+
+.pagination {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.pagination li > a, 
+.pagination li > span, 
+.dataTables_paginate li > a, 
+.dataTables_paginate li > span {
+	font-family: $lato-bold;
+	color: #138cce;
+	min-height: 10px;
+	min-width: 10px;
+	padding: 0 6px;
+	border: 0;
+}
+.pagination li.active > a, 
+.pagination li.active > span, 
+.dataTables_paginate li.active > a, 
+.dataTables_paginate li.active > span {
+	background-color: #fff;
+	color: #bdc3c7;
+}
+.navbar-default .navbar-toggle:before, .navbar-default .navbar-toggle:before,
+.navbar-default .navbar-toggle:hover:before, .navbar-default .navbar-toggle:focus:before {
+	color: #3498db;
+}
+@media (min-width: 1500px) {
+  nav .container,
+  .topbar .container {
+    width: 1470px;
+  }
+}
+/*.btn-default {
+	background-color: #edf6fa;
+	border-color: #d5e5ed;
+	color: #395871;
+	font-size: 14px;
+}
+.btn-default:hover {
+	background-color: #039bda;
+	color: #fff;
+}
+.btn-info {
+	background-color: #0199da;
+}
+.btn-sm {
+	font-size: 12px;
+	width: 55%;
+}
+form input[type=text] {
+	border-color: #cfe7f1;
+}
+.input-lg, 
+.form-horizontal .form-group-lg .form-control, 
+.input-group-lg > .form-control, 
+.input-group-lg > .input-group-addon {
+	border-radius: 0;
+	color: #566a7f;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #1b93ab;
+}
+.navbar-default .navbar-toggle {
+	border-color: #21232f;
+}
+.navbar-default .navbar-toggle:hover {
+	background-color: $lightblue;
+}
+.sub-menu {
+	position: relative;
+
+	.interior {
+		background-color: #f5f8f9;
+		border: 1px solid #c1dddd;
+		text-align: center;
+		margin-left: -50%;
+		margin-right: -50%;
+		
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		min-height: 20px;
+		position: absolute;
+		margin-top: 20px;
+		left: 50%;
+		right: 50%;
+		width: 100%;
+		display: inline-block;
+		padding-left: 100px;
+		padding-right: 100px;
+	}
+}
+.btn-group {
+
+	margin: 0 auto;
+	display: table;
+
+	a {
+		min-width: 150px;
+		display: inline-block;
+		text-transform: uppercase;
+	}
+
+	.btn-default:hover, 
+	.btn-default:focus, 
+	.btn-default:active, 
+	.btn-default.active, 
+	.open > .btn-default.dropdown-toggle {
+		background-color: #059dda;
+		background-image: url("../images/elements/bg-button.png");
+		background-repeat: repeat-x;
+		background-position: top;
+		box-shadow: none;
+		border-top: 1px solid #33c2d3;
+		border-bottom: 1px solid #059dda;
+		color: #fff;
+	}
+
+}
+.carousel-control.left,
+.carousel-control.right {
+	background-image: none;
+	width: 16px;
+	vertical-align: middle;
+
+	img {
+		padding-top: 75px;
+	}
+}
+
+*/
