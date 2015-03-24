@@ -19,6 +19,10 @@ class Itmfil < PbsData
     end
   end
 
+  def get_price
+    item_prc_1
+  end
+
 private
 
   def handle_alt_unit
