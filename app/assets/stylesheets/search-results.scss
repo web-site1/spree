@@ -137,7 +137,7 @@ body.home .panel-group.homepage {
 			display: block;
 			background-color: #3498db;
 			color: #138cce;
-			background-image: url('../images/elements/arrow-up.png');
+			background-image: image-url('elements/arrow-up.png');
 			background-repeat: no-repeat;
 			background-position: calc(100% - 20px) center;
 		}
@@ -147,7 +147,7 @@ body.home .panel-group.homepage {
 		}
 		a.collapsed {
 			background-color: #ecf0f1;
-			background-image: url('../images/elements/arrow-down.png');
+			background-image: image-url('elements/arrow-down.png');
 			color: #138cce;
 			padding: 5px 15px;
 		}

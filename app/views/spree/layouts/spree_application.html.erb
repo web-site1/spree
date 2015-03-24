@@ -44,7 +44,9 @@
 <%= render partial: 'spree/shared/ribbon_quick_srch' %>
 
 <%= render partial: 'spree/products/breadcrumbs' if (@product||@taxon) %>
+
 <div class="main-content">
+    <%= flash_messages %>
     <%= yield %>
 </div>
 
