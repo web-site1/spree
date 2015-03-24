@@ -12,10 +12,11 @@ Version: 1.0-artribbon
 
 // Here we import our overrides
 // Dan had to rename David's bootstrap.scss to bootstrap_overrides.scss so spree backend didn't pickup the wrong file.
+// Note the order in which these load is extremely important
 
+@import "david_bootstrap";
 @import "flat-ui-pro";
 @import "bootstrap_overrides";
-@import "david_bootstrap";
 @import "jcarousel.responsive";
 
 // Here we import our theme-specific files
