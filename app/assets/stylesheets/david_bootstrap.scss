@@ -251,10 +251,14 @@ th {
   .table-bordered th,
   .table-bordered td {
     border: 1px solid #ddd !important; } }
-@font-face {
-  font-family: 'Glyphicons Halflings';
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+//@font-face {
+//  font-family:'Glyphicons Halflings';
+//  src:  font-url('glyphicons/glyphicons-halflings-regular.eot');
+//  src:  font-url('glyphicons/glyphicons-halflings-regular.eot?#iefix') format("embedded-opentype"),
+//  font-url('glyphicons/glyphicons-halflings-regular.woff') format("woff"),
+//  font-url('glyphicons/glyphicons-halflings-regular.ttf') format("truetype"),
+//  font-url('glyphicons/glyphicons-halflings-regular.svg#glyphicons-halflings-regular') format("svg")
+//}
 .glyphicon {
   position: relative;
   top: 1px;
