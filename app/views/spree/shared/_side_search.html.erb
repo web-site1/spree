@@ -12,6 +12,8 @@
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
+
+
     <h3 class="hidden-sm hidden-xs"> <%= link_to(k,"/t/#{v.first}") %> </h3>
       <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
 
