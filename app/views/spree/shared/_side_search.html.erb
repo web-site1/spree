@@ -12,39 +12,50 @@
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
+      <div class="panel-group homepage" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingMenu<%=cntr%>">
+            <h4 class="panel-title">
+              <a class="top-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseMenu<%=cntr%>" aria-expanded="false" aria-controls="collapseMenu<%=cntr%>">
+                <%= k %>
+              </a>
+            </h4>
+          </div>
 
-
-    <h3 class="hidden-sm hidden-xs"> <%= link_to(k,"/t/#{v.first}") %> </h3>
-      <div class="panel-group hidden-sm hidden-xs ribbons" id="accordion" role="tablist" aria-multiselectable="true">
-
-        <% v.last.each do |sk,sv| %>
-            <% uniq_id = cntr %>
-                <% is_selected = permalink_array.include?(sv.first.split('/').last) %>
-
-                    <div class="panel panel-default">
-                      <div class="panel-heading" role="tab" id="headingOne<%=uniq_id%>">
-                        <h4 class="panel-title">
-                          <a class="<%= "collapsed" if !is_selected%>" data-toggle="collapse" data-parent="#accordion" href="#collapseOne<%=uniq_id%>" aria-expanded="<%=is_selected %>" aria-controls="collapseOne<%=uniq_id%>">
-                            <%= sk %>
-                          </a>
-                        </h4>
-                      </div>
-                      <div id="collapseOne<%=uniq_id%>" class="panel-collapse collapse <%= "in" if is_selected %>" role="tabpanel" aria-labelledby="headingOne<%=uniq_id%>" <%= 'aria-expanded="true"' if is_selected %> >
-                        <div class="panel-body">
-                          <ul>
-                           <% sv.last.each do |ocv| %>
-                                <li><a href="/t/<%=ocv.first%>"><%= ocv.last %></a></li>
-                           <% end %>
-                          </ul>
+          <div id="collapseMenu<%=cntr%>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMenu<%=cntr%>">
+            <div class="panel-body">
+              <!-- Here we insert another nested accordion -->
+              <div class="row">
+          <% v.last.each do |sk,sv| %>
+              <% uniq_id = sk.downcase.gsub(' ','_') %>
+                     <div class="col-xs-12">
+                      <div class="panel-group sub-panel" id="accordion<%=uniq_id%>">
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            <h5 class="panel-title"><a data-toggle="collapse" class="collapsed" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"><%= sk %></a></h5>
+                          </div>
+                          <div id="collapseInnerOne<%=uniq_id%>" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              <ul>
+                                <% sv.last.each do |ocv| %>
+                                    <li><a href="/t/<%=ocv.first%>"><%= ocv.last%></a></li>
+                                <% end %>
+                              </ul>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-            <% cntr += 1 %>
-        <% end %>
+
+
+                <% cntr += 1 %>
+          <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
   <% end %>
-
 
 
   <%= render partial: 'spree/shared/ads' %>
