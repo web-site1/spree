@@ -196,7 +196,7 @@
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                 <h3>Color</h3>
-                <% @colors = Spree::Variant.where("sku like '#{@product.variants.first.sku.split('-')[0]}-%-%-%'").includes(:product,:option_values).collect{|v| [ v.option_value('color'), v.product.slug] }.uniq %>
+                <% @colors = @product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq %>
                 <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
