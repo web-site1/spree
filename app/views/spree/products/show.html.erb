@@ -196,7 +196,7 @@
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                 <h3>Color</h3>
-                <% @colors = Spree::Variant.where("sku like '#{@product.variants.first.sku.split('-')[0]}-%-%-%'").includes(:product,:option_values).collect{|v| [ v.option_value('color'), v.product.slug] }.uniq %>
+                <% @colors = @product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq %>
                 <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
@@ -276,7 +276,7 @@
   out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
   variants = [];
   <% @product.variants.each do |variant| %>
-    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>]);
+    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>,"<%= variant.sku %>"]);
   <% end %>
 
   widths = [];
@@ -323,8 +323,8 @@
     var putup_index = $("#length-slider").slider("value")*1-1;
     selected_width = widths[width_index];
     selected_putup = putups[putup_index];
-    console.log('selected_width: '+selected_width);
-    console.log('selected_putup: '+selected_putup);
+    // console.log('selected_width: '+selected_width);
+    // console.log('selected_putup: '+selected_putup);
     selected_variant = -1;
     $.each(variants,function(index,value){
       if(value[1]==selected_width && value[2]==selected_putup){
@@ -334,17 +334,25 @@
     if(selected_variant==-1){
       $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
       $('#add-to-cart-button').hide();
+      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+
     }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
       $('#variant_id').val(variants[selected_variant][0]);
       $('.price span').html(variants[selected_variant][3]);
       $('#add-to-cart-button').show();
-      console.log("variant_found");
+      $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
+      // console.log("variant_found");
     }else{ // out of stock
       $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
       $('#add-to-cart-button').hide();
+      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
     }
 
   }
+
+  $('.product-details ul').append('<li id="sku"><strong>SKU</strong> : NA </li>');
+
+  change_variant();
 
   if(getCookie('sWidth')!= null){
     var cookieWidth = getCookie('sWidth')
@@ -357,10 +365,10 @@
   }
 
   if(getCookie('sLength')!= null){
-    var cookieWidth = getCookie('sLength')
+    var cookieLength = getCookie('sLength')
     $('#length-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieWidth){
-        $('#length-slider').slider('option','value',i);
+      if($(el).html()==cookieLength){
+        $('#length-slider').slider('option','value',i+1);
         setCookie('sLength',null);
       }
     });
@@ -372,8 +380,11 @@
     setCookie('sWidth',wvalue);
 
     lindex = $('#length-slider').slider("option","value");
-    lvalue = $($('#length-slider .labels li')[lindex]).html();
+    lvalue = $($('#length-slider .labels li')[lindex-1]).html();
     setCookie('sLength',lvalue);
+
+    console.log(wvalue);
+    console.log(lvalue);
 
     window.location='/products/'+$(this).val();
     event.preventDefault();
