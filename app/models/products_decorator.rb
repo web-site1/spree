@@ -51,7 +51,7 @@ Spree::Product.class_eval do
       product_brand
     end
 
-    text :product_sku do
+    text :product_sku, :as => :sku_textp do
       self.variants.map{|s| s.sku}.reject{|e| e.nil?}
     end
 

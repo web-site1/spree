@@ -85,7 +85,9 @@ module ApplicationHelper
         cat_hash_vals.delete_if{|k,v| v.first.split("/").last == cat}
         if !subcat.blank?
           index_of_subcat = selected_cat[selected_cat.keys.first].last.index{|a| a.first.split('/').last == subcat}
-          selected_cat[selected_cat.keys.first].last.insert(0,selected_cat[selected_cat.keys.first].last.delete_at(index_of_subcat))
+          if index_of_subcat
+            selected_cat[selected_cat.keys.first].last.insert(0,selected_cat[selected_cat.keys.first].last.delete_at(index_of_subcat))
+          end
         end
         new_cat_hash.merge!(selected_cat)
         cat_hash_vals.each{|k,v| new_cat_hash.merge!(k => v)}
