@@ -58,6 +58,14 @@ Version: 1.0-artribbon
   content:"";
 }
 
+#width-slider.ui-slider.ui-slider-horizontal,
+#length-slider.ui-slider.ui-slider-horizontal {
+    .labels {
+        background: none !important;
+        min-width: initial !important;
+    }
+}
+
 /*END CSS Changes by Fahad*/
 
 

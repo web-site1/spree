@@ -16,4 +16,4 @@
 //= require flat-ui-pro.min
 //= require jcarousel.responsive
 //= require jquery.jcarousel.js
-//= require min/main-min
+//= require main

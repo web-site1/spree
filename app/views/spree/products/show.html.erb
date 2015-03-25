@@ -160,7 +160,6 @@
                     na <=> nb
 
                   } %>
-
                   <% @sorted_widths.each do |width| %>
                   
                     <li><%= width %></li>
@@ -197,11 +196,8 @@
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                 <h3>Color</h3>
-                <select class="form-control select select-primary" data-toggle="select">
-                  <option value="2">Grey</option>
-                  <option value="3">Red</option>
-                  <option value="4">Blue</option>
-                </select>
+                <% @colors = Spree::Variant.where("sku like '#{@product.variants.first.sku.split('-')[0]}-%-%-%'").includes(:product,:option_values).collect{|v| [ v.option_value('color'), v.product.slug] }.uniq %>
+                <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
                 <h3>Quantity</h3>
@@ -350,15 +346,62 @@
 
   }
 
+  if(getCookie('sWidth')!= null){
+    var cookieWidth = getCookie('sWidth')
+    $('#width-slider .labels li').each(function(i,el){
+      if($(el).html()==cookieWidth){
+        $('#width-slider').slider('option','value',i);
+        setCookie('sWidth',null);
+      }
+    });
+  }
+
+  if(getCookie('sLength')!= null){
+    var cookieWidth = getCookie('sLength')
+    $('#length-slider .labels li').each(function(i,el){
+      if($(el).html()==cookieWidth){
+        $('#length-slider').slider('option','value',i);
+        setCookie('sLength',null);
+      }
+    });
+  }
+
+  $(document).on('change','.colors',function(event){
+    windex = $('#width-slider').slider("option","value");
+    wvalue = $($('#width-slider .labels li')[windex]).html();
+    setCookie('sWidth',wvalue);
+
+    lindex = $('#length-slider').slider("option","value");
+    lvalue = $($('#length-slider .labels li')[lindex]).html();
+    setCookie('sLength',lvalue);
+
+    window.location='/products/'+$(this).val();
+    event.preventDefault();
+  });
+
   wparentWidth = $('#width-slider').width();
-  witemWidth = witems>0 ? parseInt(wparentWidth / witems) : 0;
+
+  if(witems == 1){
+    witemWidth = wparentWidth;
+    wparentWidth = 0;
+  }else if(witems == 2)
+    witemWidth = wparentWidth;
+  else
+    witemWidth = witems>0 ? parseInt(wparentWidth / witems) : 0;
   wlabelsWidth = wparentWidth+witemWidth;
   $('#width-slider ol.labels').css("width",wlabelsWidth); // set width of labels div for widhts options
   $('#width-slider ol.labels').css("left", "-" + witemWidth/2 +"px"); // adjust to bring label to center
 
 
   lparentWidth = $('#length-slider').width();
-  litemWidth = litems>0 ? parseInt(lparentWidth / litems) : 0;
+  if(litems == 1){
+    litemWidth = lparentWidth;
+    lparentWidth = 0;
+  }else if(litems == 2)
+    litemWidth = lparentWidth;
+  else
+    litemWidth = litems>0 ? parseInt(lparentWidth / litems) : 0;
+  
   llabelsWidth = lparentWidth+litemWidth;
   $('#length-slider ol.labels').css("width",llabelsWidth); // set width of labels for length options
   $('#length-slider ol.labels').css("left", "-" + litemWidth/2 +"px"); // adjust labels to bring to center
