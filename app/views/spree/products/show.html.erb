@@ -323,8 +323,8 @@
     var putup_index = $("#length-slider").slider("value")*1-1;
     selected_width = widths[width_index];
     selected_putup = putups[putup_index];
-    console.log('selected_width: '+selected_width);
-    console.log('selected_putup: '+selected_putup);
+    // console.log('selected_width: '+selected_width);
+    // console.log('selected_putup: '+selected_putup);
     selected_variant = -1;
     $.each(variants,function(index,value){
       if(value[1]==selected_width && value[2]==selected_putup){
@@ -338,7 +338,7 @@
       $('#variant_id').val(variants[selected_variant][0]);
       $('.price span').html(variants[selected_variant][3]);
       $('#add-to-cart-button').show();
-      console.log("variant_found");
+      // console.log("variant_found");
     }else{ // out of stock
       $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
       $('#add-to-cart-button').hide();
@@ -357,9 +357,9 @@
   }
 
   if(getCookie('sLength')!= null){
-    var cookieWidth = getCookie('sLength')
+    var cookieLength = getCookie('sLength')
     $('#length-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieWidth){
+      if($(el).html()==cookieLength){
         $('#length-slider').slider('option','value',i);
         setCookie('sLength',null);
       }
@@ -374,6 +374,9 @@
     lindex = $('#length-slider').slider("option","value");
     lvalue = $($('#length-slider .labels li')[lindex]).html();
     setCookie('sLength',lvalue);
+
+    console.log(wvalue);
+    console.log(lvalue);
 
     window.location='/products/'+$(this).val();
     event.preventDefault();

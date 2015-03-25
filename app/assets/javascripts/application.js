@@ -15,3 +15,4 @@
 // removed gem = require turbolinks
 //= require_tree .
 //= require spree/frontend
+//= require spree/backend
