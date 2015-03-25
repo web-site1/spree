@@ -9,32 +9,70 @@
     end
   %>
 
+  <% selected_hash = taxon_selection %>
+
   <% side_cats = side_search_cats %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
+      <%
+         this_type_selected = false
+         this_subcat_selected = false
+         cat_selection = ' '
+         sub_cat_selection = ' '
+         type_from_link = v.first.split("/").last
+         if !selected_hash.empty?
+             if type_from_link == selected_hash[:type]
+               this_type_selected = true
+               cat_selection = selected_hash[:cat]
+               sub_cat_selection = selected_hash[:subcat]
+             end
+         end
+      %>
+
+
       <div class="panel-group homepage" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="headingMenu<%=cntr%>">
             <h4 class="panel-title">
-              <a class="top-panel" data-toggle="collapse" data-parent="#accordion" href="#collapseMenu<%=cntr%>" aria-expanded="false" aria-controls="collapseMenu<%=cntr%>">
+              <!-- top-panel class triggers a click -->
+              <a class="top-pane cat-click" data-toggle="collapse" data-parent="#accordion" href="#collapseMenu<%=cntr%>"
+                    aria-expanded="<%=this_type_selected%>" aria-controls="collapseMenu<%=cntr%>" data-hrefa="<%= %Q{/t/#{v.first}} %>">
                 <%= k %>
               </a>
             </h4>
           </div>
 
-          <div id="collapseMenu<%=cntr%>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingMenu<%=cntr%>">
+          <div id="collapseMenu<%=cntr%>" class="panel-collapse collapse <%="in" if this_type_selected %>" role="tabpanel" aria-labelledby="headingMenu<%=cntr%>"
+          aria-expanded= "<%=this_type_selected%>"
+          >
             <div class="panel-body">
               <!-- Here we insert another nested accordion -->
               <div class="row">
           <% v.last.each do |sk,sv| %>
+
+              <%
+                this_cat_selected = false
+                if this_type_selected
+                    cat_from_link = sv.first.split('/').last
+                    if cat_from_link == cat_selection
+                      this_cat_selected = true
+                    end
+                end
+              %>
+
               <% uniq_id = sk.downcase.gsub(' ','_') %>
                      <div class="col-xs-12">
                       <div class="panel-group sub-panel" id="accordion<%=uniq_id%>">
                         <div class="panel panel-default">
                           <div class="panel-heading">
-                            <h5 class="panel-title"><a data-toggle="collapse" class="collapsed" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"><%= sk %></a></h5>
+                            <h5 class="panel-title">
+                              <a data-toggle="collapse" class="<%= "collapsed" if !this_cat_selected%> cat-click" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"
+                                 aria-expanded="<%=this_cat_selected%>" data-hrefa="<%= %Q{/t/#{sv.first}} %>">
+                                <%= sk %>
+                              </a>
+                            </h5>
                           </div>
-                          <div id="collapseInnerOne<%=uniq_id%>" class="panel-collapse collapse">
+                          <div id="collapseInnerOne<%=uniq_id%>" class="panel-collapse collapse <%="in" if this_cat_selected %>" <%= "aria-expanded='true'" if this_cat_selected %> >
                             <div class="panel-body">
                               <ul>
                                 <% sv.last.each do |ocv| %>

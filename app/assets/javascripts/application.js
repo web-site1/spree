@@ -18,5 +18,5 @@
 //= require jquery.jcarousel.js
 //= require main
 //= require min/main-min
-//= require drop_down
+//= require src_cntrls.js
 //= require_tree .

@@ -73,5 +73,18 @@ module ApplicationHelper
     Spree::Taxon.where(parent_id: taxon.id)
   end
 
+  def taxon_selection
+    selected_hash = {}
+    if params.has_key?(:id)
+      taxon_split_array = params[:id].split("/")
+      if taxon_split_array.first == 'categories'
+        selected_hash.merge!(type: taxon_split_array[1] || ' ')
+        selected_hash.merge!(cat: taxon_split_array[2] || ' ')
+        selected_hash.merge!(subcat: taxon_split_array[2] || ' ')
+      end
+    end
+    return selected_hash
+  end
+
 
 end

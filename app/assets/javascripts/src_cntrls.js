@@ -9,4 +9,12 @@ jQuery(document).ready(function ($) {
             $('#quick_srch_frm').submit();
         }
     );
+
+    $('.cat-click').click(function(){
+            var href = $(this).data("hrefa");
+            window.location.href = href
+            //alert(href);
+        }
+    );
+
 });
