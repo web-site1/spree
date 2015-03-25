@@ -360,7 +360,7 @@
     var cookieLength = getCookie('sLength')
     $('#length-slider .labels li').each(function(i,el){
       if($(el).html()==cookieLength){
-        $('#length-slider').slider('option','value',i);
+        $('#length-slider').slider('option','value',i+1);
         setCookie('sLength',null);
       }
     });
@@ -372,7 +372,7 @@
     setCookie('sWidth',wvalue);
 
     lindex = $('#length-slider').slider("option","value");
-    lvalue = $($('#length-slider .labels li')[lindex]).html();
+    lvalue = $($('#length-slider .labels li')[lindex-1]).html();
     setCookie('sLength',lvalue);
 
     console.log(wvalue);
