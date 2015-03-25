@@ -58,7 +58,7 @@ Spree::Taxon.class_eval do
   Spree::Taxon.attachment_definitions[:icon][:s3_headers] = attachment_config[:s3_headers]
   Spree::Taxon.attachment_definitions[:icon][:bucket] = attachment_config[:bucket]
   Spree::Taxon.attachment_definitions[:icon][:path] = attachment_config[:path]
-  #Spree::Taxon.attachment_definitions[:icon][:default_url] = attachment_config[:default_url]
+  Spree::Taxon.attachment_definitions[:icon][:default_url] = 'default_taxon.png'
 end
 
 
