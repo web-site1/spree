@@ -11,7 +11,7 @@
 
   <% selected_hash = taxon_selection %>
 
-  <% side_cats = side_search_cats %>
+  <% side_cats = reposition_selected_search_cats(side_search_cats,selected_hash) %>
   <%cntr = 0%>
   <% side_cats.each do |k,v| %>
       <%

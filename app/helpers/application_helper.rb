@@ -69,6 +69,38 @@ module ApplicationHelper
     return type_hash
   end
 
+  def reposition_selected_search_cats(search_cats,selected_hash)
+
+    repositioned_hash = {}
+    if !selected_hash.empty?
+      type = selected_hash[:type]
+      cat = selected_hash[:cat]
+      subcat = selected_hash[:subcat]
+      selected = search_cats.select{|k,v| v.first.split("/").last == type}
+      search_cats.delete_if{|k,v| v.first.split("/").last == type}
+      if !cat.blank?
+        new_cat_hash = {}
+        cat_hash_vals = selected[selected.keys.first].last
+        selected_cat = cat_hash_vals.select{|k,v| v.first.split("/").last == cat}
+        cat_hash_vals.delete_if{|k,v| v.first.split("/").last == cat}
+        if !subcat.blank?
+          index_of_subcat = selected_cat[selected_cat.keys.first].last.index{|a| a.first.split('/').last == subcat}
+          selected_cat[selected_cat.keys.first].last.insert(0,selected_cat[selected_cat.keys.first].last.delete_at(index_of_subcat))
+        end
+        new_cat_hash.merge!(selected_cat)
+        cat_hash_vals.each{|k,v| new_cat_hash.merge!(k => v)}
+        cat_hash_vals = selected[selected.keys.first][1] = new_cat_hash
+      end
+      repositioned_hash.merge!(selected)
+      search_cats.each{|k,v| repositioned_hash.merge!(k => v)}
+    else
+      repositioned_hash = search_cats
+    end
+    return repositioned_hash
+
+  end
+
+
   def get_taxons_subcats(taxon)
     Spree::Taxon.where(parent_id: taxon.id)
   end
@@ -80,7 +112,7 @@ module ApplicationHelper
       if taxon_split_array.first == 'categories'
         selected_hash.merge!(type: taxon_split_array[1] || ' ')
         selected_hash.merge!(cat: taxon_split_array[2] || ' ')
-        selected_hash.merge!(subcat: taxon_split_array[2] || ' ')
+        selected_hash.merge!(subcat: taxon_split_array[3] || ' ')
       end
     end
     return selected_hash
