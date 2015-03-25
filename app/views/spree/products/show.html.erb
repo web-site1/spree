@@ -276,7 +276,7 @@
   out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
   variants = [];
   <% @product.variants.each do |variant| %>
-    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>]);
+    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>,"<%= variant.sku %>"]);
   <% end %>
 
   widths = [];
@@ -334,17 +334,25 @@
     if(selected_variant==-1){
       $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
       $('#add-to-cart-button').hide();
+      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+
     }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
       $('#variant_id').val(variants[selected_variant][0]);
       $('.price span').html(variants[selected_variant][3]);
       $('#add-to-cart-button').show();
+      $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
       // console.log("variant_found");
     }else{ // out of stock
       $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
       $('#add-to-cart-button').hide();
+      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
     }
 
   }
+
+  $('.product-details ul').append('<li id="sku"><strong>SKU</strong> : NA </li>');
+
+  change_variant();
 
   if(getCookie('sWidth')!= null){
     var cookieWidth = getCookie('sWidth')
