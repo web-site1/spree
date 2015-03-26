@@ -6,10 +6,17 @@
         <%= render partial: 'spree/shared/homepage_slider' %>
 
         <div class="row">
-          <%= render partial: 'spree/shared/featured_items' %>
+          <%# render partial: 'spree/shared/featured_items' %>
+          <% feat_products = featured_products %>
+          <%= render partial: 'spree/shared/product_carousel',locals: {products: feat_products,
+            section_name: 'Featured Items',ref: 'featured-items' } %>
         </div>
         <div class="row">
-          <%= render partial: 'spree/shared/new_arrivals' %>
+          <%# render partial: 'spree/shared/new_arrivals' %>
+          <% new_products = new_arrivals %>
+          <%= render partial: 'spree/shared/product_carousel',locals: {products: new_products,
+            section_name: 'New Arrivals',ref: 'new-arrivals' } %>
+
         </div>
         <%= render partial: 'spree/shared/why_shop' %>
       </div>

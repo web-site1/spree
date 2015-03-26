@@ -24,8 +24,13 @@
         <% subcats = get_taxons_subcats(@taxon) %>
         <% subcats.each do |sct| %>
           <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-            <%= image_tag(sct.icon(:normal)) %>
-            <%= link_to sct.name,%Q{/t/#{sct.permalink}} %>
+            <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),%Q{/t/#{sct.permalink}}, :itemprop => 'url',
+               title: sct.name
+            %>
+            <div class="item-label" title="<%=sct.name %>">
+                <%# link_to sct.name,%Q{/t/#{sct.permalink}} %>
+                <%= truncate(sct.name, :length => 20) %>
+            </div>
           </li>
         <% end %>
 
@@ -33,9 +38,11 @@
           <% @taxon.products.each do |product| %>
               <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
               <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-                <%= link_to small_image(product, :itemprop => "image",class: "img-responsive"), url, :itemprop => 'url' %>
-                <!-- <img src="assets/dist/images/placeholders/misc-2.jpg" alt="" class="img-responsive" /> -->
-                <div class="item-label"><%= truncate(product.name, :length => 50) %></div>
+                <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                            title: product.name %>
+                <div class="item-label" title="<%=product.name %>">
+                  <%= truncate(product.name, :length => 20) %>
+                </div>
               </li>
           <% end %>
       <% end %>

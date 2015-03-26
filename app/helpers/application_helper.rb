@@ -49,12 +49,13 @@ module ApplicationHelper
 
   def side_search_cats
     type_hash = {}
-    types = Spree::Taxon.where(parent_id: 1)
+    @all_tax_cats = Spree::Taxon.where("permalink like '%categories%'")
+    types =  @all_tax_cats.select{|t| t.parent_id == 1 }  #Spree::Taxon.where(parent_id: 1)
     types.each do |t|
-      eopt = Spree::Taxon.where(parent_id: t.id)
+      eopt = @all_tax_cats.select{|t| t.parent_id == t.id } #t.children
       opts ={}
       eopt.each do |eo|
-        subopt = Spree::Taxon.where(parent_id: eo.id)
+        subopt = @all_tax_cats.select{|t| t.parent_id == eo.id } #Spree::Taxon.where(parent_id: eo.id)
         sub_opts=[]
         subopt.each do |so|
           perma_link = so.permalink
@@ -118,6 +119,19 @@ module ApplicationHelper
       end
     end
     return selected_hash
+  end
+
+  def featured_products
+    featured_taxon = Spree::Taxon.featured
+    featured_products_array = []
+    if !featured_taxon.empty?
+      featured_products_array = featured_taxon.first.products
+    end
+    return featured_products_array
+  end
+
+  def new_arrivals
+    na = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
   end
 
 
