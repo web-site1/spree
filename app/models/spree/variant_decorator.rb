@@ -27,7 +27,7 @@ module Spree
     end
 
     def price
-      price_in('USD')
+      price_in('USD').amount
     end
 
   end
