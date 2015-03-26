@@ -49,12 +49,13 @@ module ApplicationHelper
 
   def side_search_cats
     type_hash = {}
-    types = Spree::Taxon.where(parent_id: 1)
+    @all_tax_cats = Spree::Taxon.where("permalink like '%categories%'")
+    types =  @all_tax_cats.select{|t| t.parent_id == 1 }  #Spree::Taxon.where(parent_id: 1)
     types.each do |t|
-      eopt = Spree::Taxon.where(parent_id: t.id)
+      eopt = @all_tax_cats.select{|t| t.parent_id == t.id } #t.children
       opts ={}
       eopt.each do |eo|
-        subopt = Spree::Taxon.where(parent_id: eo.id)
+        subopt = @all_tax_cats.select{|t| t.parent_id == eo.id } #Spree::Taxon.where(parent_id: eo.id)
         sub_opts=[]
         subopt.each do |so|
           perma_link = so.permalink
