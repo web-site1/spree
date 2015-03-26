@@ -29,7 +29,7 @@
             %>
             <div class="item-label" title="<%=sct.name %>">
                 <%# link_to sct.name,%Q{/t/#{sct.permalink}} %>
-                <%= truncate(sct.name, :length => 20) %>
+                <%= truncate(sct.name, :length => 25) %>
             </div>
           </li>
         <% end %>
@@ -41,7 +41,7 @@
                 <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
                             title: product.name %>
                 <div class="item-label" title="<%=product.name %>">
-                  <%= truncate(product.name, :length => 20) %>
+                  <%= truncate(product.name, :length => 25) %>
                 </div>
               </li>
           <% end %>
