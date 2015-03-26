@@ -50,12 +50,12 @@ module ApplicationHelper
   def side_search_cats
     type_hash = {}
     @all_tax_cats = Spree::Taxon.where("permalink like '%categories%'")
-    types =  @all_tax_cats.select{|t| t.parent_id == 1 }  #Spree::Taxon.where(parent_id: 1)
+    types =  @all_tax_cats.select{|tax| tax.parent_id == 1 }  #Spree::Taxon.where(parent_id: 1)
     types.each do |t|
-      eopt = @all_tax_cats.select{|t| t.parent_id == t.id } #t.children
+      eopt = @all_tax_cats.select{|tax| tax.parent_id == t.id } #t.children
       opts ={}
       eopt.each do |eo|
-        subopt = @all_tax_cats.select{|t| t.parent_id == eo.id } #Spree::Taxon.where(parent_id: eo.id)
+        subopt = @all_tax_cats.select{|tax| tax.parent_id == eo.id } #Spree::Taxon.where(parent_id: eo.id)
         sub_opts=[]
         subopt.each do |so|
           perma_link = so.permalink
@@ -85,7 +85,7 @@ module ApplicationHelper
         selected_cat = cat_hash_vals.select{|k,v| v.first.split("/").last == cat}
         cat_hash_vals.delete_if{|k,v| v.first.split("/").last == cat}
         if !subcat.blank?
-          index_of_subcat = selected_cat[selected_cat.keys.first].last.index{|a| a.first.split('/').last == subcat}
+          index_of_subcat = selected_cat[selected_cat.keys.first].last.index{|a| a.first.split('/').last == subcat} rescue nil
           if index_of_subcat
             selected_cat[selected_cat.keys.first].last.insert(0,selected_cat[selected_cat.keys.first].last.delete_at(index_of_subcat))
           end
