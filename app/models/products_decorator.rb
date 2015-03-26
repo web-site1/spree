@@ -15,9 +15,9 @@ Spree::Product.class_eval do
 
   def product_type
     type = ' '
-    t = self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }
-    if !t.empty?
-      type = t.first.permalink.split('/')[1]
+    t = self.cat_taxon
+    if t
+      type = t.permalink.split('/')[1]
     end
     return type
   end
@@ -31,8 +31,13 @@ Spree::Product.class_eval do
 
   def pattern
     if !(self.product_type == 'flowers')
-      self.taxons.first.name rescue ' '
+      #self.taxons.first.name rescue ' '
+      self.cat_taxon.name rescue ' '
     end
+  end
+
+  def cat_taxon
+    self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }.first rescue nil
   end
 
 

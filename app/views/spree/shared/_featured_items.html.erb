@@ -1,17 +1,19 @@
 
 
 <div class="col-lg-12">
-
+  <% fps = featured_products %>
   <div class="jcarousel-wrapper">
     <div class="headline"><h3>Featured Items</h3></div>
     <div class="jcarousel featured-items" id="featured-items">
       <ul>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
-        <li><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></li>
+        <li>
+          <% fps.each do |fp| %>
+            <%# image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %>
+              <% url = product_url(fp, :taxon_id => @taxon.try(:id)) %>
+              <%= link_to product_image(fp, :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
+                          title: fp.name%>
+          <% end %>
+        </li>
       </ul>
     </div>
 

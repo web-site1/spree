@@ -120,5 +120,14 @@ module ApplicationHelper
     return selected_hash
   end
 
+  def featured_products
+    featured_taxon = Spree::Taxon.featured
+    featured_products_array = []
+    if !featured_taxon.empty?
+      featured_products_array = featured_taxon.first.products
+    end
+    return featured_products_array
+  end
+
 
 end
