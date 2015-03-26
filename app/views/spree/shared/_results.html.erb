@@ -42,7 +42,7 @@
               <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
                           title: product.name%>
               <div class="item-label" title="<%=product.name %>">
-                <%= truncate(product.name, :length => 25) %>
+                <%= truncate(product.name, :length => 20) %>
               </div>
             </li>
             <% end %>
