@@ -39,7 +39,7 @@
             <% @products.each do |product| %>
                 <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
             <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-              <%= link_to small_image(product, :itemprop => "image",class: "img-responsive"), url, :itemprop => 'url' %>
+              <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url' %>
               <div class="item-label">
                 <%= truncate(product.name, :length => 50) %>
               </div>

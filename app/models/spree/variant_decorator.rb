@@ -21,7 +21,7 @@ module Spree
 
     alias_method :orig_price_in, :price_in
     def price_in(currency)
-      p = itmfil.get_price
+      p = itmfil.get_price rescue nil
       return orig_price_in(currency) unless p
       Spree::Price.new(:variant_id => self.id, :amount => p, :currency => currency)
     end

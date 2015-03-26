@@ -10,7 +10,10 @@ jQuery(document).ready(function ($) {
         }
     );
 
-    $('.cat-click').click(function(){
+    $('.cat-click').click(function(event){
+            $(this).attr('href','');
+            $(this).css('opacity','0.5')
+            event.preventDefault();
             var href = $(this).data("hrefa");
             window.location.href = href
             //alert(href);
