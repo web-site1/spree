@@ -10,6 +10,7 @@ module Spree
       end
     end
 
+
     def variant_width
       self.option_values.select{|ov| ov.option_type.name.downcase == 'width'}.first.name rescue ' '
     end
@@ -21,13 +22,19 @@ module Spree
 
     alias_method :orig_price_in, :price_in
     def price_in(currency)
-      p = itmfil.get_price
+      p = item_no.nil? ? nil : itmfil.get_price
       return orig_price_in(currency) unless p
       Spree::Price.new(:variant_id => self.id, :amount => p, :currency => currency)
     end
 
     def price
       price_in('USD').amount
+    end
+
+    def display_price
+      p = item_no.nil? ? nil : itmfil.get_price
+      return Spree::Money.new(999999.99, :currency => currency).to_s unless p
+      Spree::Money.new(p, :currency => currency).to_s
     end
 
   end

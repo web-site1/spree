@@ -8,6 +8,7 @@ class Itmfil < PbsData
   after_initialize :fill_from_template
 
   has_many :stafils, :primary_key => :item_no, :foreign_key => :item_no, :dependent => :destroy
+  belongs_to :variant, :primary_key => :item_no, :foreign_key => :item_no, class_name: 'Spree::Variant', inverse_of: :prices, touch: true, :dependent => :destroy
 
   def disp_item_no
     itm = item_no.sub(/^[0]*/,'').strip
@@ -19,6 +20,11 @@ class Itmfil < PbsData
     end
   end
 
+  def default_price
+    item_prc_1
+  end
+
+  # TODO Add customer specific price lookup here
   def get_price
     item_prc_1
   end
