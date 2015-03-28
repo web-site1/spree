@@ -66,9 +66,10 @@ Rails.application.routes.draw do
   get '/1-velvet-grosgrain-ribbon-category', to: redirect('t/categories/ribbons/velvet/velvet-grosgrain')
   get '/1-:subcat-grosgrain-ribbon-category', to: redirect('/t/categories/ribbons/grosgrain/%{subcat}-grosgrain')
 
-  get '/1-dotted-ribbon-category.htm', to: redirect('/t/categories/ribbons/dot-ribbon')
-  get '/1-:subcat-velvet-ribbon-category.htm', to: redirect('/t/categories/ribbons/velvet/%{subcat}-velvet')
-
+  get '/1-dotted-ribbon-category', to: redirect('/t/categories/ribbons/dot-ribbon')
+  get '/1-:subcat-velvet-ribbon-category', to: redirect('/t/categories/ribbons/velvet/%{subcat}-velvet')
+  get '/eurototes-:subcat', to: redirect('/t/categories/eurototes/%{subcat}')
+  get '/eurototes', to: redirect('/t/categories/eurototes')
 
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
