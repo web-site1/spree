@@ -78,6 +78,9 @@ Rails.application.routes.draw do
   # Redirect correctly formatted CATEGORY  pages:
   get '1-:cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}-ribbon')
 
+  # Tulle & Trims
+  get '1-:cat-category', to: redirect('/t/categories/%{cat}')
+
   # Redirect all old product requests to new url
   # #Ex: Old: /1-venetian-blue-nyvalour-velvet-ribbon-description.htm
   #      New: /products/venetian-blue-nyvalour-velvet-ribbon
