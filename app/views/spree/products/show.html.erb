@@ -191,13 +191,18 @@
           <%= form_for :order, :url => populate_orders_path do |f| %>
 
             <div class="row">
+              <% @colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq  rescue [])%>
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-                <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+                <% if @colors.length > 0 %>
+                  <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+                <% end %>
               </div>
+
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                <h3>Color</h3>
-                <% @colors = @product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq %>
-                <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
+                <% if @colors.length > 0 %>
+                  <h3>Color</h3>
+                  <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
+                <% end %>
               </div>
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
                 <h3>Quantity</h3>
