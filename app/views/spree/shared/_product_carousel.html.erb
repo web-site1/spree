@@ -5,10 +5,16 @@
       <ul>
         <% products.each do |product| %>
             <li>
-              <%# image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %>
-              <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
-              <%= link_to product_image(product, :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
-                          title: product.name%>
+              <%
+                 taxon = product.cat_taxon
+                next if taxon.nil?
+              %>
+
+              <% url = "/t/#{taxon.permalink}" %>
+              <%= link_to image_tag(taxon.icon(:normal), :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
+                          title: taxon.name%>
+
+
             </li>
         <% end %>
 

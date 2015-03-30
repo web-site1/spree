@@ -1,0 +1,32 @@
+<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+  <div class="well well-lg">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+      </div>
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+        <h3 class="headline drill-down-headline"><%= @quick_title %></h3>
+        <p></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="results row">
+    <ul>
+          <% @products.each do |product| %>
+              <% cache [I18n.locale, product] do %>
+                  <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
+                  <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                    <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                                title: product.name %>
+                    <div class="item-label" title="<%=product.name %>">
+                      <%= truncate(product.name, :length => 35) %>
+                    </div>
+                  </li>
+              <% end %>
+          <% end %>
+    </ul>
+  </section>
+
+</div> <!-- row -->

@@ -30,9 +30,22 @@
       <div class="col-lg-12">
 
         <ul class="nav navbar-nav navbar-right mini-nav-right" id="mini-nav">
+          <% if spree_current_user %>
+              <li class="my-account">
+                <%= link_to '<span class="fa fa-user"></span> My Account'.html_safe, spree.account_path %></li>
+              <li><%= link_to Spree.t(:logout), spree.logout_path %></li>
+          <% else %>
+              <li id="my-account link-to-login">
+                <%= link_to '<span class="fa fa-user"></span> Login '.html_safe, spree.login_path %></li>
+              <li><a href="#">|</a></li>
+              <li id="link-to-login">
+                <%= link_to "Register", spree.signup_path %></li>
+           <% end %>
+        <!--
           <li class="my-account"><a href="#"><span class="fa fa-user"></span> My Account</a></li>
           <li><a href="#">Login</a></li>
           <li><a href="#">Register</a></li>
+        -->
         </ul>
 
       </div>
@@ -41,11 +54,11 @@
 
         <ul class="nav navbar-nav navbar-right main-nav-right" id="main-nav">
           <li class="nav-home active"><%= link_to Spree.t(:home), spree.root_path %></li>
-          <li class="nav-ribbons"><a href="#">Ribbons</a></li>
-          <li class="nav-new-items"><a href="#">New Items</a></li>
+          <li class="nav-ribbons"><a href="/t/categories/ribbons">Ribbons</a></li>
+          <li class="nav-new-items"><a href="/show_new_arrivals">New Items</a></li>
           <li class="nav-specials"><a href="#">Specials</a></li>
           <li class="nav-accessories"><a href="#">Accessories</a></li>
-          <li class="nav-featured"><a href="#">Featured</a></li>
+          <li class="nav-featured"><a href="/t/tags/featured">Featured</a></li>
           <li class="nav-search">
             <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
                 <div id="search">

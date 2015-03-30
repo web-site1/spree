@@ -5,7 +5,7 @@ require File.expand_path('../../config/environment', __FILE__)
 # Cord on a spool
 # options color and putup
 
-r = RcPbs.where("ws_subcat like 'cord%'")
+r = RcPbs.where("ws_subcat like 'jute%cord%'")
 
 
 ribbon_putup_option = Spree::OptionType.find_by_name('ribbon-putup')

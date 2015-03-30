@@ -18,6 +18,10 @@ module Spree
       self.option_values.select{|ov| ov.option_type.name.downcase == 'color'}.first.name rescue ' '
     end
 
+    def has_color?
+      !(self.option_values.select{|ov| ov.option_type.name.downcase == 'color'}.empty?)
+    end
+
 
     alias_method :orig_price_in, :price_in
     def price_in(currency)
