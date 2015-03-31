@@ -87,7 +87,8 @@ Rails.application.routes.draw do
   #      New: /products/venetian-blue-nyvalour-velvet-ribbon
   get '/1-:product-description', to: redirect('/products/%{product}')
 
-
+  get 'show_new_arrivals' => 'spree/products#show_new_arrivals'
+  get 'why_shop/:id' => 'spree/home#why_shop'
   # get '1-:prod-description', to: redirect  { |path_params|
   #         Rails.logger.debug "!!! /products/#{path_params[:prod]}"
   #         "/products/#{path_params[:prod]}"
