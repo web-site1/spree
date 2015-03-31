@@ -20,4 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  spree:
+    print_invoice:
+      buttons:
+        picking_ticket: Print Picking Ticket
+      picking_ticket: Picking Ticket

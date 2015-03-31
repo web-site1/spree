@@ -75,4 +75,6 @@ gem 'capistrano-passenger'
 gem 'sshkit', '~> 1.4.0'
 gem 'progress_bar'
 
+gem 'spree_print_invoice', github: 'spree-contrib/spree_print_invoice', branch: '3-0-stable'
+
 #gem 'activemerchant', '~> 1.47'
