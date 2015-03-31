@@ -1,6 +1,6 @@
 require File.expand_path('../../config/environment', __FILE__)
                                  #165
-geomesh_taxon = Spree::Taxon.find(165)
+geomesh_taxon = Spree::Taxon.find(374)
 
 geo_prods = geomesh_taxon.products
 
