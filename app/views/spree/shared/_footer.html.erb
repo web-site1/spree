@@ -8,7 +8,7 @@
         <%= image_tag "logo_footer.png", alt: "Artistic Ribbon", class: "img-responsive" %>
         </div>
         <h5>About</h5>
-        <p>Artistic Ribbon has been serving thousands of manufacturers, distributors and mass merchandisers internationally since 1928. <a href="#">Read more...</a></p>
+        <p>Artistic Ribbon has been serving thousands of manufacturers, distributors and mass merchandisers internationally since 1928. <a href="/why_shop/about_us">Read more...</a></p>
       </div>
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 footer-column">
         <h5>News &amp; Info</h5>
@@ -22,7 +22,21 @@
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 footer-column">
         <h5>Important Links</h5>
         <ul>
-          <li><a href="#">Register / Login</a></li>
+          <!-- <li><a href="#">Register / Login</a></li> -->
+          <% if spree_current_user %>
+              <li>
+                <%= link_to '<span class="fa fa-user"></span> My Account'.html_safe, spree.account_path %> /
+              <%= link_to Spree.t(:logout), spree.logout_path %></li>
+          <% else %>
+              <li>
+                <%= link_to "Register ", spree.signup_path %>/
+                <%= link_to ' Login '.html_safe, spree.login_path %></li>
+
+              </li>
+
+          <% end %>
+
+
           <li><a href="#">Contact</a></li>
           <li><a href="#">Privacy</a></li>
           <li><a href="#">Terms of Use</a></li>
