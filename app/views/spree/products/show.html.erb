@@ -402,6 +402,36 @@
 
   }
 
+  function change_variant_by_id(variant_id){
+    for(var i = 0; i < variants.length; i++){
+      if(variants[i][0]==variant_id){
+        selected_variant_index = i;
+        break;
+      }
+    }
+
+    value = variants[selected_variant_index];
+    var windex = widths.indexOf(value[1])+1;
+    if(windex) 
+      $("#width-slider").slider("value", windex);
+    var dindex = diameters.indexOf(value[6])+1;
+    if(dindex)
+      $("#diameter-slider").slider("value",dindex);
+    var tindex = totes.indexOf(value[8].toLowerCase())+1
+    if(tindex)     
+      $("#tote-slider").slider("value",tindex);
+    var pindex = putups.indexOf(value[2])+1;
+    if(pindex)
+      $("#putup-slider").slider("value",pindex);
+    var lindex = lengths.indexOf(value[7])+1
+    if(lindex)
+      $("#length-slider").slider("value",lindex);
+    if(value[9]!='')
+      $('#color-selector').val(value[9]);
+
+    change_variant();
+
+  }
 
   // $(document).ready(function(){
 
@@ -521,7 +551,7 @@
     else
       cookieWidth = variants[0][1]
     
-    console.log(cookieWidth);
+    // console.log(cookieWidth);
 
     $('#width-slider .labels li').each(function(i,el){
       if($(el).html()==cookieWidth){
@@ -536,7 +566,7 @@
     else
       cookieDiameter = variants[0][6]
     
-    console.log(cookieDiameter);
+    // console.log(cookieDiameter);
 
     $('#diameter-slider .labels li').each(function(i,el){
       if($(el).html()==cookieDiameter){
@@ -551,7 +581,7 @@
     else
       cookieTote = variants[0][8];
 
-    console.log(cookieTote);
+    // console.log(cookieTote);
 
     $('#tote-slider .labels li').each(function(i,el){
       if($(el).html()==cookieTote){
@@ -566,7 +596,7 @@
     else
       cookiePutup = variants[0][2];
 
-    console.log(cookiePutup);
+    // console.log(cookiePutup);
 
     $('#putup-slider .labels li').each(function(i,el){
       if($(el).html()==cookiePutup){
@@ -580,7 +610,7 @@
     else
       cookieLength = variants[0][7]
     
-    console.log(cookieLength);
+    // console.log(cookieLength);
 
     $('#length-slider .labels li').each(function(i,el){
       if($(el).html()==cookieLength){
@@ -592,6 +622,8 @@
     // For colors cookie is not required since we switch page by color.
 
     change_variant();
+    if($('.price span span').text()=="Not Available")
+      change_variant_by_id(variants[0][0]);
 
     $(document).on('change','.colors_page',function(event){
       windex = $('#width-slider').slider("option","value");
@@ -614,8 +646,8 @@
       lvalue = $($('#length-slider .labels li')[lindex-1]).html();
       setCookie('sLength',lvalue);
 
-      console.log(wvalue);
-      console.log(lvalue);
+      // console.log(wvalue);
+      // console.log(lvalue);
       
       window.location='/products/'+$(this).val();
       event.preventDefault();
