@@ -169,7 +169,10 @@
          <% if Spree::Order.checkout_step_names.include?(:delivery) %>
           <th><%= sort_link @search, :shipment_state, I18n.t(:shipment_state, :scope => 'activerecord.attributes.spree/order') %></th>
          <% end %>
-        <th><%= sort_link @search, :email,            I18n.t(:email, :scope => 'activerecord.attributes.spree/order') %></th>
+        <th> <%# sort_link @search, :email,            I18n.t(:email, :scope => 'activerecord.attributes.spree/order') %>
+            Name
+        </th>
+
         <th><%= sort_link @search, :total,            I18n.t(:total, :scope => 'activerecord.attributes.spree/order') %></th>
         <th data-hook="admin_orders_index_header_actions" class="actions"></th>
       </tr>
@@ -177,7 +180,14 @@
     <tbody>
     <% @orders.each do |order| %>
       <tr data-hook="admin_orders_index_rows" class="state-<%= order.state.downcase %> <%= cycle('odd', 'even') %>">
-        <td><%= l (@show_only_completed ? order.completed_at : order.created_at).try(&:to_date) %></td>
+        <td>
+          <% show_dt =  (@show_only_completed) ? order.completed_at : order.created_at %>
+          <span title="<%=show_dt%>">
+            <%= l (@show_only_completed ? order.completed_at : order.created_at).try(&:to_date) %>
+          </span>
+        </td>
+
+
         <td><%# link_to order.number, edit_admin_order_path(order) %> <%= link_to order.number , spree.admin_order_path(order, :pdf, template: "picking_ticket"),
                                                                                   title: %Q{Print Picking Ticket for #{order.number}},
                                                                                   target: "_blank" %></td>
@@ -206,13 +216,21 @@
         <% end %>
         <td>
           <% if order.user %>
-            <%= link_to order.email, edit_admin_user_path(order.user) %>
+            <%= link_to order.name, edit_admin_user_path(order.user) %>
           <% else %>
             <%= mail_to order.email %>
           <% end %>
-          <% if order.user || order.email %>
-            <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_email_cont" data-ransack-value="<%= order.email %>"></span>
-          <% end %>
+
+         <%# if order.user %>
+            <%# link_to order.email, edit_admin_user_path(order.user) %>
+          <%# else %>
+            <%# mail_to order.email %>
+          <%# end %>
+
+
+          <%# if order.user || order.email %>
+            <!-- <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_email_cont" data-ransack-value="<%# order.email %>"></span> -->
+          <%# end %>
         </td>
         <td><%= order.display_total.to_html %></td>
         <td class='actions actions-1' data-hook="admin_orders_index_row_actions">

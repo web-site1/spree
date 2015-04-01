@@ -135,4 +135,8 @@ module ApplicationHelper
   end
 
 
+  def rate_range(rates,amt)
+    rates.reject{|r| !r.shipping_method.sack_range.include?(amt) }
+  end
+
 end
