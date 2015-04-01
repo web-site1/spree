@@ -24,6 +24,14 @@ module Spree::Search
               with(:widths).any_of(params[:widths])
             end
 
+            if params.has_key?(:diameters) && !(params[:diameters].include?('place-holder'))
+              with(:diameters).any_of(params[:diameters])
+            end
+
+            if params.has_key?(:tote_sizes) && !(params[:tote_sizes].include?('place-holder'))
+              with(:tote_sizes).any_of(params[:tote_sizes])
+            end
+
             if params.has_key?(:ribbon_putups) && !(params[:ribbon_putups].include?('place-holder'))
               with(:ribbon_putups).any_of(params[:ribbon_putups])
             end
@@ -40,6 +48,8 @@ module Spree::Search
             facet :wired
             facet :type
             facet :widths
+            facet :diameters
+            facet :tote_sizes
             facet :ribbon_putups
             facet :color
             facet :pattern
