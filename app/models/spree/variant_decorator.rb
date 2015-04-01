@@ -22,6 +22,18 @@ module Spree
       !(self.option_values.select{|ov| ov.option_type.name.downcase == 'color'}.empty?)
     end
 
+    def cat_and_subcat
+      rcat = []
+      taxon  = self.product.cat_taxon rescue nil
+      if taxon
+        split_perm = taxon.permalink.split('/')
+        l = split_perm.length
+        rcat << split_perm[l-2].gsub('-',' ').titlecase rescue ' '
+        rcat << split_perm[l-1].gsub('-',' ').titlecase rescue ' '
+      end
+      return rcat
+    end
+
 
     alias_method :orig_price_in, :price_in
     def price_in(currency)
