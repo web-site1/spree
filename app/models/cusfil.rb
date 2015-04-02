@@ -25,6 +25,7 @@ private
     # self.item_prod_cat      ||= ''
     # self.item_prod_sub_cat  ||= ''
     # self.item_prime_vend    ||= ''
+    #
   end
 
 end
