@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150324142975) do
+ActiveRecord::Schema.define(version: 20150331190639) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -355,6 +355,8 @@ ActiveRecord::Schema.define(version: 20150324142975) do
     t.datetime "canceled_at"
     t.integer  "canceler_id",            limit: 4
     t.integer  "store_id",               limit: 4
+    t.integer  "invoice_number",         limit: 4
+    t.date     "invoice_date"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id"

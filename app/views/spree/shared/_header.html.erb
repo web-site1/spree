@@ -41,6 +41,13 @@
               <li id="link-to-login">
                 <%= link_to "Register", spree.signup_path %></li>
            <% end %>
+          <li id="link-to-cart" data-hook>
+            <noscript>
+              <%= link_to Spree.t(:cart), '/cart' %>
+            </noscript>
+            &nbsp;
+          </li>
+          <script>Spree.fetch_cart()</script>
         <!--
           <li class="my-account"><a href="#"><span class="fa fa-user"></span> My Account</a></li>
           <li><a href="#">Login</a></li>
