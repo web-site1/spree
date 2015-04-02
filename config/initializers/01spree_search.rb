@@ -44,6 +44,8 @@ module Spree::Search
               with(:wired).any_of(params[:wired])
             end
 
+            order_by :available_on, :desc
+
             facet :pattern
             facet :wired
             facet :type
