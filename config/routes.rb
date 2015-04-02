@@ -71,6 +71,20 @@ Rails.application.routes.draw do
   get '/eurototes-:subcat', to: redirect('/t/categories/eurototes/%{subcat}')
   get '/eurototes', to: redirect('/t/categories/eurototes')
 
+  get '/1-cord-on-a-spool-category', to: redirect('/t/categories/tulle-and-trims/cord-on-a-spool')
+  get '/1-stretch-loops-category', to: redirect('/t/categories/tulle-and-trims/stretch-loops')
+  get '/1-tulle-category', to: redirect('/t/categories/tulle-and-trims/tulle')
+  get '/1-sparkle-tulle-category', to: redirect('/t/categories/tulle-and-trims/sparkle-tulle')
+  get '/1-dotted-tulle-category', to: redirect('/t/categories/tulle-and-trims/dotted-tulle')
+  get '/1-jeannie-tulle-category', to: redirect('/t/categories/tulle-and-trims/jeannie-tulle')
+  get '/1-lacey-category', to: redirect('/t/categories/tulle-and-trims/lacey')
+  get '/1-jute-cord-category', to: redirect('/t/categories/tulle-and-trims/jute-cord')
+  get '/1-geomesh-category', to: redirect('/t/categories/tulle-and-trims/geomesh')
+  get '/1-geomesh-cross-category', to: redirect('/t/categories/tulle-and-trims/geomesh-cross')
+  get '/1-giltter-maze-category', to: redirect('/t/categories/tulle-and-trims/giltter-maze')
+  get '/1-love-foiled-category', to: redirect('/t/categories/tulle-and-trims/love-foiled')
+  get '/1-jasmine-category', to: redirect('/t/categories/tulle-and-trims/jasmine')
+
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
 
