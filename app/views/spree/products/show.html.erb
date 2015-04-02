@@ -123,90 +123,168 @@
         </div> <!-- product details -->
 
         <div class="product-settings">
+          <% @product_type = (@product_properties.first.value rescue '') %>
+          
 
-          <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-              <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
-              <h3>Width</h3>
-              <div id="width-slider">
-                <ol class="labels">
+          <% @sorted_widths = (@product.widths.uniq rescue []) %>
+
+          <% if @sorted_widths.count > 1 #['Ribbon'].include? @product_type  %>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Width</h3>
+                <div id="width-slider">
+                  <ol class="labels">
                   
-                  <% #TODO: Move sort method to helper %>
-
-                  <% @sorted_widths = @product.widths.uniq.sort{ |a,b| 
+                    <% @sorted_widths = @sorted_widths.sort{ |a,b| compare_lengths(a,b) } %>
+                    <% @sorted_widths.each do |width| %>
                     
-                    aa = a.split('-')
-                    na=0
-                    if(aa.length>1)
-                      na = aa[0].to_f
-                      aal = aa[1].split('/')
-                    else
-                      aal = aa[0].split('/')
-                    end
-                    na += aal[0].to_f/aal[1].to_f
-                    
-                    bb = b.split('-')
-                    nb=0
-                    if(bb.length>1)
-                      nb = bb[0].to_f
-                      bbl = bb[1].split('/')
-                    else
-                      bbl = bb[0].split('/')
-                    end
-                    nb+= bbl[0].to_f/bbl[1].to_f
-                    
-                    na <=> nb
-
-                  } %>
-                  <% @sorted_widths.each do |width| %>
-                  
-                    <li><%= width %></li>
-                  <% end %>
-                </ol>
+                      <li><%= width %></li>
+                    <% end %>
+                  </ol>
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
 
-          <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-              <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
-              <h3>Length</h3>
-              <div id="length-slider">
-                <ol class="labels">
-                  <% @sorted_putups = @product.ribbon_putups.uniq.sort{|a,b| 
-                    a.to_f <=> b.to_f
-                    }%>
-                  <% @sorted_putups.each do |putup| %>
-                    <li><%= putup %></li>
-                  <% end %>
-                </ol>
+          <% @sorted_diameters = (@product.diameters.uniq rescue []) %>
+
+          <% if @sorted_diameters.count > 1 #['Ribbon'].include? @product_type  %>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <!-- TODO: Replace by diameter image -->
+                <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>DiaMeter</h3>
+                <div id="diameter-slider">
+                  <ol class="labels">
+                  
+                    <% @sorted_diameters = @sorted_diameters.sort{ |a,b| compare_lengths(a,b) } %>
+                    <% @sorted_diameters.each do |diameter| %>
+                    
+                      <li><%= diameter %></li>
+                    <% end %>
+                  </ol>
+                </div>
               </div>
             </div>
-          </div>
+          <% end %>
+
+          <% @sorted_totes = (@product.tote_sizes.uniq rescue []) %>
+          <% if @sorted_totes.length > 1 #['Ribbon'].include? @product_type %>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <!-- TODO: change image -->
+                <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Size</h3>
+                <div id="tote-slider">
+                  <ol class="labels">
+                    <% @sorted_totes = @sorted_totes.sort{|a,b| 
+                      a.to_f <=> b.to_f
+                      }%>
+                    <% @sorted_totes.each do |tote| %>
+                      <li><%= tote %></li>
+                    <% end %>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+
+          <% @sorted_putups = (@product.ribbon_putups.uniq rescue []) %>
+          <% if @sorted_putups.length > 1 #['Ribbon'].include? @product_type %>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Length</h3>
+                <div id="putup-slider">
+                  <ol class="labels">
+                    <% @sorted_putups = @sorted_putups.sort{|a,b| 
+                      a.to_f <=> b.to_f
+                      }%>
+                    <% @sorted_putups.each do |putup| %>
+                      <li><%= putup %></li>
+                    <% end %>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <% @sorted_lengths = (@product.lengths.uniq rescue []) %>
+
+          <% if @sorted_lengths.count > 1 #['Ribbon'].include? @product_type  %>
+            <div class="row">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Length</h3>
+                <div id="length-slider">
+                  <ol class="labels">
+                  
+                    <% @sorted_lengths = @sorted_lengths.sort{ |a,b| compare_lengths(a,b) } %>
+                    <% @sorted_lengths.each do |length| %>
+                    
+                      <li><%= length %></li>
+                    <% end %>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
 
           <%= form_for :order, :url => populate_orders_path do |f| %>
 
             <div class="row">
-              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-                <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-              </div>
-              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                <h3>Color</h3>
-                <% @colors = @product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq %>
-                <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors", "data-toggle"=>"select" %> 
-              </div>
+              <% @sorted_colors = (@product.colors.uniq rescue []) %>
+
+              <% if @sorted_colors.length != 0 # ['Ribbon','Tulle & Trims'].include? @product_type %>                
+                <% if @sorted_colors.length == 1 %>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                      <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+                  </div>
+                  <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                      <h3>Color</h3>
+                      <% @colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq  rescue [])%>
+                      <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
+                  </div>
+                <% else %>
+                  <!-- here we will display color as options -->
+                  <% if @sorted_colors.length > 1 %>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                        <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <h3>Color</h3>
+                        <%= select_tag 'color-selector', options_for_select(@sorted_colors),:class=>"form-control select select-primary colors colors_variant", "data-toggle"=>"select" %> 
+                    </div>
+                  <% end %>
+
+                <% end %>
+              <% else %>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col"></div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5"></div>
+              <% end %>
+
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
                 <h3>Quantity</h3>
                 <%= text_field_tag :quantity, 1, :class => 'input-sm spinner form-control', :min => 1 %>
 
                 <!-- <input type="text" id="spinner-05" value="0" class="form-control input-sm spinner" /> -->
               </div>
-
             </div>
+            
+
             <%= hidden_field_tag "variant_id", @product.master.id %>
             <div class="row bottom-row">
 
@@ -273,148 +351,334 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/Javascript">
-  out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
-  variants = [];
-  <% @product.variants.each do |variant| %>
-    variants.push([<%=variant.id%>,"<%=variant.option_value('width')%>","<%=variant.option_value('ribbon-putup')%>","<%= display_price(variant) %>",<%= variant.can_supply? %>,"<%= variant.sku %>"]);
-  <% end %>
-
-  widths = [];
-  <% @sorted_widths.each do |width| %>
-    widths.push("<%= width %>");
-  <% end %>
-
-  putups = [];
-  <% @sorted_putups.each do |putup| %>
-    putups.push("<%= putup.gsub('-',' ') %>");
-  <% end %>
-
-
-  witems = $('#width-slider .labels li').length;
-  litems = $('#length-slider .labels li').length;
-  // calculate value from default product below.
-
-  wslider = $("#width-slider");
-  if (wslider.length > 0) {
-    wslider.slider({
-      min: 1,
-      max: witems,
-      value: 1,
-      orientation: "horizontal",
-      range: "min",
-      change: change_variant
-    }).addSliderSegments(wslider.slider("option").max);
-  }
-
-  lslider = $("#length-slider");
-  if (lslider.length > 0) {
-    lslider.slider({
-      min: 1,
-      max: litems,
-      value: 1,
-      orientation: "horizontal",
-      range: "min",
-      change: change_variant
-    }).addSliderSegments(lslider.slider("option").max);
-  }
+  
 
   function change_variant(event,ui){
-    var width_index = $("#width-slider").slider("value")*1-1;
-    var putup_index = $("#length-slider").slider("value")*1-1;
-    selected_width = widths[width_index];
-    selected_putup = putups[putup_index];
-    // console.log('selected_width: '+selected_width);
-    // console.log('selected_putup: '+selected_putup);
-    selected_variant = -1;
-    $.each(variants,function(index,value){
-      if(value[1]==selected_width && value[2]==selected_putup){
-        selected_variant = index;
-      }
-    });
-    if(selected_variant==-1){
-      $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
-      $('#add-to-cart-button').hide();
-      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+    if(variants.length >0 ){
+      var width_index = $("#width-slider").slider("value")*1-1;
+      var diameter_index = $("#diameter-slider").slider("value")*1-1;
+      var tote_index = $("#tote-slider").slider("value")*1-1;
+      var putup_index = $("#putup-slider").slider("value")*1-1;
+      var length_index = $("#length-slider").slider("value")*1-1;
+      // var colors_index = colors.indexOf($(".colors_variant").val());
+      
 
-    }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
-      $('#variant_id').val(variants[selected_variant][0]);
-      $('.price span').html(variants[selected_variant][3]);
+      selected_width = widths.length > 1 ? widths[width_index] : (widths.length==0 ? '' : widths[0]);
+      selected_diameter = diameters.length>1 ? diameters[diameter_index] : (diameters.length==0 ? '' : diameters[0]);
+      selected_tote = totes.length > 1 ? totes[tote_index] : (totes.length==0 ? '' : totes[0]);
+      selected_putup = putups.length > 1 ? putups[putup_index] : (putups.length==0 ? '' : putups[0]);
+      selected_length = lengths.length > 1 ? lengths[length_index] : (lengths.length==0 ? '' : lengths[0]);
+      selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : colors[0])
+      // console.log('selected_width: '+selected_width);
+      // console.log('selected_putup: '+selected_putup);
+      selected_variant = -1;
+      $.each(variants,function(index,value){
+        if(value[1]==selected_width && value[2]==selected_putup && value[6]==selected_diameter && value[7]==selected_length && value[8].toLowerCase()==selected_tote.toLowerCase() && value[9] == selected_color){
+          selected_variant = index;
+        }
+      });
+      if(selected_variant==-1){
+        $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
+        $('#add-to-cart-button').hide();
+        $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+
+      }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
+        $('#variant_id').val(variants[selected_variant][0]);
+        $('.price span').html(variants[selected_variant][3]);
+        $('#add-to-cart-button').show();
+        $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
+        // console.log("variant_found");
+      }else{ // out of stock
+        $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
+        $('#add-to-cart-button').hide();
+        $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+      }
+    }else{
+      $('#variant_id').val("<%=@product.master.id%>");
+      $('.price span').html("<%=display_price(@product.master)%>");
       $('#add-to-cart-button').show();
-      $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
-      // console.log("variant_found");
-    }else{ // out of stock
-      $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
-      $('#add-to-cart-button').hide();
-      $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+      $('.product-details ul #sku').html('<strong>SKU</strong> : <%=@product.master.sku%>');
     }
 
   }
 
-  $('.product-details ul').append('<li id="sku"><strong>SKU</strong> : NA </li>');
+  function change_variant_by_id(variant_id){
+    for(var i = 0; i < variants.length; i++){
+      if(variants[i][0]==variant_id){
+        selected_variant_index = i;
+        break;
+      }
+    }
 
-  change_variant();
+    value = variants[selected_variant_index];
+    var windex = widths.indexOf(value[1])+1;
+    if(windex) 
+      $("#width-slider").slider("value", windex);
+    var dindex = diameters.indexOf(value[6])+1;
+    if(dindex)
+      $("#diameter-slider").slider("value",dindex);
+    var tindex = totes.indexOf(value[8].toLowerCase())+1
+    if(tindex)     
+      $("#tote-slider").slider("value",tindex);
+    var pindex = putups.indexOf(value[2])+1;
+    if(pindex)
+      $("#putup-slider").slider("value",pindex);
+    var lindex = lengths.indexOf(value[7])+1
+    if(lindex)
+      $("#length-slider").slider("value",lindex);
+    if(value[9]!='')
+      $('#color-selector').val(value[9]);
 
-  if(getCookie('sWidth')!= null){
-    var cookieWidth = getCookie('sWidth')
+    change_variant();
+
+  }
+
+  // $(document).ready(function(){
+
+    // Add SKU to products page
+    $('.product-details ul').append('<li id="sku"><strong>SKU</strong> : NA </li>');
+
+    out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
+    variants = [];
+    <% @product.variants.each do |variant| %>
+      variants.push([<%=variant.id%>,
+        "<%=variant.option_value('width')%>",
+        "<%=variant.option_value('ribbon-putup')%>",
+        "<%= display_price(variant) %>",
+        <%= variant.can_supply? %>,
+        "<%= variant.sku %>",
+        "<%=variant.option_value('diameter')%>",
+        "<%=variant.option_value('length')%>",
+        "<%=variant.option_value('tote-size')%>",
+        "<%=variant.option_value('color')%>"]);
+    <% end %>
+
+    widths = [];
+    <% @sorted_widths.each do |width| %>
+      widths.push("<%= width %>");
+    <% end %>
+
+    diameters = [];
+    <% @sorted_diameters.each do |diameter| %>
+      diameters.push("<%= diameter %>");
+    <% end %>
+
+    totes = [];
+    <% @sorted_totes.each do |tote| %>
+      totes.push("<%= tote.gsub('-',' ') %>");
+    <% end %>
+
+    putups = [];
+    <% @sorted_putups.each do |putup| %>
+      putups.push("<%= putup.gsub('-',' ') %>");
+    <% end %>
+
+    lengths = [];
+    <% @sorted_lengths.each do |length| %>
+      lengths.push("<%= length %>");
+    <% end %>
+    
+    colors = [];
+    <% @sorted_colors.each do |color| %>
+      colors.push("<%= color %>");
+    <% end %>
+    // calculate value from default product below.
+
+    wslider = $("#width-slider");
+    if (wslider.length > 0) {
+      wslider.slider({
+        min: 1,
+        max: widths.length,
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        change: change_variant
+      }).addSliderSegments(wslider.slider("option").max);
+    }
+
+    dslider = $("#diameter-slider");
+    if (dslider.length > 0) {
+      dslider.slider({
+        min: 1,
+        max: diameters.length,
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        change: change_variant
+      }).addSliderSegments(dslider.slider("option").max);
+    }
+
+    tslider = $("#tote-slider");
+    if (tslider.length > 0) {
+      tslider.slider({
+        min: 1,
+        max: totes.length,
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        change: change_variant
+      }).addSliderSegments(tslider.slider("option").max);
+    }
+
+    pslider = $("#putup-slider");
+    if (pslider.length > 0) {
+      pslider.slider({
+        min: 1,
+        max: putups.length,
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        change: change_variant
+      }).addSliderSegments(pslider.slider("option").max);
+    }
+
+    lslider = $("#length-slider");
+    if (lslider.length > 0) {
+      lslider.slider({
+        min: 1,
+        max: lengths.length,
+        value: 1,
+        orientation: "horizontal",
+        range: "min",
+        change: change_variant
+      }).addSliderSegments(lslider.slider("option").max);
+    }
+
+    // Set defaults value from cookie or default variant
+
+    if(getCookie('sWidth')!= null)
+      cookieWidth = getCookie('sWidth');
+    else
+      cookieWidth = variants[0][1]
+    
+    // console.log(cookieWidth);
+
     $('#width-slider .labels li').each(function(i,el){
       if($(el).html()==cookieWidth){
-        $('#width-slider').slider('option','value',i);
+        $('#width-slider').slider('option','value',i+1);
         setCookie('sWidth',null);
       }
     });
-  }
 
-  if(getCookie('sLength')!= null){
-    var cookieLength = getCookie('sLength')
+
+    if(getCookie('sDiameter')!= null)
+      cookieDiameter = getCookie('sDiameter');
+    else
+      cookieDiameter = variants[0][6]
+    
+    // console.log(cookieDiameter);
+
+    $('#diameter-slider .labels li').each(function(i,el){
+      if($(el).html()==cookieDiameter){
+        $('#diameter-slider').slider('option','value',i+1);
+        setCookie('sDiameter',null);
+      }
+    });
+
+    
+    if(getCookie('sTote')!= null)
+      cookieTote = getCookie('sTote')
+    else
+      cookieTote = variants[0][8];
+
+    // console.log(cookieTote);
+
+    $('#tote-slider .labels li').each(function(i,el){
+      if($(el).html()==cookieTote){
+        $('#tote-slider').slider('option','value',i+1);
+        setCookie('sTote',null);
+      }
+    });
+
+
+    if(getCookie('sPutup')!= null)
+      cookiePutup = getCookie('sPutup')
+    else
+      cookiePutup = variants[0][2];
+
+    // console.log(cookiePutup);
+
+    $('#putup-slider .labels li').each(function(i,el){
+      if($(el).html()==cookiePutup){
+        $('#putup-slider').slider('option','value',i+1);
+        setCookie('sPutup',null);
+      }
+    });
+    
+    if(getCookie('sLength')!= null)
+      cookieLength = getCookie('sLength');
+    else
+      cookieLength = variants[0][7]
+    
+    // console.log(cookieLength);
+
     $('#length-slider .labels li').each(function(i,el){
       if($(el).html()==cookieLength){
         $('#length-slider').slider('option','value',i+1);
         setCookie('sLength',null);
       }
     });
-  }
 
-  $(document).on('change','.colors',function(event){
-    windex = $('#width-slider').slider("option","value");
-    wvalue = $($('#width-slider .labels li')[windex]).html();
-    setCookie('sWidth',wvalue);
+    // For colors cookie is not required since we switch page by color.
 
-    lindex = $('#length-slider').slider("option","value");
-    lvalue = $($('#length-slider .labels li')[lindex-1]).html();
-    setCookie('sLength',lvalue);
+    change_variant();
+    if($('.price span span').text()=="Not Available")
+      change_variant_by_id(variants[0][0]);
 
-    console.log(wvalue);
-    console.log(lvalue);
+    $(document).on('change','.colors_page',function(event){
+      windex = $('#width-slider').slider("option","value");
+      wvalue = $($('#width-slider .labels li')[windex-1]).html();
+      setCookie('sWidth',wvalue);
 
-    window.location='/products/'+$(this).val();
-    event.preventDefault();
-  });
+      dindex = $('#diameter-slider').slider("option","value");
+      dvalue = $($('#diameter-slider .labels li')[dindex-1]).html();
+      setCookie('sDiameter',dvalue);
 
-  wparentWidth = $('#width-slider').width();
+      tindex = $('#tote-slider').slider("option","value");
+      tvalue = $($('#tote-slider .labels li')[tindex-1]).html();
+      setCookie('sTote',tvalue);
 
-  if(witems == 1){
-    witemWidth = wparentWidth;
-    wparentWidth = 0;
-  }else if(witems == 2)
-    witemWidth = wparentWidth;
-  else
-    witemWidth = witems>0 ? parseInt(wparentWidth / witems) : 0;
-  wlabelsWidth = wparentWidth+witemWidth;
-  $('#width-slider ol.labels').css("width",wlabelsWidth); // set width of labels div for widhts options
-  $('#width-slider ol.labels').css("left", "-" + witemWidth/2 +"px"); // adjust to bring label to center
+      pindex = $('#putup-slider').slider("option","value");
+      pvalue = $($('#putup-slider .labels li')[pindex-1]).html();
+      setCookie('sPutup',pvalue);
 
+      lindex = $('#length-slider').slider("option","value");
+      lvalue = $($('#length-slider .labels li')[lindex-1]).html();
+      setCookie('sLength',lvalue);
 
-  lparentWidth = $('#length-slider').width();
-  if(litems == 1){
-    litemWidth = lparentWidth;
-    lparentWidth = 0;
-  }else if(litems == 2)
-    litemWidth = lparentWidth;
-  else
-    litemWidth = litems>0 ? parseInt(lparentWidth / litems) : 0;
+      // console.log(wvalue);
+      // console.log(lvalue);
+      
+      window.location='/products/'+$(this).val();
+      event.preventDefault();
+    });
+
+    
+    $(document).on('change','.colors_variant',change_variant);
+
+    function set_slider_width(div_selector, arr){
+      parentWidth = $(div_selector).width();
+      if(arr.length == 1){
+        itemWidth = parentWidth;
+        parentWidth = 0;
+      }else if(arr.length == 2)
+        itemWidth = parentWidth;
+      else
+        itemWidth = arr.length>0 ? parseInt(parentWidth / arr.length) : 0;
+      labelsWidth = parentWidth+itemWidth;
+      $(div_selector+' ol.labels').css("width",labelsWidth); // set width of labels div for any options
+      $(div_selector+' ol.labels').css("left", "-" + itemWidth/2 +"px"); // adjust to bring label to center  
+    }
+    
+    set_slider_width('#width-slider',widths);
+    set_slider_width('#diameter-slider',diameters);
+    set_slider_width('#tote-slider',totes);
+    set_slider_width('#putup-slider',putups);
+    set_slider_width('#length-slider',lengths);
+
+  // });
   
-  llabelsWidth = lparentWidth+litemWidth;
-  $('#length-slider ol.labels').css("width",llabelsWidth); // set width of labels for length options
-  $('#length-slider ol.labels').css("left", "-" + litemWidth/2 +"px"); // adjust labels to bring to center
+  
+
 
 </script>
