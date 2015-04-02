@@ -46,16 +46,16 @@ module Spree::Search
 
             order_by :available_on, :desc
 
-            facet :pattern
-            facet :wired
-            facet :type
-            facet :widths
-            facet :diameters
-            facet :tote_sizes
-            facet :ribbon_putups
-            facet :color
-            facet :pattern
-            facet :wired
+            facet :pattern,:limit => -1
+            facet :wired,:limit => -1
+            facet :type,:limit => -1
+            facet :widths,:limit => -1
+            facet :diameters,:limit => -1
+            facet :tote_sizes,:limit => -1
+            facet :ribbon_putups,:limit => -1
+            facet :color,:limit => -1
+            facet :pattern,:limit => -1
+            facet :wired,:limit => -1
 
             per_page = (params.has_key?(:per_page)) ? params[:per_page] : Spree::Config[:products_per_page]
 

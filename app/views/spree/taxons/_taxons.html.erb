@@ -35,7 +35,8 @@
         <% end %>
 
       <% else %>
-          <% @taxon.products.order(available_on: :desc).each do |product| %>
+          <% prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []%>
+          <% prods.each do |product| %>
               <% cache [I18n.locale, product] do %>
                   <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
                   <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
