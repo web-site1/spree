@@ -13,20 +13,14 @@
           </ol>
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
-            <div class="item active">
-              <%= render :partial => 'image' %>
-            </div>
-            <div class="item">
-              <%= render :partial => 'image' %>
-            </div>
-            <div class="item">
+            <div class="item active product_main">
               <%= render :partial => 'image' %>
             </div>
           </div>
           <!-- Controls -->
-          <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
+<!--           <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
           <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a>
-        </div>
+ -->        </div>
 
         <div class="row">
 
@@ -55,19 +49,40 @@
             <div class="jcarousel-wrapper">
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %> </a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
-                  <li><a href="#"><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></a></li>
+                  <% @sorted_colors = (@product.colors.uniq rescue []) %>
+                  <% if @sorted_colors.length == 1  %>
+                    <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
+                    
+                    <% @product_colors.each do |product_color| %>
+                        <li>
+                          <%= link_to(image_tag(product_color[2].attachment.url(:mini), class: "img-responsive", title: product_color[0]),"/products/#{product_color[1]}")  %>
+                        </li>
+                    <% end %>
+                  <% else %>
+                    <% if @product.variant_images.length > 1 %>
+                      <% if @product.master.images.first %>
+                        <li>
+                          <%= link_to(image_tag(@product.master.images[0].attachment.url(:mini), purl: @product.master.images[0].attachment.url(:product), class: "img-responsive"),"#", class: "v_color") %>
+                        </li>
+                      <% end %>
+
+                      <% @product.variants.each do |v|%>
+                        <% if v.images.length > 0 %>
+                          <li>
+                            <%= link_to(image_tag(v.images.first.attachment.url(:mini), purl: v.images.first.attachment.url(:product), class: "img-responsive", title: v.option_value('color')),'#', class: 'v_color') %>
+                          </li>
+                        <% end %>
+
+                      <% end %>
+                    <% end %>
+                  <% end %>
                 </ul>
               </div>
 
-              <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-              <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+              <% if @product.variant_images.length > 3 or @product_colors.length > 3 %>
+                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+              <% end %>
 
               <p class="jcarousel-pagination"></p>
             </div>
@@ -198,7 +213,8 @@
 
 
           <% @sorted_putups = (@product.ribbon_putups.uniq rescue []) %>
-          <% if @sorted_putups.length > 1 #['Ribbon'].include? @product_type %>
+          
+          <% if @sorted_putups.length > ( (['Euro-totes'].include?((@product.taxons.first.parent.name rescue ''))  || ["Lacey", "Cord On A Spool", "Love Foiled", "Glitter Maze", "Tulle", "Geomesh", "Geomesh Cross"].include?((@product.taxons.first.name rescue ''))) ? 0 : 1) %>
             <div class="row">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
@@ -246,7 +262,6 @@
           <%= form_for :order, :url => populate_orders_path do |f| %>
 
             <div class="row">
-              <% @sorted_colors = (@product.colors.uniq rescue []) %>
 
               <% if @sorted_colors.length != 0 # ['Ribbon','Tulle & Trims'].include? @product_type %>                
                 <% if @sorted_colors.length == 1 %>
@@ -255,7 +270,7 @@
                   </div>
                   <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                       <h3>Color</h3>
-                      <% @colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug] }.uniq  rescue [])%>
+                      <% @colors = @product_colors.collect{|p| [ p[0],p[1] ]} %>
                       <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
                   </div>
                 <% else %>
@@ -654,7 +669,18 @@
     });
 
     
-    $(document).on('change','.colors_variant',change_variant);
+    $(document).on('change','#color-selector',function(){
+      var selected_color = $(this).val();
+      var selected_imgs = $('.v_color img[title='+selected_color+']');
+      if(selected_imgs.length>0){
+        $('.product_main img').attr('src', $(selected_imgs[0]).attr('purl'));
+      }else{
+        $('.product_main img').attr('src', $('.v_color img').attr('purl'));
+      }
+      change_variant()
+    });
+
+    $('#color-selector').trigger('change');
 
     function set_slider_width(div_selector, arr){
       parentWidth = $(div_selector).width();
@@ -676,6 +702,21 @@
     set_slider_width('#putup-slider',putups);
     set_slider_width('#length-slider',lengths);
 
+ 
+    $(document).on('click','.v_color',function(event){
+      console.log('here');
+      var color_clicked = $(this).find('img').attr('title');
+
+      if(color_clicked){
+        $('#color-selector').val(color_clicked);
+        $('#color-selector').trigger('change');
+      }
+
+      // change product main image
+      $('.product_main img').attr('src',$(this).find('img').attr('purl'));
+
+      event.preventDefault();
+    });
   // });
   
   
