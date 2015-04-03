@@ -24,7 +24,7 @@
             <select name='type[]' class="form-control select select-primary select-block mbl">
               <option class="mblo" value="place-holder">All Types</option>
               <% srch_opts('type').each do |o| %>
-                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first}} %></option>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first.gsub('-',' ').titlecase}} %></option>
               <% end %>
             </select>
           </div>

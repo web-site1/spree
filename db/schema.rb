@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331190639) do
+ActiveRecord::Schema.define(version: 20150402182633) do
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -1025,8 +1025,10 @@ ActiveRecord::Schema.define(version: 20150331190639) do
     t.string   "confirmation_token",     limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.string   "cust_number",            limit: 12
   end
 
+  add_index "spree_users", ["cust_number"], name: "index_spree_users_on_cust_number"
   add_index "spree_users", ["deleted_at"], name: "index_spree_users_on_deleted_at"
   add_index "spree_users", ["email"], name: "email_idx_unique", unique: true
   add_index "spree_users", ["spree_api_key"], name: "index_spree_users_on_spree_api_key"
