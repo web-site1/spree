@@ -49,7 +49,7 @@ module ApplicationHelper
 
   def side_search_cats
     type_hash = {}
-    @all_tax_cats = Spree::Taxon.where("permalink like '%categories%'")
+    @all_tax_cats = Spree::Taxon.where("permalink like '%categories%'").order(:lft)
     types =  @all_tax_cats.select{|tax| tax.parent_id == 1 }  #Spree::Taxon.where(parent_id: 1)
     types.each do |t|
       eopt = @all_tax_cats.select{|tax| tax.parent_id == t.id } #t.children
@@ -134,5 +134,9 @@ module ApplicationHelper
     na = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
   end
 
+
+  def rate_range(rates,amt)
+    rates.reject{|r| !r.shipping_method.sack_range.include?(amt) }
+  end
 
 end
