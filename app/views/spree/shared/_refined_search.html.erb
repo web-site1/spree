@@ -22,7 +22,7 @@
             <% type_opts.each_with_index do |opt,i| %>
                 <li>
                   <label class="checkbox" for="checkbox<%=i%>"><input name="type[]" type="checkbox" value="<%= opt.first %>" id="checkbox<%=i%>" data-toggle="checkbox" <%=src_selected('type',opt.first,'checked',true)%>>
-                    <%= %Q{#{opt.first} (#{opt.last})}%></label>
+                    <%= %Q{#{opt.first.gsub('-',' ').titlecase} (#{opt.last})}%></label>
                 </li>
             <% end %>
           </ul>

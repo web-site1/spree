@@ -20,4 +20,29 @@ jQuery(document).ready(function ($) {
         }
     );
 
+    $('#pause').click(function(event) {
+            pause();
+        }
+    );
+
+    //Auto slide the carousel every 3.5 seconds
+    setslider();
+
+    function setslider(){
+        var intervalId = setInterval( "$('#next_slide').click();",4000 );
+    }
+
+    function stopslider(){
+        clearInterval(intervalId);
+        delete intervalId;
+    }
+
+    function pause(){
+        if (typeof intervalId == 'undefined'){
+            setslider();
+        }else{
+            stopslider();
+        }
+    }
+
 });

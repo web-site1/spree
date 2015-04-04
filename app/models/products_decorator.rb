@@ -52,6 +52,9 @@ Spree::Product.class_eval do
     text :pattern do
       pattern
     end
+
+    date :available_on
+
     text :brand do
       product_brand
     end

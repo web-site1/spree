@@ -105,7 +105,7 @@ module ApplicationHelper
 
 
   def get_taxons_subcats(taxon)
-    Spree::Taxon.where(parent_id: taxon.id)
+    Spree::Taxon.where(parent_id: taxon.id).order(:lft)
   end
 
   def taxon_selection
