@@ -270,10 +270,10 @@
               <% if @sorted_colors.length != 0 # ['Ribbon','Tulle & Trims'].include? @product_type %>                
                 <% if @sorted_colors.length == 1 %>
                   <% if @product_colors.length > 0 %>
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                         <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-                    </div>
-                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    </div> -->
+                    <div class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
                         <h3>Color</h3>
                         <% @colors = @product_colors.collect{|p| [ p[0],p[1] ]} %>
                         <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
@@ -282,10 +282,10 @@
                 <% else %>
                   <!-- here we will display color as options -->
                   <% if @sorted_colors.length > 1 %>
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                         <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-                    </div>
-                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                    </div> -->
+                    <div class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
                         <h3>Color</h3>
                         <%= select_tag 'color-selector', options_for_select(@sorted_colors),:class=>"form-control select select-primary colors colors_variant", "data-toggle"=>"select" %> 
                     </div>
