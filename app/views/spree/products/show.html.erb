@@ -50,10 +50,11 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul>
                   <% @sorted_colors = (@product.colors.uniq rescue []) %>
+                  <% @product_colors = [] %>
                   <% if @sorted_colors.length == 1  %>
                       <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
                   <% end %>  
-                  <% if @product.variant_images.length > 1 %>
+                  <% if @product.variant_images.length > 1 or @product_colors.length > 1 %>
                     <% if @sorted_colors.length == 1  %>  
                       <% @product_colors.each do |product_color| %>
                           <% if product_color[2] %>
@@ -82,7 +83,7 @@
                 </ul>
               </div>
 
-              <% if @product.variant_images.length > 3 %>
+              <% if @product.variant_images.length > 3 or @product_colors.length > 3%>
                 <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
                 <a href="#" class="jcarousel-control-next">&rsaquo;</a>
               <% end %>
