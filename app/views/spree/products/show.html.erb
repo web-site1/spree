@@ -50,11 +50,11 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul>
                   <% @sorted_colors = (@product.colors.uniq rescue []) %>
-                  <% @product_colors = [] %>
-                  <% if @product.variant_images.length > 1 %>
-                    <% if @sorted_colors.length == 1  %>
+                  <% if @sorted_colors.length == 1  %>
                       <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
-                      
+                  <% end %>  
+                  <% if @product.variant_images.length > 1 %>
+                    <% if @sorted_colors.length == 1  %>  
                       <% @product_colors.each do |product_color| %>
                           <% if product_color[2] %>
                             <li>
@@ -268,14 +268,16 @@
 
               <% if @sorted_colors.length != 0 # ['Ribbon','Tulle & Trims'].include? @product_type %>                
                 <% if @sorted_colors.length == 1 %>
-                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-                      <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-                  </div>
-                  <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                      <h3>Color</h3>
-                      <% @colors = @product_colors.collect{|p| [ p[0],p[1] ]} %>
-                      <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
-                  </div>
+                  <% if @product_colors.length > 0 %>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                        <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
+                    </div>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <h3>Color</h3>
+                        <% @colors = @product_colors.collect{|p| [ p[0],p[1] ]} %>
+                        <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
+                    </div>
+                  <% end %>
                 <% else %>
                   <!-- here we will display color as options -->
                   <% if @sorted_colors.length > 1 %>
