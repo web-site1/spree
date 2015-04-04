@@ -50,16 +50,19 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul>
                   <% @sorted_colors = (@product.colors.uniq rescue []) %>
-                  <% if @sorted_colors.length == 1  %>
-                    <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
-                    
-                    <% @product_colors.each do |product_color| %>
-                        <li>
-                          <%= link_to(image_tag(product_color[2].attachment.url(:mini), class: "img-responsive", title: product_color[0]),"/products/#{product_color[1]}")  %>
-                        </li>
-                    <% end %>
-                  <% else %>
-                    <% if @product.variant_images.length > 1 %>
+                  <% @product_colors = [] %>
+                  <% if @product.variant_images.length > 1 %>
+                    <% if @sorted_colors.length == 1  %>
+                      <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
+                      
+                      <% @product_colors.each do |product_color| %>
+                          <% if product_color[2] %>
+                            <li>
+                              <%= link_to(image_tag(product_color[2].attachment.url(:mini), class: "img-responsive", title: product_color[0]),"/products/#{product_color[1]}")  %>
+                            </li>
+                          <% end %>
+                      <% end %>
+                    <% else %>
                       <% if @product.master.images.first %>
                         <li>
                           <%= link_to(image_tag(@product.master.images[0].attachment.url(:mini), purl: @product.master.images[0].attachment.url(:product), class: "img-responsive"),"#", class: "v_color") %>
@@ -79,7 +82,7 @@
                 </ul>
               </div>
 
-              <% if @product.variant_images.length > 3 or @product_colors.length > 3 %>
+              <% if @product.variant_images.length > 3 %>
                 <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
                 <a href="#" class="jcarousel-control-next">&rsaquo;</a>
               <% end %>
