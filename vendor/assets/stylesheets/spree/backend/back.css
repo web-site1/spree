@@ -1,0 +1,10 @@
+/*Css Louie Change yellow labels to black font
+Start
+*/
+
+span.label-balance_due a , span.label-pending,
+span.label-balance_due,span.label-void,span.label-void a{
+    color: black !important;
+}
+
+/* end */
