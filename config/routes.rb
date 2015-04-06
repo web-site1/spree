@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   get '/1-giltter-maze-category', to: redirect('/t/categories/tulle-and-trims/giltter-maze')
   get '/1-love-foiled-category', to: redirect('/t/categories/tulle-and-trims/love-foiled')
   get '/1-jasmine-category', to: redirect('/t/categories/tulle-and-trims/jasmine')
+  get '1-newest-ribbon-category.htm', to: redirect('/show_new_arrivals')
 
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
