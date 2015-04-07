@@ -140,11 +140,17 @@ module ApplicationHelper
   end
 
   def art_ship_states(ship_state=nil)
-    if ship_state.nil?
-      "Pending"
-    else
-      ship_state
+    size = 10
+    rtn = "Pending"
+
+    if !ship_state.nil?
+      rtn = ship_state
     end
+    x = size - rtn.length
+    if x > 0
+      x.times do rtn = rtn + "&nbsp;" end
+    end
+    return rtn.html_safe
   end
 
 end
