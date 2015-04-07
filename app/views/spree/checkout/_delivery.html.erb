@@ -52,10 +52,11 @@
               </li> -->
             <%# end %>
 
-            <% rng_rates.each do |rate| %>
+            <% rng_rates.each_with_index do |rate,i| %>
                <li class="list-group-item shipping-method">
                 <label>
-                  <%= ship_form.radio_button :selected_shipping_rate_id, rate.id %>
+                  <%  checked = (i== 0) ? true : false %>
+                  <%= ship_form.radio_button :selected_shipping_rate_id, rate.id,:checked => checked   %>
                   <span class="rate-name"><%= rate.name %></span>
                   <span class="badge rate-cost"><%= rate.display_cost %></span>
                 </label>
