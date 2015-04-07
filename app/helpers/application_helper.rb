@@ -139,4 +139,12 @@ module ApplicationHelper
     rates.reject{|r| !r.shipping_method.sack_range.include?(amt) }
   end
 
+  def art_ship_states(ship_state=nil)
+    if ship_state.nil?
+      "Pending"
+    else
+      ship_state
+    end
+  end
+
 end
