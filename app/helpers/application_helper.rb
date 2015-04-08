@@ -139,4 +139,18 @@ module ApplicationHelper
     rates.reject{|r| !r.shipping_method.sack_range.include?(amt) }
   end
 
+  def art_ship_states(ship_state=nil)
+    size = 10
+    rtn = "Pending"
+
+    if !ship_state.nil?
+      rtn = ship_state
+    end
+    x = size - rtn.length
+    if x > 0
+      x.times do rtn = rtn + "&nbsp;" end
+    end
+    return rtn.html_safe
+  end
+
 end

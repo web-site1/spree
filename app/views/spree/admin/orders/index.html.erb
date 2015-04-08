@@ -69,8 +69,12 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <%= label_tag :q_shipment_state_eq, Spree.t(:shipment_state) %>
-            <%= f.select :shipment_state_eq, Spree::Order::SHIPMENT_STATES.map {|s| [Spree.t("shipment_states.#{s}"), s]}, {:include_blank => true}, :class => 'select2 js-filterable' %>
+          <!--
+            <%# label_tag :q_shipment_state_eq, Spree.t(:shipment_state) %>
+            <%#= f.select :shipment_state_eq, Spree::Order::SHIPMENT_STATES.map {|s| [Spree.t("shipment_states.#{s}"), s]}, {:include_blank => true}, :class => 'select2 js-filterable' %>
+          -->
+            <%= label_tag "Art Ship" %>
+            <%= f.select :art_ship_state_eq, ArtShipState.all.map {|s| [s.art_state, s.art_state]}, {:include_blank => true}, :class => 'select2 js-filterable' %>
           </div>
         </div>
 
@@ -163,12 +167,18 @@
           <th><%= sort_link @search, :created_at,     I18n.t(:created_at, :scope => 'activerecord.attributes.spree/order') %></th>
         <% end %>
         <th><%= sort_link @search, :number,           I18n.t(:number, :scope => 'activerecord.attributes.spree/order') %></th>
-        <th><%= sort_link @search, :considered_risky, I18n.t(:considered_risky, :scope => 'activerecord.attributes.spree/order') %></th>
+        <!-- <th><%# sort_link @search, :considered_risky, I18n.t(:considered_risky, :scope => 'activerecord.attributes.spree/order') %></th> -->
         <th><%= sort_link @search, :state,            I18n.t(:state, :scope => 'activerecord.attributes.spree/order') %></th>
         <th><%= sort_link @search, :payment_state,    I18n.t(:payment_state, :scope => 'activerecord.attributes.spree/order') %></th>
-         <% if Spree::Order.checkout_step_names.include?(:delivery) %>
-          <th><%= sort_link @search, :shipment_state, I18n.t(:shipment_state, :scope => 'activerecord.attributes.spree/order') %></th>
-         <% end %>
+        <th><%= sort_link @search, :art_ship_state, "Art Ship" %>
+
+        <!-- <%# if Spree::Order.checkout_step_names.include?(:delivery) %>
+          <th><%# sort_link @search, :shipment_state, I18n.t(:shipment_state, :scope => 'activerecord.attributes.spree/order') %></th>
+         <%# end %>
+        -->
+
+
+
         <th> <%# sort_link @search, :email,            I18n.t(:email, :scope => 'activerecord.attributes.spree/order') %>
             Name
         </th>
@@ -178,6 +188,9 @@
       </tr>
     </thead>
     <tbody>
+
+    <% art_ship_state_opts = options_from_collection_for_select(ArtShipState.all, 'art_state', 'art_state') %>
+
     <% @orders.each do |order| %>
       <tr data-hook="admin_orders_index_rows" class="state-<%= order.state.downcase %> <%= cycle('odd', 'even') %>">
         <td>
@@ -191,11 +204,13 @@
         <td><%# link_to order.number, edit_admin_order_path(order) %> <%= link_to order.number , spree.admin_order_path(order, :pdf, template: "picking_ticket"),
                                                                                   title: %Q{Print Picking Ticket for #{order.number}},
                                                                                   target: "_blank" %></td>
-        <td>
-          <span class="label label-<%= order.considered_risky ? 'considered_risky' : 'considered_safe' %>">
-            <%= order.considered_risky ? Spree.t("risky") : Spree.t("safe") %>
+        <!-- <td>
+          <span class="label label-<%# order.considered_risky ? 'considered_risky' : 'considered_safe' %>">
+            <%# order.considered_risky ? Spree.t("risky") : Spree.t("safe") %>
           </span>
         </td>
+        -->
+
         <td>
           <span class="label label-<%= order.state.downcase %>"><%= Spree.t("order_state.#{order.state.downcase}") %></span>
           <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_state_eq" data-ransack-value="<%= order.state %>"></span>
@@ -206,14 +221,59 @@
             <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_payment_state_eq" data-ransack-value="<%= order.payment_state %>"></span>
           <% end %>
         </td>
-        <% if Spree::Order.checkout_step_names.include?(:delivery) %>
+
+        <td>
+          <% shp_state = art_ship_states(order.art_ship_state) %>
+          <span class="label label-pending">
+            <span id="ord_val_<%=order.id%>"><%= shp_state %></span>
+          </span>
+          <button type="button" class="btn btn-xs art_butt" data-toggle="modal" data-target="#ord_<%=order.id%>">
+              <span class='glyphicon glyphicon-edit' aria-hidden="true"></span>
+          </button>
+
+          <div class="modal fade" id="ord_<%=order.id%>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Art State for Order <%= order.number%></h4>
+                </div>
+                <%= form_tag "/change_art_state", class: 'art_state',"data-target".to_sym => "#ord_val_#{order.id}","data-order".to_sym => order.id %>
+                    <div class="modal-body">
+                        <%= hidden_field_tag :order_id, order.id %>
+                        <%= select_tag 'state',art_ship_state_opts,class: "form-control"  %>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                 </form>
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </td>
+
+
+
+
+        <!--
+        <%# if Spree::Order.checkout_step_names.include?(:delivery) %>
           <td>
-            <% if order.shipment_state %>
-              <span class="label label-<%= order.shipment_state %>"><%= Spree.t("shipment_states.#{order.shipment_state}") %></span>
-              <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_shipment_state_eq" data-ransack-value="<%= order.shipment_state %>"></span>
-            <% end %>
+            <%# if order.shipment_state %>
+              <span class="label label-<%# order.shipment_state %>"><%# Spree.t("shipment_states.#{order.shipment_state}") %></span>
+              <span class="icon icon-filter filterable js-add-filter" data-ransack-field="q_shipment_state_eq" data-ransack-value="<%# order.shipment_state %>"></span>
+            <%# end %>
           </td>
-        <% end %>
+        <%# end %>
+        -- >
+
+
+
+
         <td>
           <% if order.user %>
             <%= link_to order.name, edit_admin_user_path(order.user) %>

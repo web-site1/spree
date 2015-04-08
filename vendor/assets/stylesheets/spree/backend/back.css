@@ -7,4 +7,9 @@ span.label-balance_due,span.label-void,span.label-void a{
     color: black !important;
 }
 
+.art_butt {
+    background-color: white;
+    border: none;
+}
+
 /* end */
