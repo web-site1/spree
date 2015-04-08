@@ -1,5 +1,7 @@
 Spree::ProductsController.class_eval do
 
+  skip_before_filter :force_ssl
+
   def show_new_arrivals
     @quick_title = "New Arrivals"
     @products = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
