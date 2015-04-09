@@ -1,6 +1,6 @@
 Spree::ProductsController.class_eval do
 
-  skip_before_filter :force_ssl
+  # skip_before_filter :force_ssl
 
   def show_new_arrivals
     @quick_title = "New Arrivals"

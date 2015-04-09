@@ -31,7 +31,7 @@ attachment_config = {
 
     storage:        :s3,
     s3_headers:     { "Cache-Control" => "max-age=315576000" },
-    s3_protocol:    "http",
+    s3_protocol:    "https",
     bucket:         ENV['AWS_BUCKET'],
     url:            ":s3_domain_url",
 

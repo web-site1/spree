@@ -1,6 +1,6 @@
 Spree::HomeController.class_eval do
 
-  skip_before_filter :force_ssl
+  # skip_before_filter :force_ssl
 
   def why_shop
     id = params[:id]
