@@ -109,12 +109,13 @@
 
           <!-- Please call pinit.js only once per page -->
           <!--<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>-->
-          <a href="https://www.facebook.com/pages/Artistic-Ribbon-Inc/192678021022?ref=search&sid=539378516.1359065251..1" target="_blank" class="btn btn-default btn-sm btn-social-facebook">
+          <a href="//www.facebook.com/plugins/like.php?href=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>" target="_blank" class="btn btn-default btn-sm btn-social-facebook">
             <span class="fui-facebook"></span>
             Like
             <span class="btn-tip">91</span>
           </a>
-          <a href="https://twitter.com/ArtisticRibbon" target="_blank" class="btn btn-default btn-sm btn-social-twitter">
+
+          <a href="//twitter.com/share?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&text=<%=h @product.name %>&via=ArtisticRibbon" target="_blank" class="btn btn-default btn-sm btn-social-twitter">
             <span class="fui-twitter"></span>
             Tweet
             <span class="btn-tip">45</span>
