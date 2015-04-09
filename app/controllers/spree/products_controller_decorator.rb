@@ -6,4 +6,23 @@ Spree::ProductsController.class_eval do
     render :template => 'spree/products/quick_results'
   end
 
+  def show
+	  if request.format == 'html'
+		  @variants = @product.variants_including_master.active(current_currency).includes([:option_values, :images])
+		  @product_properties = @product.product_properties.includes(:property)
+		  @taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
+		  @taxon ||= @product.taxons.first
+		elsif request.format == 'json'
+			if @product.colors.uniq.length > 1
+				@products = [@product]
+			else
+				@taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
+				@taxon ||= @product.taxons.first
+				@products = @taxon.products.includes(:master, :variants => [{:option_values => :option_type}, :images, :prices],:product_properties => :property, :product_option_types => :option_type)
+				# render :text => @products.count
+			end
+		end
+
+	end
+
 end
