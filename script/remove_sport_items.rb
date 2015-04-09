@@ -46,6 +46,7 @@ sports_taxon.products.each{|p| prod_to_delete_array << p }
 
 sports_taxon.children.each do |c|
   c.products.each{|p| prod_to_delete_array << p}
+  c.children.each{|cc| cc.products.each{|cp| prod_to_delete_array << cp}}
 end
 
 array_of_ids =  prod_to_delete_array.map{|p| p.id}
