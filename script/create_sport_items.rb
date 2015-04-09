@@ -258,7 +258,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
           #
-          if @rcpbs.ws_cat == 'NFL Accessories'
+          if @rcpbs.ws_cat.downcase == 'nfl accessories'
             prod_name =  %Q{#{@rcpbs.new_pbs_desc_3}}.gsub(@rcpbs.width,'').strip.titlecase
             @item_type = 'NFL Accessories'
           else
@@ -282,7 +282,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             p_meta = @wi.description
             p_key = @wi.keywords
 
-            if @rcpbs.ws_cat == 'NFL Accessories'
+            if @rcpbs.ws_cat.downcase == 'nfl accessories'
               p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
               p_des += %Q{ All come 3 to a pack.}
             else
@@ -394,6 +394,9 @@ CSV.open(csv_error_file, "wb") do |csv|
                   found_image = true
                   @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                   @product.save!
+                else
+                  logger.info "no image #{@rcpbs.item} file #{@wi.image_file}"
+                  puts "no image #{@rcpbs.item} file #{@wi.image_file}"
                 end
               rescue Exception => e
                 puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
@@ -620,6 +623,9 @@ BEGIN{
                       found_image = true
                       v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                       v.save!
+                    else
+                      logger.info "no image #{@rcpbs.item} file #{@wi.image_file}"
+                      puts "no image #{@rcpbs.item} file #{@wi.image_file}"
                     end
                   rescue Exception => e
                     puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"

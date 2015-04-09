@@ -28,12 +28,11 @@ sql = "select table_name from INFORMATION_SCHEMA.columns where TABLE_CATALOG = '
 
 
 msg = "OK to continue? "
-=begin
+
 unless confirm(msg)
   puts "Chicken."
   exit(1)
 end
-=end
 
 # First delete records using dependent => destroy
 puts("Destroying Products before DELETEing...")
