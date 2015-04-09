@@ -260,18 +260,27 @@ CSV.open(csv_error_file, "wb") do |csv|
           #
           if @rcpbs.ws_cat.downcase == 'nfl accessories'
             prod_name =  %Q{#{@rcpbs.new_pbs_desc_3}}.gsub(@rcpbs.width,'').strip.titlecase
+
             @item_type = 'NFL Accessories'
           else
             prod_name = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}.titlecase
             @item_type = 'Ribbon'
+
           end
           prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
 
 
 
 
-          @product = Spree::Product.find_by_name(prod_name)
 
+          #@product = Spree::Product.find_by_name(prod_name)
+          prod_var = Spree::Variant.find_by_sku(prod_sku)
+
+          if !prod_var.nil?
+            @product = prod_var.product
+          else
+            @product = nil
+          end
 
 
           if !@product.nil?
