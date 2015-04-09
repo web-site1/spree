@@ -98,17 +98,23 @@
         <div class="social-icons">
           <label>Share</label>
 
-          <a href="#fakelink" class="btn btn-default btn-sm btn-social-pinterest">
+
+          <a target="_blank" title="Pin It" class="btn btn-default btn-sm btn-social-pinterest"
+             href="http://www.pinterest.com/pin/create/button/?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&media=<%= @product.master.images[0].attachment.url(:product) %>&description=<%=h @product.name %>">
+
             <span class="fui-pinterest"></span>
             Pin It
             <span class="btn-tip">100</span>
           </a>
-          <a href="#fakelink" class="btn btn-default btn-sm btn-social-facebook">
+
+          <!-- Please call pinit.js only once per page -->
+          <!--<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>-->
+          <a href="https://www.facebook.com/pages/Artistic-Ribbon-Inc/192678021022?ref=search&sid=539378516.1359065251..1" target="_blank" class="btn btn-default btn-sm btn-social-facebook">
             <span class="fui-facebook"></span>
             Like
             <span class="btn-tip">91</span>
           </a>
-          <a href="#fakelink" class="btn btn-default btn-sm btn-social-twitter">
+          <a href="https://twitter.com/ArtisticRibbon" target="_blank" class="btn btn-default btn-sm btn-social-twitter">
             <span class="fui-twitter"></span>
             Tweet
             <span class="btn-tip">45</span>
