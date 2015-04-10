@@ -234,7 +234,7 @@ CSV.open(csv_error_file, "wb") do |csv|
     #r = RcPbs.where(ws_subcat: "CQA-62.")
     #r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
 
-    r = Sport.where("ws_cat IN( 'NFL Licensed Ribbon','MLB Ribbon', 'Collegiate Licensed Ribbon')").order(:ws_cat,:ws_subcat,:ws_color).limit(10)
+    r = Sport.where("ws_cat IN('NFL Accessories')").order(:ws_cat,:ws_subcat,:ws_color).limit(10)
     r.each do |rcpbs|
 
       web_item = rcpbs.web_item
@@ -267,7 +267,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             @item_type = 'Ribbon'
 
           end
-          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
+          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip} #{@rcpbs.item}}
 
 
 
@@ -292,8 +292,11 @@ CSV.open(csv_error_file, "wb") do |csv|
             p_key = @wi.keywords
 
             if @rcpbs.ws_cat.downcase == 'nfl accessories'
-              p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
-              p_des += %Q{ All come 3 to a pack.}
+              #p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
+              #p_des += %Q{ All come 3 to a pack.}
+
+              p_des = @rcpbs.desc
+
             else
               p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
               p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
@@ -365,6 +368,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
             end
 
+=begin
             array_of_options = @product.option_types.map{|ot|ot.name}
 
             option_hash = {}
@@ -392,6 +396,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 )
               end
             end
+=end
 
             found_image = false
             if @wi
@@ -573,6 +578,7 @@ BEGIN{
               v.save!
 
               # set options
+=begin
               ot = v.product.option_types
               if !ot.empty?
                 array_of_type_and_id = ot.map{|o|[o.id,o.name]}
@@ -620,6 +626,7 @@ BEGIN{
                 end
 
               end
+=end
 
 
               #if (@item_type == 'Flower')

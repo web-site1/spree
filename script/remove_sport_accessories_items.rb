@@ -9,7 +9,7 @@ def confirm(msg)
   STDOUT.printf "OK to " + msg + " (y/n)? "
   input = STDIN.gets.chomp.downcase
   input == "y"
-end
+end                            removeremov
 
 db = 'spree99'
 
