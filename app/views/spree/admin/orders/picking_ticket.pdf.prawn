@@ -132,6 +132,10 @@ grid([1,0], [6,4]).bounding_box do
   #if total_payments > 0
   #  totals << ["Payment Total", total_payments.to_s]
   #end
+  if @order.outstanding_balance? && @order.outstanding_balance > 0
+      totals << ["Balance Due", @order.display_outstanding_balance.to_s]
+  end
+
 
   table(totals, column_widths: [475, 65]) do
     row(0..6).style align: :right
