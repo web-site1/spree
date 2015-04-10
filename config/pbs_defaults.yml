@@ -54,7 +54,7 @@ Itmfil:
   depth: !ruby/object:BigDecimal 18:0.0
   jc_cat_no: 0
   item_track_flg: N
-  lst_sls_dat: <%= Time.now %>
+  lst_sls_dat:
   item_dat_created: <%= Time.now %>
   usr_def_qty_1: !ruby/object:BigDecimal 18:0.0
   usr_def_qty_2: !ruby/object:BigDecimal 18:0.0
@@ -88,7 +88,7 @@ Stafil:
   qty_on_bk_ord: !ruby/object:BigDecimal 18:0.0
   qty_on_work_ord: !ruby/object:BigDecimal 18:0.0
   item_stock_status:
-  lst_sls_dat: <%= Time.now %>
+  lst_sls_dat:
   lst_used_dat:
   clsd_prd_run_flg:
   prior_prd_qty_sold_1: !ruby/object:BigDecimal 18:0.0

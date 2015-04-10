@@ -112,19 +112,30 @@ grid([1,0], [6,4]).bounding_box do
 
   # Payments
   total_payments = 0.0
-  @order.payments.each do |payment|
-    totals << [
-      make_cell(
-        content: Spree.t(:payment_via,
-        gateway: (payment.source_type || Spree.t(:unprocessed, scope: :print_invoice)),
-        number: payment.number,
-        date: I18n.l(payment.updated_at.to_date, format: :long),
-        scope: :print_invoice)
-      ),
-      payment.display_amount.to_s
-    ]
-    total_payments += payment.amount
+
+
+  #@order.payments.each do |payment|
+
+  #  totals << [
+  #    make_cell(
+  #      content: Spree.t(:payment_via,
+  #      gateway: (payment.source_type || Spree.t(:unprocessed, scope: :print_invoice)),
+  #      number: payment.number,
+  #      date: I18n.l(payment.updated_at.to_date, format: :long),
+  #      scope: :print_invoice)
+  #    ),
+  #    payment.display_amount.to_s
+  #  ]
+  #  total_payments += payment.amount
+  #end
+
+  #if total_payments > 0
+  #  totals << ["Payment Total", total_payments.to_s]
+  #end
+  if @order.outstanding_balance? && @order.outstanding_balance > 0
+      totals << ["Balance Due", @order.display_outstanding_balance.to_s]
   end
+
 
   table(totals, column_widths: [475, 65]) do
     row(0..6).style align: :right

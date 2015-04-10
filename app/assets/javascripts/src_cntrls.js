@@ -45,4 +45,14 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    //Add toggle
+
+
+    $( '#add_btn' ).click( function() {
+        //alert('hello world');
+        $( '#bannerformmodal' ).modal();
+        $( '#bannerformmodal').toggle();
+      });
+
+
 });

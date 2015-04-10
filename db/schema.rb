@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150402182633) do
+ActiveRecord::Schema.define(version: 20150407161340) do
+
+  create_table "art_ship_states", force: :cascade do |t|
+    t.string "art_state", limit: 25
+  end
+
+  add_index "art_ship_states", ["art_state"], name: "index_art_ship_states_on_art_state"
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -357,9 +363,11 @@ ActiveRecord::Schema.define(version: 20150402182633) do
     t.integer  "store_id",               limit: 4
     t.integer  "invoice_number",         limit: 4
     t.date     "invoice_date"
+    t.string   "art_ship_state",         limit: 25
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id"
+  add_index "spree_orders", ["art_ship_state"], name: "index_spree_orders_on_art_ship_state"
   add_index "spree_orders", ["bill_address_id"], name: "index_spree_orders_on_bill_address_id"
   add_index "spree_orders", ["completed_at"], name: "index_spree_orders_on_completed_at"
   add_index "spree_orders", ["confirmation_delivered"], name: "index_spree_orders_on_confirmation_delivered"

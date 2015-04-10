@@ -8,4 +8,11 @@ class ApplicationController < ActionController::Base
     @current_user = current_user rescue nil
   end
 
+  # Not currently used.  Using NGINX instead
+  def force_ssl
+    if !request.ssl? && Rails.env.production?
+      redirect_to :protocol => 'https'
+    end
+  end
+
 end

@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/spree-contrib/spree_mail_settings.git
+  revision: 13fd1efad2d5242977de2d6be6abac6dc8154dfa
+  branch: 3-0-stable
+  specs:
+    spree_mail_settings (2.2.0)
+      spree_backend (~> 3.0.0)
+
+GIT
   remote: git://github.com/spree-contrib/spree_print_invoice.git
   revision: b0e476a14e717392d840071152379937dab783c6
   branch: 3-0-stable
@@ -428,6 +436,7 @@ DEPENDENCIES
   spree!
   spree_auth_devise!
   spree_gateway!
+  spree_mail_settings!
   spree_print_invoice!
   spring
   sshkit (~> 1.4.0)

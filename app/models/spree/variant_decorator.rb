@@ -37,7 +37,9 @@ module Spree
 
     alias_method :orig_price_in, :price_in
     def price_in(currency)
-      p = item_no.nil? ? nil : itmfil.get_price
+      return orig_price_in(currency) unless item_no
+      p = Itmfil.find(item_no).get_price
+      # p = item_no.nil? ? nil : itmfil.get_price
       return orig_price_in(currency) unless p
       Spree::Price.new(:variant_id => self.id, :amount => p, :currency => currency)
     end
@@ -47,7 +49,8 @@ module Spree
     end
 
     def display_price
-      p = item_no.nil? ? nil : itmfil.get_price
+      return Spree::Money.new(999999.99, :currency => currency).to_s unless item_no
+      p = Itmfil.find(item_no).get_price
       return Spree::Money.new(999999.99, :currency => currency).to_s unless p
       Spree::Money.new(p, :currency => currency).to_s
     end

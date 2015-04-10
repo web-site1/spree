@@ -1,3 +1,6 @@
+set :stage, :production
+set :rails_env, 'production'
+
 # Simple Role Syntax
 # ==================
 # Supports bulk-adding hosts to roles, the primary server in each group
@@ -15,7 +18,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'pbs.artisticribbon.com', user: 'ubuntu', roles: %w{web app}, my_property: :my_value
+server 'pbs.artisticribbon.com', user: 'ubuntu', roles: %w{web app}, port: 88
 
 
 # Custom SSH Options

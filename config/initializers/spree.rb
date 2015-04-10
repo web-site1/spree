@@ -31,7 +31,7 @@ attachment_config = {
 
     storage:        :s3,
     s3_headers:     { "Cache-Control" => "max-age=315576000" },
-    s3_protocol:    "http",
+    s3_protocol:    Rails.env.production? ? 'https' : 'http',
     bucket:         ENV['AWS_BUCKET'],
     url:            ":s3_domain_url",
 
@@ -59,6 +59,7 @@ Spree::Taxon.class_eval do
   Spree::Taxon.attachment_definitions[:icon][:bucket] = attachment_config[:bucket]
   Spree::Taxon.attachment_definitions[:icon][:path] = attachment_config[:path]
   Spree::Taxon.attachment_definitions[:icon][:default_url] = 'default_taxon.png'
+  Spree::Taxon.attachment_definitions[:icon][:s3_protocol] = Rails.env.production? ? 'https' : 'http'
 end
 
 
