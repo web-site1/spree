@@ -23,7 +23,7 @@ Spree::Product.class_eval do
   end
 
   {ribbon_widths: 'ribbon9width',ribbon_putups: 'ribbon9putup',bow_sizes: 'bow9size',
-    widths: 'width',colors: 'color', diameters: 'diameter', lengths: 'length',tote_sizes: 'tote9size'}.each do |k,val|
+    widths: 'width',colors: 'color', diameters: 'diameter', lengths: 'length',tote_sizes: 'tote9size',counts:'count'}.each do |k,val|
     define_method(k) do
       self.variants.collect{|v| eval(%Q{v.variant_#{val}})}.reject{|a| a.nil?||a.blank?}
     end
@@ -71,6 +71,10 @@ Spree::Product.class_eval do
       colors
     end
 
+    text :counts do
+      counts
+    end
+    
     text :widths do
       widths
     end
@@ -123,6 +127,10 @@ Spree::Product.class_eval do
 
     string :tote_sizes, :multiple => true do
       tote_sizes
+    end
+
+    string :counts, :multiple => true do
+      counts
     end
 
 

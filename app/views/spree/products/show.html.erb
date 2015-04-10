@@ -50,23 +50,23 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul ng-show="store.product.colors.length==1 && store.products.length > 1">
                     <li ng-repeat="product in store.products" >
-                      <a href="" ng-click="store.thumb_clicked(product)"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
-                <ul ng-show="store.product.colors.length>1">
+                <ul ng-show="store.product.colors.length>1 || store.product.colors.length == 0">
                   <li ng-show="store.product.master.image_mini">
-                    <a href="" ng-click="store.thumb_clicked(store.product)"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
                   <li ng-repeat="variant in store.product.variants">
-                    <a href="#" class="v_color" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="img-responsive" title="{{variant.color}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="img-responsive" title="{{variant.color}}"/></a>
                   </li>
                 </ul>
-              
-                <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
+              </div>
+
+              <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
                   <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
                   <a href="#" class="jcarousel-control-next">&rsaquo;</a>
-                </span>
-              </div>
+              </span>
 
               <p class="jcarousel-pagination"></p>
             </div>
@@ -184,6 +184,22 @@
               </div>
             </div>
 
+
+
+            <div class="row" ng-show="store.product.counts.length > 0 ">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Count</h3>
+                <div id="count-slider">
+                  <ol class="labels">
+                      <li ng-repeat="count in store.product.counts">{{count}}</li>                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+
           
 
             <div class="row" ng-show="store.product.lengths.length>0">
@@ -258,7 +274,7 @@
           <div class="jcarousel related-items" id="related-items">
             <ul>
               <li ng-repeat="related_product in store.related_products">
-                <a title="{{related_product.name}}" ng-href="{{related_product.url}}"><%= image_tag "{{related_product.image}}", class: "img-responsive" %></a>
+                <a title="{{related_product.name}}" ng-href="{{related_product.url}}"><img ng-src="{{related_product.image}}"  class = "img-responsive" /></a>
               </li>
             </ul>
           </div>
@@ -290,6 +306,7 @@
       var tote_index = $("#tote-slider").slider("value")*1-1;
       var putup_index = $("#putup-slider").slider("value")*1-1;
       var length_index = $("#length-slider").slider("value")*1-1;
+      var count_index = $("#count-slider").slider("value")*1-1;
       // var colors_index = colors.indexOf($(".colors_variant").val());
       
 
@@ -298,6 +315,8 @@
       selected_tote = totes.length > 1 ? totes[tote_index] : (totes.length==0 ? '' : totes[0]);
       selected_putup = putups.length > 1 ? putups[putup_index] : (putups.length==0 ? '' : putups[0]);
       selected_length = lengths.length > 1 ? lengths[length_index] : (lengths.length==0 ? '' : lengths[0]);
+      selected_count = counts.length > 1 ? counts[count_index] : (counts.length==0 ? '' : counts[0]);
+      
       // selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : $('#color-selector').val());//colors[0]);
 
       // console.log('selected_width: '+selected_width);
@@ -309,10 +328,12 @@
             value[6]==selected_diameter && 
             value[7]==selected_length && 
             value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase() && 
-            value[9] == selected_color){
+            value[9] == selected_color &&
+            value[10] == selected_count){
           selected_variant = index;
         }
       });
+
       if(selected_variant==-1){
         $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
         $('#add-to-cart-button').hide();
@@ -364,7 +385,9 @@
       $("#length-slider").slider("value",lindex);
     if(value[9]!='')
       $('.colors').val(value[9]);
-
+    var cindex = counts.indexOf(value[10])+1
+    if(value[10]!='')
+      $('#count-slider').slider("value",cindex);
     change_variant();
 
   }
@@ -408,6 +431,9 @@
     lengths = [];
     selected_length = '';
 
+    counts = [];
+    selected_count = '';
+
     colors = [];
     selected_color = '';
     
@@ -443,18 +469,29 @@
       this.selected_tote=null;
       this.selected_putup=null;
       this.selected_length=null;
-      
+      this.selected_count=null;
+
       this.selected_image=null;
       this.related_products=null;
 
-      this.thumb_clicked = function(p){
-        store.selected_image = p.image;
-        if(p.variants){ // check if product or variant;
-          store.selected_color = p.colors[0];
-        }else{
-          store.selected_color = p.color;
+      this.thumb_clicked = function(item, item_type){
+        i = item;
+        store.selected_image = item.image;
+        if(item_type == 'product'){
+          slug = item.slug;
+          store.setProduct();
         }
-        store.color_changed();
+
+        if(item_type=='variant'){
+          change_variant_by_id(item.id);
+        }
+        
+        // if(p.variants){ // check if product or variant;
+        //   store.selected_color = p.colors[0];
+        // }else{
+        //   store.selected_color = p.color;
+        // }
+        // store.color_changed();
 
       };
 
@@ -497,14 +534,12 @@
               selected = i;
             }
           }
-          if(this.selected_color==null){
+          //if(this.selected_color==null){
             selected_color = this.selected_color = store.options_for_colors[selected].value;
             $('.colors').val(store.options_for_colors[selected].value)
             // $('.colors').select2({dropdownCssClass: 'dropdown-inverse'});
             setTimeout(function(){$('.colors').trigger('change')},1000);
-
-
-          }
+          //}
         }else if(store.product.colors.length>1){
           store.colors_class = "color-selector";
           for(var i=0;i<store.product.colors.length;i++){
@@ -532,7 +567,7 @@
             variants=[];
             for(var j=0; j<store.product.variants.length;j++){
               variant = store.product.variants[j];
-              variants.push([variant.id,variant.width,variant.putup, variant.price, variant.can_supply,variant.sku,variant.diameter,variant.length, variant.tote, variant.color])
+              variants.push([variant.id,variant.width,variant.putup, variant.price, variant.can_supply,variant.sku,variant.diameter,variant.length, variant.tote, variant.color, variant.count])
             }
             
             // setup options array
@@ -542,7 +577,7 @@
             putups = store.product.putups;
             lengths = store.product.lengths;
             colors = store.product.colors;
-
+            counts = store.product.counts;
 
             setTimeout(function(){
 
@@ -619,6 +654,17 @@
                 }).addSliderSegments(lengths.length);
               }
 
+              cslider = $("#count-slider");
+              if (cslider.length > 0) {
+                cslider.slider({
+                  min: 1,
+                  max: counts.length,
+                  value: 1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(counts.length);
+              }
 
               store.set_options_for_color_select();
 
@@ -633,20 +679,11 @@
               set_slider_width('#tote-slider',totes);
               set_slider_width('#putup-slider',putups);
               set_slider_width('#length-slider',lengths);
+              set_slider_width('#count-slider',counts);
 
               
               // images carousel
-              var carousel3 = jQuery('#multiple-items');
-
-               jQuery('.multiple-items .jcarousel-control-prev').jcarouselControl({
-                  target: '-=1',
-                  carousel: carousel3
-              });
-
-              jQuery('.multiple-items .jcarousel-control-next').jcarouselControl({
-                  target: '-=1',
-                  carousel: carousel3
-              });
+             // jQuery('#multiple-items').trigger('jcarousel:reload');   
 
             },500);
 
@@ -673,7 +710,7 @@
       <% end %>
 
       $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
-        store.related_products = data;
+        store.related_products = data.products;
       })
 
     }]);

@@ -7,6 +7,7 @@
 	json.image product.images.first.attachment.url(:product) rescue ''
 	json.variant_images_count product.variant_images.count
 	json.colors product.colors.uniq
+	json.counts product.counts.uniq.sort{ |a,b| a.to_f <=> b.to_f }
 	json.widths product.widths.uniq.sort{ |a,b| compare_lengths(a,b) }
 	json.diameters product.diameters.uniq.sort{ |a,b| compare_lengths(a,b) }
 	json.totes product.tote_sizes.uniq.sort{ |a,b| a.to_f <=> b.to_f }.uniq
@@ -41,6 +42,7 @@
 		json.diameter variant.option_value('diameter') || ''
 		json.length variant.option_value('length') || ''
 		json.tote variant.option_value('tote-size') || ''
+		json.count variant.option_value('count') || ''
 		json.color variant.option_value('color') || ''
 
 	end
