@@ -13,6 +13,14 @@
 //= require jquery
 //= require jquery_ujs
 // removed gem = require turbolinks
-//= require_tree .
+
+//= require flat-ui-pro.min.js
+//= require jquery.jcarousel.js
+//= require jcarousel.responsive.js
+//= require main.js
+//= require src_cntrls.js
+
+//= require angular.min.js
+
 //= require spree/frontend
 //= require spree/backend

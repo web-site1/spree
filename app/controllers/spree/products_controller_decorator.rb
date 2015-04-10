@@ -22,7 +22,14 @@ Spree::ProductsController.class_eval do
 				# render :text => @products.count
 			end
 		end
+	end
 
+	def related_products
+		load_product
+		@taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
+		@taxon ||= @product.taxons.first
+		@related_products = @taxon.products	
+		# render :json => [ {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}].to_json
 	end
 
 end

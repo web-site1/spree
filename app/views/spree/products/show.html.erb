@@ -48,12 +48,12 @@
 
             <div class="jcarousel-wrapper">
               <div class="jcarousel multiple-items" id="multiple-items">
-                <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
+                <ul ng-show="store.product.colors.length==1 && store.products.length > 1">
                     <li ng-repeat="product in store.products" >
                       <a href="" ng-click="store.thumb_clicked(product)"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
-                <ul ng-if="store.product.colors.length>1">
+                <ul ng-show="store.product.colors.length>1">
                   <li ng-show="store.product.master.image_mini">
                     <a href="" ng-click="store.thumb_clicked(store.product)"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
@@ -61,12 +61,12 @@
                     <a href="#" class="v_color" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="img-responsive" title="{{variant.color}}"/></a>
                   </li>
                 </ul>
+              
+                <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
+                  <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                  <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+                </span>
               </div>
-
-              <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
-                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
-              </span>
 
               <p class="jcarousel-pagination"></p>
             </div>
@@ -122,7 +122,7 @@
 
         <div class="product-settings">
           
-            <div class="row" ng-show="store.product.widths.length>0">
+            <div class="row" ng-show="store.product.widths.length > 0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
               </div>
@@ -137,7 +137,7 @@
             </div>
 
 
-            <div class="row" ng-show="store.product.diameters.length > 1">
+            <div class="row" ng-show="store.product.diameters.length > 0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <!-- TODO: Replace by diameter image -->
                 <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
@@ -154,7 +154,7 @@
               </div>
             </div>
 
-            <div class="row" ng-show="store.product.totes.length>1">
+            <div class="row" ng-show="store.product.totes.length>0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <!-- TODO: change image -->
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
@@ -170,7 +170,7 @@
             </div>
 
 
-            <div class="row" ng-show="store.product.lengths > (['Euro-totes'].indexOf(store.product.taxon_parent)!=-1 || ['Lacey', 'Cord On A Spool', 'Love Foiled', 'Glitter Maze', 'Tulle', 'Geomesh', 'Geomesh Cross'].indexOf(store.product.taxon)!=-1) ? 0 : 1">
+            <div class="row" ng-show="store.product.putups.length > 0 ">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
               </div>
@@ -178,8 +178,7 @@
                 <h3>Putup</h3>
                 <div id="putup-slider">
                   <ol class="labels">
-                      <li ng-repeat="putup in store.product.putups">{{putup}}</li>
-                    
+                      <li ng-repeat="putup in store.product.putups">{{putup}}</li>                    
                   </ol>
                 </div>
               </div>
@@ -254,22 +253,13 @@
 
       <div class="col-lg-12">
 
-        <div class="jcarousel-wrapper">
+        <div ng-if="store.related_products.length>0" class="jcarousel-wrapper">
           <div class="headline"><h3>Related Products</h3></div>
           <div class="jcarousel related-items" id="related-items">
             <ul>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li ng-repeat="related_product in store.related_products">
+                <a title="{{related_product.name}}" ng-href="{{related_product.url}}"><%= image_tag "{{related_product.image}}", class: "img-responsive" %></a>
+              </li>
             </ul>
           </div>
 
@@ -314,7 +304,12 @@
       // console.log('selected_putup: '+selected_putup);
       selected_variant = -1;
       $.each(variants,function(index,value){
-        if(value[1]==selected_width && value[2].replace(' ','-')==selected_putup && value[6]==selected_diameter && value[7]==selected_length && value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase() && value[9] == selected_color){
+        if( value[1]==selected_width && 
+            value[2].replace(' ','-')==selected_putup && 
+            value[6]==selected_diameter && 
+            value[7]==selected_length && 
+            value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase() && 
+            value[9] == selected_color){
           selected_variant = index;
         }
       });
@@ -368,7 +363,7 @@
     if(lindex)
       $("#length-slider").slider("value",lindex);
     if(value[9]!='')
-      $('#color-selector').val(value[9]);
+      $('.colors').val(value[9]);
 
     change_variant();
 
@@ -399,102 +394,25 @@
     variants = [];
     
     widths = [];
-      
+    selected_width = '';  
+    
     diameters = [];
-
+    selected_diameter = '';
+    
     totes = [];
+    selected_tote = '';
 
     putups = [];
+    selected_putup = '';
 
     lengths = [];
-    
-    colors = [];
+    selected_length = '';
 
-    selected_color = null;
+    colors = [];
+    selected_color = '';
+    
     product=null;
 
-    
-    
-    // // Set defaults value from cookie or default variant
-
-    // if(getCookie('sWidth')!= null)
-    //   cookieWidth = getCookie('sWidth');
-    // else
-    //   cookieWidth = variants[0][1]
-    
-    // // console.log(cookieWidth);
-
-    // $('#width-slider .labels li').each(function(i,el){
-    //   if($(el).html()==cookieWidth){
-    //     $('#width-slider').slider('option','value',i+1);
-    //     setCookie('sWidth',null);
-    //   }
-    // });
-
-
-    // if(getCookie('sDiameter')!= null)
-    //   cookieDiameter = getCookie('sDiameter');
-    // else
-    //   cookieDiameter = variants[0][6]
-    
-    // // console.log(cookieDiameter);
-
-    // $('#diameter-slider .labels li').each(function(i,el){
-    //   if($(el).html()==cookieDiameter){
-    //     $('#diameter-slider').slider('option','value',i+1);
-    //     setCookie('sDiameter',null);
-    //   }
-    // });
-
-    
-    // if(getCookie('sTote')!= null)
-    //   cookieTote = getCookie('sTote')
-    // else
-    //   cookieTote = variants[0][8];
-
-    // // console.log(cookieTote);
-
-    // $('#tote-slider .labels li').each(function(i,el){
-    //   if($(el).html()==cookieTote){
-    //     $('#tote-slider').slider('option','value',i+1);
-    //     setCookie('sTote',null);
-    //   }
-    // });
-
-
-    // if(getCookie('sPutup')!= null)
-    //   cookiePutup = getCookie('sPutup')
-    // else
-    //   cookiePutup = variants[0][2];
-
-    // // console.log(cookiePutup);
-
-    // $('#putup-slider .labels li').each(function(i,el){
-    //   if($(el).html()==cookiePutup){
-    //     $('#putup-slider').slider('option','value',i+1);
-    //     setCookie('sPutup',null);
-    //   }
-    // });
-    
-    // if(getCookie('sLength')!= null)
-    //   cookieLength = getCookie('sLength');
-    // else
-    //   cookieLength = variants[0][7]
-    
-    // // console.log(cookieLength);
-
-    // $('#length-slider .labels li').each(function(i,el){
-    //   if($(el).html()==cookieLength){
-    //     $('#length-slider').slider('option','value',i+1);
-    //     setCookie('sLength',null);
-    //   }
-    // });
-
-    // For colors cookie is not required since we switch page by color.
-
-
-  // });
-  
   
   var slug = '<%=params[:id]%>';
 
@@ -527,7 +445,7 @@
       this.selected_length=null;
       
       this.selected_image=null;
-
+      this.related_products=null;
 
       this.thumb_clicked = function(p){
         store.selected_image = p.image;
@@ -583,6 +501,8 @@
             selected_color = this.selected_color = store.options_for_colors[selected].value;
             $('.colors').val(store.options_for_colors[selected].value)
             // $('.colors').select2({dropdownCssClass: 'dropdown-inverse'});
+            setTimeout(function(){$('.colors').trigger('change')},1000);
+
 
           }
         }else if(store.product.colors.length>1){
@@ -644,7 +564,7 @@
                 wslider.slider({
                   min: 1,
                   max: widths.length,
-                  value: 1,
+                  value: widths.indexOf(selected_width)+1,
                   orientation: "horizontal",
                   range: "min",
                   change: change_variant
@@ -680,7 +600,7 @@
                 pslider.slider({
                   min: 1,
                   max: putups.length,
-                  value: 1,
+                  value: putups.indexOf(selected_putup)+1,
                   orientation: "horizontal",
                   range: "min",
                   change: change_variant
@@ -751,6 +671,10 @@
             alert('Unable to load some parts of the page, please try and reload to get complete data.');
           });;
       <% end %>
+
+      $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
+        store.related_products = data;
+      })
 
     }]);
 
