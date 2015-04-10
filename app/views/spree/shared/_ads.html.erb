@@ -1,6 +1,8 @@
-<section class="ad sidebar-ad">
-  <a href="#" target="ad text here"><%= image_tag "placeholders/ad-sidebar.png" ,class: "img-responsive", alt: "ad text here" %></a>
-</section>
+<% if !Spree::Promotion.active.empty? %>
+    <section class="ad sidebar-ad">
+      <a href="#" target="ad text here"><%= image_tag "placeholders/ad-sidebar.png" ,class: "img-responsive", alt: "ad text here" %></a>
+    </section>
+<% end %>
 
 <section class="ad sidebar-ad">
   <a href="//pinterest.com/artisticribbon" target="_blank"><%= image_tag "placeholders/ad-pinterest.png", class: "img-responsive",  alt: "Click for our Pinterest Page" %></a>
