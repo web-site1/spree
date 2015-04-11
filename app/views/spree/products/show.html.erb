@@ -53,7 +53,7 @@
                       <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
-                <ul ng-show="store.product.colors.length>1 || store.product.colors.length == 0">
+                <ul ng-show="(store.product.colors.length>1 || store.product.colors.length == 0) && product.variant_images_count > 1">
                   <li ng-show="store.product.master.image_mini">
                     <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
@@ -232,7 +232,7 @@
                   <h3>Color</h3>
                   <select ng-model="store.selected_color" ng-change="store.color_changed()" id="{{store.colors_class}}" class="form-control select select-primary colors {{store.colors_class}}" data-toggle="select">
                     <option ng-repeat="item in store.options_for_colors track by item.value" value="{{item.key}}">{{item.value}}</option>
-                  </select> {{store.selected_color}}
+                  </select>
               </div>
                                     
               <div ng-show="store.product.colors.length==0" class="col-lg-7 col-md-5 col-sm-5 col-xs-5"></div>
@@ -276,7 +276,7 @@
 
       <div class="col-lg-12">
 
-        <div ng-if="store.related_products.length>0" class="jcarousel-wrapper">
+        <div ng-show="store.related_products.length>0" class="jcarousel-wrapper">
           <div class="headline"><h3>Related Products</h3></div>
           <div class="jcarousel related-items" id="related-items">
             <ul>
@@ -690,7 +690,8 @@
 
               
               // images carousel
-             // jQuery('#multiple-items').trigger('jcarousel:reload');   
+              jQuery('#multiple-items').jcarousel('reload');   
+
 
             },500);
 
@@ -718,6 +719,9 @@
 
       $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
         store.related_products = data.products;
+        setTimeout(function(){
+          jQuery('#related-items').jcarousel('reload');   
+        },500);
       })
 
     }]);
