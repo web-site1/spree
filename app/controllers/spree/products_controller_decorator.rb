@@ -43,11 +43,11 @@ Spree::ProductsController.class_eval do
 		@taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
 		@taxon ||= @product.taxons.first
 		if((@taxon.parent.name.downcase rescue '')['accessories'])
-			@related_products = @taxon.products
+			@related_products = @taxon.products - [@product]
 		else
 			@related_products = []
 			@taxon.parent.children.each do |child|
-				@related_products << child.products.first
+				@related_products << child.products.first if child.products.first and child.products.first != @product
 			end	
 		end
 		
