@@ -42,7 +42,16 @@ Spree::ProductsController.class_eval do
 		load_product
 		@taxon = Spree::Taxon.find(params[:taxon_id]) if params[:taxon_id]
 		@taxon ||= @product.taxons.first
-		@related_products = []#@taxon.products	
+		if((@taxon.parent.name.downcase rescue '')['accessories'])
+			@related_products = @taxon.products
+		else
+			@related_products = []
+			@taxon.parent.children.each do |child|
+				@related_products << child.products.first
+			end	
+		end
+		
+
 		# render :json => [ {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}, {name:"product #{rand(100)}",image:@product.images.first.attachment.url(:product), url:"/products/#{@product.slug}"}].to_json
 	end
 
