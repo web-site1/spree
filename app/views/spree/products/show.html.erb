@@ -340,7 +340,8 @@
         $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
         for(var i = 0; i < product.variants.length; i++){
           if(product.variants[i].id == variants[selected_variant][0]){
-            $('.product_main img').attr('src',product.variants[i].image);
+            if(product.variants[i].image)
+              $('.product_main img').attr('src',product.variants[i].image);
           }
         }
         // console.log("variant_found");

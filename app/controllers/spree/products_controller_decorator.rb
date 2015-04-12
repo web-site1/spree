@@ -49,6 +49,7 @@ Spree::ProductsController.class_eval do
 			@taxon.parent.children.each do |child|
 				@related_products << child.products.first if child.products.first and child.products.first != @product
 			end	
+			@related_products = @related_products.select{|p| !p.images.first.nil? }
 		end
 		
 
