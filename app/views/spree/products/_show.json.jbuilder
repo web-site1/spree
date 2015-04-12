@@ -13,7 +13,7 @@
 	json.totes product.tote_sizes.uniq.sort{ |a,b| a.to_f <=> b.to_f }.uniq
 	json.putups product.ribbon_putups.uniq.sort{ |a,b| a.to_f <=> b.to_f }
 	json.lengths product.lengths.uniq.sort{ |a,b| compare_lengths(a,b) }
-
+	json.is_new product.available_on > (Time.now - 30.days)
 
 	json.product_properties product.product_properties.includes(:property) do |property|
 		json.property property.property.presentation

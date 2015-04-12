@@ -14,7 +14,7 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
             <div class="item active product_main">
-              <img itemprop="image" alt={{store.product.name}} ng-src="{{store.selected_image}}">
+              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image}}">
             </div>
           </div>
           <!-- Controls -->
@@ -48,12 +48,12 @@
 
             <div class="jcarousel-wrapper">
               <div class="jcarousel multiple-items" id="multiple-items">
-                <ul ng-show="store.product.colors.length==1 && store.products.length > 1">
+                <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
                     <li ng-repeat="product in store.products" >
                       <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
-                <ul ng-show="(store.product.colors.length>1 || store.product.colors.length == 0) && product.variant_images_count > 1">
+                <ul ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
                   <li ng-show="store.product.master.image_mini">
                     <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
@@ -77,36 +77,23 @@
 
         <div class="social-icons">
           <label>Share</label>
+            <ul ng-social-buttons
+                 data-url="store.myModel.FbLikeUrl"
+                 data-title="store.myModel.Name"
+                 data-description="store.myModel.Name"
+                 data-image="store.myModel.ImageUrl">
+                <li class="ng-social-pinterest">Pin It</li>
+                <li class="ng-social-facebook"> Facebook</li>
+                <li class="ng-social-twitter">Twitter</li>
+            </ul>
 
-
-          <a target="_blank" title="Pin It" class="btn btn-default btn-sm btn-social-pinterest"
-             href="http://www.pinterest.com/pin/create/button/?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&media=<%= @product.master.images[0].attachment.url(:product) %>&description=<%=h @product.name %>">
-
-            <span class="fui-pinterest"></span>
-            Pin It
-            <span class="btn-tip">100</span>
-          </a>
-
-          <!-- Please call pinit.js only once per page -->
-          <!--<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>-->
-          <a href="//www.facebook.com/plugins/like.php?href=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>" target="_blank" class="btn btn-default btn-sm btn-social-facebook">
-            <span class="fui-facebook"></span>
-            Like
-            <span class="btn-tip">91</span>
-          </a>
-
-          <a href="//twitter.com/share?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&text=<%=h @product.name %>&via=ArtisticRibbon" target="_blank" class="btn btn-default btn-sm btn-social-twitter">
-            <span class="fui-twitter"></span>
-            Tweet
-            <span class="btn-tip">45</span>
-          </a>
         </div>
 
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-information">
 
-        <div><span class="label label-danger">New</span></div>
+        <div ng-show="store.product.is_new"><span class="label label-danger">New</span></div>
 
         <h1>{{store.product.name}}</h1>
 
@@ -304,9 +291,10 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/Javascript">
+  thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
   function change_variant(event,ui){
-    console.log('=============================')
-    console.log(product.master.id);
+    // console.log('=============================')
+    // console.log(product.master.id);
     if(variants.length >0 ){
       var width_index = $("#width-slider").slider("value")*1-1;
       var diameter_index = $("#diameter-slider").slider("value")*1-1;
@@ -345,12 +333,17 @@
         $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
         $('#add-to-cart-button').hide();
         $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
-
       }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
         $('#variant_id').val(variants[selected_variant][0]);
         $('.price span').html(variants[selected_variant][3]);
         $('#add-to-cart-button').show();
         $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
+        for(var i = 0; i < product.variants.length; i++){
+          if(product.variants[i].id == variants[selected_variant][0]){
+            if(product.variants[i].image)
+              $('.product_main img').attr('src',product.variants[i].image);
+          }
+        }
         // console.log("variant_found");
       }else{ // out of stock
         $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
@@ -451,11 +444,17 @@
 
     
   (function(){
-    var app = angular.module('spreeStore', []);
+    var app = angular.module('spreeStore', ['ngSocial'])
     
     app.controller('StoreController',['$http',function($http){
       var store = this;
       this.product=null;
+
+      this.myModel={
+        Name: '',
+        ImageUrl: '',
+        FbLikeUrl:''
+      };
 
       this.find_product_by_color = function(color){
         for(var i=0;i<store.products.length;i++){
@@ -564,7 +563,7 @@
       };
 
       this.setProduct = function(){
-        console.log('set product called');
+        //console.log('set product called');
         products = store.products;
         for(var i=0;i<store.products.length;i++){
           if(store.products[i].slug==slug){
@@ -586,9 +585,16 @@
             colors = store.product.colors;
             counts = store.product.counts;
 
+
+            //sharing plugins
+            store.myModel.ImageUrl = store.product.image;
+            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '?taxon_id=<%=@taxon.id%>'
+
+            store.myModel.Name = store.product.name;
+
             setTimeout(function(){
 
-              console.log('in set timeout');
+              //console.log('in set timeout');
               // calculate value from default product below.
 
               $('#color-selector').unbind('click');
@@ -696,7 +702,7 @@
             },500);
 
 
-            console.log('set product');
+            //console.log('set product');
           }    
         }
       };
@@ -729,7 +735,280 @@
 
 
 
+  })();
+
+  (function(){
+    function template(tmpl, context, filter) {
+        'use strict';
+
+        return tmpl.replace(/\{([^\}]+)\}/g, function (m, key) {
+            // If key don't exists in the context we should keep template tag as is
+            return key in context ? (filter ? filter(context[key]) : context[key]) : m;
+        });
+    }
+
+    var app = angular.module('ngSocial', []);
+
+    app.directive('ngSocialButtons', ['$compile', '$q', '$parse', '$http', '$location',
+        function ($compile, $q, $parse, $http, $location) {
+            'use strict';
+
+            return {
+                restrict: 'A',
+                scope: {
+                    'url': '=',
+                    'title': '=',
+                    'description': '=',
+                    'image': '=',
+                    'showcounts': '='
+                },
+                replace: true,
+                transclude: true,
+                template: '<div class="ng-social-container ng-cloak"><ul class="ng-social" ng-transclude></ul></div>',
+                controller: ['$scope', '$q', '$http', function ($scope, $q, $http) {
+                    var getUrl = function () {
+                        return $scope.url || $location.absUrl();
+                    }, ctrl = this;
+                    this.init = function (scope, element, options) {
+                        if (options.counter) {
+                            ctrl.getCount(scope.options).then(function (count) {
+                                scope.count = count;
+                            });
+                        }
+                    };
+                    this.link = function (options) {
+                            options = options || {};
+                            var urlOptions = options.urlOptions || {};
+                            urlOptions.url = getUrl();
+                            urlOptions.title = $scope.title;
+                            urlOptions.image = $scope.image;
+                            urlOptions.description = $scope.description || '';
+                            return ctrl.makeUrl(options.clickUrl || options.popup.url, urlOptions);
+                    };
+                    this.clickShare = function (e, options) {
+                        if (e.shiftKey || e.ctrlKey) {
+                            return;
+                        }
+                        e.preventDefault();
+
+                        if (options.track && typeof _gaq != 'undefined' && angular.isArray(_gaq)) {
+                            _gaq.push(['_trackSocial', options.track.name, options.track.action, $scope.url]);
+                        }
+
+                        var process = true;
+                        if (angular.isFunction(options.click)) {
+                            process = options.click.call(this, options);
+                        }
+                        if (process) {
+                            var url = ctrl.link(options);
+                            ctrl.openPopup(url, options.popup);
+                        }
+                    };
+                    this.openPopup = function (url, params) {
+                        var left = Math.round(screen.width / 2 - params.width / 2),
+                            top = 0;
+                        if (screen.height > params.height) {
+                            top = Math.round(screen.height / 3 - params.height / 2);
+                        }
+
+                        var win = window.open(
+                            url,
+                            'sl_' + this.service,
+                            'left=' + left + ',top=' + top + ',' +
+                            'width=' + params.width + ',height=' + params.height +
+                            ',personalbar=0,toolbar=0,scrollbars=1,resizable=1'
+                        );
+                        if (win) {
+                            win.focus();
+                        } else {
+                            location.href = url;
+                        }
+                    };
+                    this.getCount = function (options) {
+                        var def = $q.defer();
+                        var urlOptions = options.urlOptions || {};
+                        urlOptions.url = getUrl();
+                        urlOptions.title = $scope.title;
+                        var url = ctrl.makeUrl(options.counter.url, urlOptions),
+                            showcounts = angular.isUndefined($scope.showcounts) ? true : $scope.showcounts;
+
+                        if (showcounts) {
+                            if (options.counter.get) {
+                                options.counter.get(url, def, $http);
+                            } else {
+                                $http.jsonp(url).success(function (res) {
+                                    if (options.counter.getNumber) {
+                                        def.resolve(options.counter.getNumber(res));
+                                    } else {
+                                        def.resolve(res);
+                                    }
+                                });
+                            }
+                        }
+                        return def.promise;
+                    };
+                    this.makeUrl = function (url, context) {
+                        return template(url, context, encodeURIComponent);
+                    };
+                    return this;
+                }]
+            };
+        }
+        ]);
+
+    app.directive('ngSocialFacebook', function() {
+        'use strict';
+
+        var options = {
+            counter: {
+                url: 'http://graph.facebook.com/fql?q=SELECT+total_count+FROM+link_stat+WHERE+url%3D%22{url}%22' +
+                     '&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+            if (0 === data.data.length) {
+              return 0;
+            }
+
+                    return data.data[0].total_count;
+                }
+            },
+            popup: {
+                url: 'http://www.facebook.com/sharer/sharer.php?u={url}',
+                width: 600,
+                height: 500
+            },
+            track: {
+                'name': 'facebook',
+                'action': 'send'
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li>' +
+                        '<a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)"' +
+                            ' class="btn btn-default btn-sm btn-social-facebook">' +
+                            '<span class="fui-facebook"></span>' +
+                            '<span class="ng-social-text" ng-transclude></span>' +
+                            '<span ng-show="count" class="btn-tip">{{ count }}</span>' +
+                        '</a>' +
+                       '</li>',
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-facebook');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        };
+    });
+
+    app.directive('ngSocialTwitter', function() {
+        'use strict';
+
+        var options = {
+            counter: {
+                url: 'http://urls.api.twitter.com/1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+                    return data.count;
+                }
+            },
+            popup: {
+                url: 'http://twitter.com/intent/tweet?url={url}&text={title}',
+                width: 600,
+                height: 450
+            },
+            click: function(options) {
+                // Add colon to improve readability
+                if (!/[\.:\-–—]\s*$/.test(options.pageTitle)) options.pageTitle += ':';
+                return true;
+            },
+            track: {
+                'name': 'twitter',
+                'action': 'tweet'
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li> \
+                        <a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)" class="btn btn-default btn-sm btn-social-twitter"> \
+                            <span class="fui-twitter"></span> \
+                            <span class="ng-social-text" ng-transclude></span> \
+                          <span ng-show="count" class="btn-tip">{{ count }}</span> \
+                        </a> \
+                       </li>',
+            controller: function($scope) {
+            },
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-twitter');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        }
+    });
+    
+
+
+    angular.module("ngSocial").directive('ngSocialPinterest', function() {
+        'use strict';
+ 
+        var options = {
+            counter: {
+                url: 'http://api.pinterest.com/v1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+                    return data.count;
+                }
+            },
+            popup: {
+                url: 'http://pinterest.com/pin/create/button/?url={url}&description={title}&media={image}',
+                width: 630,
+                height: 270
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li> \
+                        <a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)" class="btn btn-default btn-sm btn-social-pinterest"> \
+                            <span class="fui-pinterest"></span> \
+                            <span class="ng-social-text" ng-transclude></span> \
+                            <span ng-show="count" class="btn-tip">{{ count }}</span> \
+                        </a> \
+                       </li>',
+            controller: function($scope) {
+            },
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-pinterest');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        }
+    });
+
+
 
   })();
+
+
+
 
 </script>
