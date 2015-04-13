@@ -43,7 +43,7 @@ sport_taxon = Spree::Taxon.where("name IN( 'NFL Licensed Ribbon','MLB Ribbon', '
 
 sport_taxon.each{|t| t.products.each{|p| prod_to_delete_array << p }}
 
-sport_taxon_taxon.each do |t|
+sport_taxon.each do |t|
   t.children.each do |c|
      c.products.each{|p| prod_to_delete_array << p}
      c.children.each{|cc| cc.products.each{|cp| prod_to_delete_array << cp}}
