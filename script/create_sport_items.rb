@@ -300,7 +300,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               #p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
               #p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
 
-              if !width.blank?
+              if !@rcpbs.width.blank?
                 prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}X#{@rcpbs.putup_pack},#{@rcpbs.ws_color.gsub('spool','-')} }
                 p_des =  %Q{#{@rcpbs.ws_subcat} #{@rcpbs.ws_cat}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}X#{@rcpbs.putup_pack},#{@rcpbs.ws_color.gsub('spool','-spool')} packs.}
               else
