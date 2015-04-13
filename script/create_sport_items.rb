@@ -267,7 +267,8 @@ CSV.open(csv_error_file, "wb") do |csv|
             @item_type = 'Ribbon'
 
           end
-          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
+          #prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
+          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip} #{@rcpbs.item}}
 
 
 
@@ -295,9 +296,11 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
               p_des += %Q{ All come 3 to a pack.}
             else
-              p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
-              p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
-              p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
+              #p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
+              #p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
+              #p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
+              p_desc = @rcpbs.desc
+
             end
 
 
