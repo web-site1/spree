@@ -9,7 +9,7 @@ def confirm(msg)
   STDOUT.printf "OK to " + msg + " (y/n)? "
   input = STDIN.gets.chomp.downcase
   input == "y"
-end                            removeremov
+end
 
 db = 'spree99'
 
@@ -39,13 +39,15 @@ puts("Destroying Products before DELETEing...")
 
 prod_to_delete_array = []
 
-accessories_taxon = Spree::Taxon.where("name IN( 'NFL Licensed Ribbon','MLB Ribbon', 'Collegiate Licensed Ribbon') ")
+sport_taxon = Spree::Taxon.where("name IN( 'NFL Licensed Ribbon','MLB Ribbon', 'Collegiate Licensed Ribbon') ")
 
-accessories_taxon.products.each{|p| prod_to_delete_array << p }
+sport_taxon.each{|t| t.products.each{|p| prod_to_delete_array << p }}
 
-accessories_taxon.children.each do |c|
-  c.products.each{|p| prod_to_delete_array << p}
-  c.children.each{|cc| cc.products.each{|cp| prod_to_delete_array << cp}}
+sport_taxon_taxon.each do |t|
+  t.children.each do |c|
+     c.products.each{|p| prod_to_delete_array << p}
+     c.children.each{|cc| cc.products.each{|cp| prod_to_delete_array << cp}}
+  end
 end
 
 array_of_ids =  prod_to_delete_array.map{|p| p.id}
