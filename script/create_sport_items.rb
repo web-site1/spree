@@ -301,8 +301,8 @@ CSV.open(csv_error_file, "wb") do |csv|
               #p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
 
               if !@rcpbs.width.blank?
-                prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")},#{@rcpbs.ws_color.gsub('spool','-')} }
-                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")},#{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
+                prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")}, #{@rcpbs.ws_color.gsub('spool','-')} }
+                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")}, #{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
               else
                 prod_name = %Q{#{@rcpbs.ws_subcat} 4-PACK SPECIAL }
                 p_des =  %Q{#{@rcpbs.ws_color}. #{@rcpbs.ws_subcat.titlecase}. #{@rcpbs.desc.scan( /Ribbon patterns*.*/).first}}
