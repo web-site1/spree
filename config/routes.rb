@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
+  get 'products/:id/related_products' => 'spree/products#related_products'
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
@@ -85,6 +86,10 @@ Rails.application.routes.draw do
   get '/1-love-foiled-category', to: redirect('/t/categories/tulle-and-trims/love-foiled')
   get '/1-jasmine-category', to: redirect('/t/categories/tulle-and-trims/jasmine')
   get '1-newest-ribbon-category.htm', to: redirect('/show_new_arrivals')
+  get '1-MLB-ribbon-category', to: redirect('/t/categories/sports/MLB-ribbon')
+  get '1-:team-MLB-ribbon', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+  get 'NFL-licensed-ribbon-:team', to: redirect('/t/categories/sports/NFL-licensed-ribbon/%{team}')
+  get 'CLC-licensed-ribbon-:team', to: redirect('/t/categories/sports/CLC-licensed-ribbon/%{team}')
 
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm

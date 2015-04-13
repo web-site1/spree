@@ -162,7 +162,7 @@ $.fn.addSliderSegments = function (amount, orientation) {
 	    carousel: carousel2
 	});
 
-    var carousel3 = jQuery('#multiple-items');
+    carousel3 = jQuery('#multiple-items');
 
     carousel3
     	.on('jcarousel:reload jcarousel:create ', function () {

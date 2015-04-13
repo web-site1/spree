@@ -1,6 +1,6 @@
-<div class="main-content search-results-content">
+<div class="main-content search-results-content" ng-app="spreeStore">
 
-  <div class="container">
+  <div class="container" ng-controller="StoreController as store">
 
     <div class="row">
 
@@ -14,13 +14,13 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
             <div class="item active product_main">
-              <%= render :partial => 'image' %>
+              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image}}">
             </div>
           </div>
           <!-- Controls -->
-<!--           <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
-          <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a>
- -->        </div>
+          <!-- <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
+          <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a> -->
+        </div>
 
         <div class="row">
 
@@ -48,45 +48,25 @@
 
             <div class="jcarousel-wrapper">
               <div class="jcarousel multiple-items" id="multiple-items">
-                <ul>
-                  <% @sorted_colors = (@product.colors.uniq rescue []) %>
-                  <% @product_colors = [] %>
-                  <% if @sorted_colors.length == 1  %>
-                      <% @product_colors = (@product.taxons[0].products.collect{|p| [ p.variants.first.option_value('color'), p.slug, p.master_images.first] }  rescue [])%>
-                  <% end %>  
-                  <% if @product.variant_images.length > 1 or @product_colors.length > 1 %>
-                    <% if @sorted_colors.length == 1  %>  
-                      <% @product_colors.each do |product_color| %>
-                          <% if product_color[2] %>
-                            <li>
-                              <%= link_to(image_tag(product_color[2].attachment.url(:mini), class: "img-responsive", title: product_color[0]),"/products/#{product_color[1]}")  %>
-                            </li>
-                          <% end %>
-                      <% end %>
-                    <% else %>
-                      <% if @product.master.images.first %>
-                        <li>
-                          <%= link_to(image_tag(@product.master.images[0].attachment.url(:mini), purl: @product.master.images[0].attachment.url(:product), class: "img-responsive"),"#", class: "v_color") %>
-                        </li>
-                      <% end %>
-
-                      <% @product.variants.each do |v|%>
-                        <% if v.images.length > 0 %>
-                          <li>
-                            <%= link_to(image_tag(v.images.first.attachment.url(:mini), purl: v.images.first.attachment.url(:product), class: "img-responsive", title: v.option_value('color')),'#', class: 'v_color') %>
-                          </li>
-                        <% end %>
-
-                      <% end %>
-                    <% end %>
-                  <% end %>
+                <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
+                    <li ng-repeat="product in store.products" >
+                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                    </li>
+                </ul>
+                <ul ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
+                  <li ng-show="store.product.master.image_mini">
+                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                  </li>
+                  <li ng-repeat="variant in store.product.variants">
+                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="img-responsive" title="{{variant.color}}"/></a>
+                  </li>
                 </ul>
               </div>
 
-              <% if @product.variant_images.length > 3 or @product_colors.length > 3%>
-                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
-              <% end %>
+              <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
+                  <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                  <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+              </span>
 
               <p class="jcarousel-pagination"></p>
             </div>
@@ -97,88 +77,61 @@
 
         <div class="social-icons">
           <label>Share</label>
+            <ul ng-social-buttons
+                 data-url="store.myModel.FbLikeUrl"
+                 data-title="store.myModel.Name"
+                 data-description="store.myModel.Name"
+                 data-image="store.myModel.ImageUrl">
+                <li class="ng-social-pinterest">Pin It</li>
+                <li class="ng-social-facebook"> Facebook</li>
+                <li class="ng-social-twitter">Twitter</li>
+            </ul>
 
-
-          <a target="_blank" title="Pin It" class="btn btn-default btn-sm btn-social-pinterest"
-             href="http://www.pinterest.com/pin/create/button/?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&media=<%= @product.master.images[0].attachment.url(:product) %>&description=<%=h @product.name %>">
-
-            <span class="fui-pinterest"></span>
-            Pin It
-            <span class="btn-tip">100</span>
-          </a>
-
-          <!-- Please call pinit.js only once per page -->
-          <!--<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>-->
-          <a href="//www.facebook.com/plugins/like.php?href=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>" target="_blank" class="btn btn-default btn-sm btn-social-facebook">
-            <span class="fui-facebook"></span>
-            Like
-            <span class="btn-tip">91</span>
-          </a>
-
-          <a href="//twitter.com/share?url=<%= "#{request.protocol}#{request.host_with_port}#{request.fullpath}" %>&text=<%=h @product.name %>&via=ArtisticRibbon" target="_blank" class="btn btn-default btn-sm btn-social-twitter">
-            <span class="fui-twitter"></span>
-            Tweet
-            <span class="btn-tip">45</span>
-          </a>
         </div>
 
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-information">
 
-        <div><span class="label label-danger">New</span></div>
+        <div ng-show="store.product.is_new"><span class="label label-danger">New</span></div>
 
-        <h1><%= @product.name %></h1>
+        <h1>{{store.product.name}}</h1>
 
+        <!-- TODO set has no description text later if no discription -->
         <p>
-          <%= product_description(@product) rescue Spree.t(:product_has_no_description) %>
+          {{store.product.description}}
         </p>
 
         <div class="product-details">
 
           <h2>Product details</h2>
-          <% unless @product_properties.empty? %>
-              <ul>
-                <% @product_properties.each do |product_property| %>
-                <li><strong><%= product_property.property.presentation %></strong> :
-                  <%= product_property.value %>
-                </li>
-                <% end %>
-              </ul>
-          <% end %>
+          <ul>
+            <li ng-repeat="product_property in store.product.product_properties">
+              <strong>{{product_property.property}}</strong> :
+              {{product_property.value }}
+            </li>
+          </ul>
+          
         </div> <!-- product details -->
 
         <div class="product-settings">
-          <% @product_type = (@product_properties.first.value rescue '') %>
           
-
-          <% @sorted_widths = (@product.widths.uniq rescue []) %>
-
-          <% if @sorted_widths.count > 1 #['Ribbon'].include? @product_type  %>
-            <div class="row">
+            <div class="row" ng-show="store.product.widths.length > 0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
               </div>
               <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
                 <h3>Width</h3>
                 <div id="width-slider">
-                  <ol class="labels">
-                  
-                    <% @sorted_widths = @sorted_widths.sort{ |a,b| compare_lengths(a,b) } %>
-                    <% @sorted_widths.each do |width| %>
-                    
-                      <li><%= width %></li>
-                    <% end %>
+                  <ol class="labels">                    
+                      <li ng-repeat="width in store.product.widths">{{width}}</li>
                   </ol>
                 </div>
               </div>
             </div>
-          <% end %>
 
-          <% @sorted_diameters = (@product.diameters.uniq rescue []) %>
 
-          <% if @sorted_diameters.count > 1 #['Ribbon'].include? @product_type  %>
-            <div class="row">
+            <div class="row" ng-show="store.product.diameters.length > 0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <!-- TODO: Replace by diameter image -->
                 <%= image_tag "product-page/icon-width.png", class: "img-responsive" %>
@@ -187,21 +140,15 @@
                 <h3>DiaMeter</h3>
                 <div id="diameter-slider">
                   <ol class="labels">
-                  
-                    <% @sorted_diameters = @sorted_diameters.sort{ |a,b| compare_lengths(a,b) } %>
-                    <% @sorted_diameters.each do |diameter| %>
+                                
+                      <li ng-repeat="diameter in store.product.diameters">{{diameter}}</li>
                     
-                      <li><%= diameter %></li>
-                    <% end %>
                   </ol>
                 </div>
               </div>
             </div>
-          <% end %>
 
-          <% @sorted_totes = (@product.tote_sizes.uniq rescue []) %>
-          <% if @sorted_totes.length > 1 #['Ribbon'].include? @product_type %>
-            <div class="row">
+            <div class="row" ng-show="store.product.totes.length>0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <!-- TODO: change image -->
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
@@ -210,110 +157,84 @@
                 <h3>Size</h3>
                 <div id="tote-slider">
                   <ol class="labels">
-                    <% @sorted_totes = @sorted_totes.sort{|a,b| 
-                      a.to_f <=> b.to_f
-                      }%>
-                    <% @sorted_totes.each do |tote| %>
-                      <li><%= tote %></li>
-                    <% end %>
+                      <li ng-repeat="tote in store.product.totes">{{tote}}</li>
                   </ol>
                 </div>
               </div>
             </div>
-          <% end %>
 
 
-          <% @sorted_putups = (@product.ribbon_putups.uniq rescue []) %>
-          
-          <% if @sorted_putups.length > ( (['Euro-totes'].include?((@product.taxons.first.parent.name rescue ''))  || ["Lacey", "Cord On A Spool", "Love Foiled", "Glitter Maze", "Tulle", "Geomesh", "Geomesh Cross"].include?((@product.taxons.first.name rescue ''))) ? 0 : 1) %>
-            <div class="row">
+            <div class="row" ng-show="store.product.putups.length > 0 ">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
               </div>
               <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
-                <h3>Length</h3>
+                <h3>Putup</h3>
                 <div id="putup-slider">
                   <ol class="labels">
-                    <% @sorted_putups = @sorted_putups.sort{|a,b| 
-                      a.to_f <=> b.to_f
-                      }%>
-                    <% @sorted_putups.each do |putup| %>
-                      <li><%= putup %></li>
-                    <% end %>
+                      <li ng-repeat="putup in store.product.putups">{{putup}}</li>                    
                   </ol>
                 </div>
               </div>
             </div>
-          <% end %>
 
-          <% @sorted_lengths = (@product.lengths.uniq rescue []) %>
 
-          <% if @sorted_lengths.count > 1 #['Ribbon'].include? @product_type  %>
-            <div class="row">
+
+            <div class="row" ng-show="store.product.counts.length > 0 ">
+              <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
+                <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
+              </div>
+              <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
+                <h3>Count</h3>
+                <div id="count-slider">
+                  <ol class="labels">
+                      <li ng-repeat="count in store.product.counts">{{count}}</li>                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+          
+
+            <div class="row" ng-show="store.product.lengths.length>0">
               <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
                 <%= image_tag "product-page/icon-length.png", class: "img-responsive" %>
               </div>
               <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 slider-col">
                 <h3>Length</h3>
                 <div id="length-slider">
-                  <ol class="labels">
-                  
-                    <% @sorted_lengths = @sorted_lengths.sort{ |a,b| compare_lengths(a,b) } %>
-                    <% @sorted_lengths.each do |length| %>
-                    
-                      <li><%= length %></li>
-                    <% end %>
+                  <ol class="labels">                    
+                    <li ng-repeat="length in store.product.lengths">{{length}}</li>
                   </ol>
                 </div>
               </div>
             </div>
-          <% end %>
 
 
           <%= form_for :order, :url => populate_orders_path do |f| %>
 
             <div class="row">
 
-              <% if @sorted_colors.length != 0 # ['Ribbon','Tulle & Trims'].include? @product_type %>                
-                <% if @sorted_colors.length == 1 %>
-                  <% if @product_colors.length > 0 %>
-                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-                        <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-                    </div> -->
-                    <div class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
-                        <h3>Color</h3>
-                        <% @colors = @product_colors.collect{|p| [ p[0],p[1] ]} %>
-                        <%= select_tag '', options_for_select(@colors,@product.slug),:class=>"form-control select select-primary colors colors_page", "data-toggle"=>"select" %> 
-                    </div>
-                  <% end %>
-                <% else %>
-                  <!-- here we will display color as options -->
-                  <% if @sorted_colors.length > 1 %>
-                    <!-- <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col">
-                        <%= image_tag "product-page/icon-color.png", class: "img-responsive" %>
-                    </div> -->
-                    <div class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
-                        <h3>Color</h3>
-                        <%= select_tag 'color-selector', options_for_select(@sorted_colors),:class=>"form-control select select-primary colors colors_variant", "data-toggle"=>"select" %> 
-                    </div>
-                  <% end %>
-
-                <% end %>
-              <% else %>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 icon-col"></div>
-                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5"></div>
-              <% end %>
-
+              <div ng-show="store.product.colors.length!=0" class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
+                  <h3>Color</h3>
+                  <select ng-model="store.selected_color" ng-change="store.color_changed()" id="{{store.colors_class}}" class="form-control select select-primary colors {{store.colors_class}}" data-toggle="select">
+                    <option ng-repeat="item in store.options_for_colors track by item.value" value="{{item.key}}">{{item.value}}</option>
+                  </select>
+              </div>
+                                    
+              <div ng-show="store.product.colors.length==0" class="col-lg-7 col-md-5 col-sm-5 col-xs-5"></div>
+              
               <div class="col-lg-5 col-md-5 col-sm-5 col-xs-4 quantity-col">
                 <h3>Quantity</h3>
                 <%= text_field_tag :quantity, 1, :class => 'input-sm spinner form-control', :min => 1 %>
 
                 <!-- <input type="text" id="spinner-05" value="0" class="form-control input-sm spinner" /> -->
               </div>
+
             </div>
             
 
-            <%= hidden_field_tag "variant_id", @product.master.id %>
+            <%= hidden_field_tag "variant_id", "{{store.product.master.id}}" %>
             <div class="row bottom-row">
 
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 price columns left">
@@ -342,22 +263,13 @@
 
       <div class="col-lg-12">
 
-        <div class="jcarousel-wrapper">
+        <div ng-show="store.related_products.length>0" class="jcarousel-wrapper">
           <div class="headline"><h3>Related Products</h3></div>
           <div class="jcarousel related-items" id="related-items">
             <ul>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
-              <li><a href="#"><%= image_tag "placeholders/small-item-1.jpg", class: "img-responsive" %></a></li>
+              <li ng-repeat="related_product in store.related_products">
+                <a title="{{related_product.name}}" ng-href="{{related_product.url}}"><img ng-src="{{related_product.image}}"  class = "img-responsive" /></a>
+              </li>
             </ul>
           </div>
 
@@ -379,15 +291,17 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/Javascript">
-  
-
+  thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
   function change_variant(event,ui){
+    // console.log('=============================')
+    // console.log(product.master.id);
     if(variants.length >0 ){
       var width_index = $("#width-slider").slider("value")*1-1;
       var diameter_index = $("#diameter-slider").slider("value")*1-1;
       var tote_index = $("#tote-slider").slider("value")*1-1;
       var putup_index = $("#putup-slider").slider("value")*1-1;
       var length_index = $("#length-slider").slider("value")*1-1;
+      var count_index = $("#count-slider").slider("value")*1-1;
       // var colors_index = colors.indexOf($(".colors_variant").val());
       
 
@@ -396,25 +310,40 @@
       selected_tote = totes.length > 1 ? totes[tote_index] : (totes.length==0 ? '' : totes[0]);
       selected_putup = putups.length > 1 ? putups[putup_index] : (putups.length==0 ? '' : putups[0]);
       selected_length = lengths.length > 1 ? lengths[length_index] : (lengths.length==0 ? '' : lengths[0]);
-      selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : colors[0])
+      selected_count = counts.length > 1 ? counts[count_index] : (counts.length==0 ? '' : counts[0]);
+      
+      // selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : $('#color-selector').val());//colors[0]);
+
       // console.log('selected_width: '+selected_width);
       // console.log('selected_putup: '+selected_putup);
       selected_variant = -1;
       $.each(variants,function(index,value){
-        if(value[1]==selected_width && value[2]==selected_putup && value[6]==selected_diameter && value[7]==selected_length && value[8].toLowerCase()==selected_tote.toLowerCase() && value[9] == selected_color){
+        if( value[1]==selected_width && 
+            value[2].replace(' ','-')==selected_putup && 
+            value[6]==selected_diameter && 
+            value[7]==selected_length && 
+            value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase() && 
+            value[9] == selected_color &&
+            value[10] == selected_count){
           selected_variant = index;
         }
       });
+
       if(selected_variant==-1){
         $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
         $('#add-to-cart-button').hide();
         $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
-
       }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
         $('#variant_id').val(variants[selected_variant][0]);
         $('.price span').html(variants[selected_variant][3]);
         $('#add-to-cart-button').show();
         $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
+        for(var i = 0; i < product.variants.length; i++){
+          if(product.variants[i].id == variants[selected_variant][0]){
+            if(product.variants[i].image)
+              $('.product_main img').attr('src',product.variants[i].image);
+          }
+        }
         // console.log("variant_found");
       }else{ // out of stock
         $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
@@ -422,10 +351,10 @@
         $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
       }
     }else{
-      $('#variant_id').val("<%=@product.master.id%>");
-      $('.price span').html("<%=display_price(@product.master)%>");
+      $('#variant_id').val(product.master.id);
+      $('.price span').html(product.master.price);
       $('#add-to-cart-button').show();
-      $('.product-details ul #sku').html('<strong>SKU</strong> : <%=@product.master.sku%>');
+      $('.product-details ul #sku').html('<strong>SKU</strong> : '+product.master.sku);
     }
 
   }
@@ -455,10 +384,27 @@
     if(lindex)
       $("#length-slider").slider("value",lindex);
     if(value[9]!='')
-      $('#color-selector').val(value[9]);
-
+      $('.colors').val(value[9]);
+    var cindex = counts.indexOf(value[10])+1
+    if(value[10]!='')
+      $('#count-slider').slider("value",cindex);
     change_variant();
 
+  }
+
+
+  function set_slider_width(div_selector, arr){
+    parentWidth = $(div_selector).width();
+    if(arr.length == 1){
+      itemWidth = parentWidth;
+      parentWidth = 0;
+    }else if(arr.length == 2)
+      itemWidth = parentWidth;
+    else
+      itemWidth = arr.length>0 ? parseInt(parentWidth / arr.length) : 0;
+    labelsWidth = parentWidth+itemWidth;
+    $(div_selector+' ol.labels').css("width",labelsWidth); // set width of labels div for any options
+    $(div_selector+' ol.labels').css("left", "-" + itemWidth/2 +"px"); // adjust to bring label to center  
   }
 
   // $(document).ready(function(){
@@ -467,272 +413,602 @@
     $('.product-details ul').append('<li id="sku"><strong>SKU</strong> : NA </li>');
 
     out_of_stock_text = "<%= Spree.t(:out_of_stock) %>";
+    
     variants = [];
-    <% @product.variants.each do |variant| %>
-      variants.push([<%=variant.id%>,
-        "<%=variant.option_value('width')%>",
-        "<%=variant.option_value('ribbon-putup')%>",
-        "<%= display_price(variant) %>",
-        <%= variant.can_supply? %>,
-        "<%= variant.sku %>",
-        "<%=variant.option_value('diameter')%>",
-        "<%=variant.option_value('length')%>",
-        "<%=variant.option_value('tote-size')%>",
-        "<%=variant.option_value('color')%>"]);
-    <% end %>
-
+    
     widths = [];
-    <% @sorted_widths.each do |width| %>
-      widths.push("<%= width %>");
-    <% end %>
-
+    selected_width = '';  
+    
     diameters = [];
-    <% @sorted_diameters.each do |diameter| %>
-      diameters.push("<%= diameter %>");
-    <% end %>
-
+    selected_diameter = '';
+    
     totes = [];
-    <% @sorted_totes.each do |tote| %>
-      totes.push("<%= tote.gsub('-',' ') %>");
-    <% end %>
+    selected_tote = '';
 
     putups = [];
-    <% @sorted_putups.each do |putup| %>
-      putups.push("<%= putup.gsub('-',' ') %>");
-    <% end %>
+    selected_putup = '';
 
     lengths = [];
-    <% @sorted_lengths.each do |length| %>
-      lengths.push("<%= length %>");
-    <% end %>
-    
+    selected_length = '';
+
+    counts = [];
+    selected_count = '';
+
     colors = [];
-    <% @sorted_colors.each do |color| %>
-      colors.push("<%= color %>");
-    <% end %>
-    // calculate value from default product below.
-
-    wslider = $("#width-slider");
-    if (wslider.length > 0) {
-      wslider.slider({
-        min: 1,
-        max: widths.length,
-        value: 1,
-        orientation: "horizontal",
-        range: "min",
-        change: change_variant
-      }).addSliderSegments(wslider.slider("option").max);
-    }
-
-    dslider = $("#diameter-slider");
-    if (dslider.length > 0) {
-      dslider.slider({
-        min: 1,
-        max: diameters.length,
-        value: 1,
-        orientation: "horizontal",
-        range: "min",
-        change: change_variant
-      }).addSliderSegments(dslider.slider("option").max);
-    }
-
-    tslider = $("#tote-slider");
-    if (tslider.length > 0) {
-      tslider.slider({
-        min: 1,
-        max: totes.length,
-        value: 1,
-        orientation: "horizontal",
-        range: "min",
-        change: change_variant
-      }).addSliderSegments(tslider.slider("option").max);
-    }
-
-    pslider = $("#putup-slider");
-    if (pslider.length > 0) {
-      pslider.slider({
-        min: 1,
-        max: putups.length,
-        value: 1,
-        orientation: "horizontal",
-        range: "min",
-        change: change_variant
-      }).addSliderSegments(pslider.slider("option").max);
-    }
-
-    lslider = $("#length-slider");
-    if (lslider.length > 0) {
-      lslider.slider({
-        min: 1,
-        max: lengths.length,
-        value: 1,
-        orientation: "horizontal",
-        range: "min",
-        change: change_variant
-      }).addSliderSegments(lslider.slider("option").max);
-    }
-
-    // Set defaults value from cookie or default variant
-
-    if(getCookie('sWidth')!= null)
-      cookieWidth = getCookie('sWidth');
-    else
-      cookieWidth = variants[0][1]
+    selected_color = '';
     
-    // console.log(cookieWidth);
+    product=null;
 
-    $('#width-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieWidth){
-        $('#width-slider').slider('option','value',i+1);
-        setCookie('sWidth',null);
-      }
-    });
-
-
-    if(getCookie('sDiameter')!= null)
-      cookieDiameter = getCookie('sDiameter');
-    else
-      cookieDiameter = variants[0][6]
-    
-    // console.log(cookieDiameter);
-
-    $('#diameter-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieDiameter){
-        $('#diameter-slider').slider('option','value',i+1);
-        setCookie('sDiameter',null);
-      }
-    });
+  
+  var slug = '<%=params[:id]%>';
 
     
-    if(getCookie('sTote')!= null)
-      cookieTote = getCookie('sTote')
-    else
-      cookieTote = variants[0][8];
-
-    // console.log(cookieTote);
-
-    $('#tote-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieTote){
-        $('#tote-slider').slider('option','value',i+1);
-        setCookie('sTote',null);
-      }
-    });
-
-
-    if(getCookie('sPutup')!= null)
-      cookiePutup = getCookie('sPutup')
-    else
-      cookiePutup = variants[0][2];
-
-    // console.log(cookiePutup);
-
-    $('#putup-slider .labels li').each(function(i,el){
-      if($(el).html()==cookiePutup){
-        $('#putup-slider').slider('option','value',i+1);
-        setCookie('sPutup',null);
-      }
-    });
+  (function(){
+    var app = angular.module('spreeStore', ['ngSocial'])
     
-    if(getCookie('sLength')!= null)
-      cookieLength = getCookie('sLength');
-    else
-      cookieLength = variants[0][7]
-    
-    // console.log(cookieLength);
+    app.controller('StoreController',['$http',function($http){
+      var store = this;
+      this.product=null;
 
-    $('#length-slider .labels li').each(function(i,el){
-      if($(el).html()==cookieLength){
-        $('#length-slider').slider('option','value',i+1);
-        setCookie('sLength',null);
-      }
-    });
+      this.myModel={
+        Name: '',
+        ImageUrl: '',
+        FbLikeUrl:''
+      };
 
-    // For colors cookie is not required since we switch page by color.
+      this.find_product_by_color = function(color){
+        for(var i=0;i<store.products.length;i++){
+          if(store.products[i].colors.indexOf(color) != -1)
+            return store.products[i]
+        }
+      };
 
-    change_variant();
-    if($('.price span span').text()=="Not Available")
-      change_variant_by_id(variants[0][0]);
-
-    $(document).on('change','.colors_page',function(event){
-      windex = $('#width-slider').slider("option","value");
-      wvalue = $($('#width-slider .labels li')[windex-1]).html();
-      setCookie('sWidth',wvalue);
-
-      dindex = $('#diameter-slider').slider("option","value");
-      dvalue = $($('#diameter-slider .labels li')[dindex-1]).html();
-      setCookie('sDiameter',dvalue);
-
-      tindex = $('#tote-slider').slider("option","value");
-      tvalue = $($('#tote-slider .labels li')[tindex-1]).html();
-      setCookie('sTote',tvalue);
-
-      pindex = $('#putup-slider').slider("option","value");
-      pvalue = $($('#putup-slider .labels li')[pindex-1]).html();
-      setCookie('sPutup',pvalue);
-
-      lindex = $('#length-slider').slider("option","value");
-      lvalue = $($('#length-slider .labels li')[lindex-1]).html();
-      setCookie('sLength',lvalue);
-
-      // console.log(wvalue);
-      // console.log(lvalue);
+      this.options_for_colors = [];
       
-      window.location='/products/'+$(this).val();
-      event.preventDefault();
-    });
+      this.colors_class=null;
+      this.selected_color=null;
+      
 
-    
-    $(document).on('change','#color-selector',function(){
-      var selected_color = $(this).val();
-      var selected_imgs = $('.v_color img[title='+selected_color+']');
-      if(selected_imgs.length>0){
-        $('.product_main img').attr('src', $(selected_imgs[0]).attr('purl'));
-      }else{
-        $('.product_main img').attr('src', $('.v_color img').attr('purl'));
+
+      this.selected_width=null;
+      this.selected_diameter=null;
+      this.selected_tote=null;
+      this.selected_putup=null;
+      this.selected_length=null;
+      this.selected_count=null;
+
+      this.selected_image=null;
+      this.related_products=null;
+
+      this.thumb_clicked = function(item, item_type){
+        i = item;
+        store.selected_image = item.image;
+        if(item_type == 'product'){
+          slug = item.slug;
+          store.setProduct();
+        }
+
+        if(item_type=='variant'){
+          change_variant_by_id(item.id);
+        }
+        
+        // if(p.variants){ // check if product or variant;
+        //   store.selected_color = p.colors[0];
+        // }else{
+        //   store.selected_color = p.color;
+        // }
+        // store.color_changed();
+
+      };
+
+      this.color_changed = function(){
+
+        if($('.colors').hasClass('colors_page')){
+
+                selected_color = store.selected_color;
+                slug = store.find_product_by_color(selected_color).slug;
+                store.setProduct();
+
+        }else{
+                
+                selected_color = store.selected_color; //$(this).val();
+                var selected_imgs = $('.v_color img[title='+selected_color+']');
+                if(selected_imgs.length>0){
+                  $('.product_main img').attr('src', $(selected_imgs[0]).attr('purl'));
+                }else{
+                  $('.product_main img').attr('src', $('.v_color img').attr('purl'));
+                }
+                change_variant()
+
+        }
+
       }
-      change_variant()
-    });
 
-    $('#color-selector').trigger('change');
 
-    function set_slider_width(div_selector, arr){
-      parentWidth = $(div_selector).width();
-      if(arr.length == 1){
-        itemWidth = parentWidth;
-        parentWidth = 0;
-      }else if(arr.length == 2)
-        itemWidth = parentWidth;
-      else
-        itemWidth = arr.length>0 ? parseInt(parentWidth / arr.length) : 0;
-      labelsWidth = parentWidth+itemWidth;
-      $(div_selector+' ol.labels').css("width",labelsWidth); // set width of labels div for any options
-      $(div_selector+' ol.labels').css("left", "-" + itemWidth/2 +"px"); // adjust to bring label to center  
+      this.set_options_for_color_select = function(){
+        if(store.product.colors == 0) 
+          return; // no color option for this product
+        
+        store.options_for_colors.length = 0;
+
+        var selected = 0;
+        if(store.product.colors.length==1){
+          store.colors_class = "colors_page";
+          for(var i=0;i<store.products.length;i++){
+            store.options_for_colors.push( { key : store.products[i].colors[0], value : store.products[i].colors[0] } );
+            if(store.product.colors[0]==store.products[i].colors[0]){
+              selected = i;
+            }
+          }
+          //if(this.selected_color==null){
+            selected_color = this.selected_color = store.options_for_colors[selected].value;
+            $('.colors').val(store.options_for_colors[selected].value)
+            // $('.colors').select2({dropdownCssClass: 'dropdown-inverse'});
+            setTimeout(function(){$('.colors').trigger('change')},1000);
+          //}
+        }else if(store.product.colors.length>1){
+          store.colors_class = "color-selector";
+          for(var i=0;i<store.product.colors.length;i++){
+            store.options_for_colors.push( { key : store.product.colors[i], value : store.product.colors[i] } );
+          } 
+          if(this.selected_color==null){        
+            selected_color = this.selected_color = store.options_for_colors[0].value;
+            $('.colors').val(store.selected_color.value);
+          }
+        }
+
+        setTimeout(function(){$('.colors').trigger('change')},500);
+
+        
+      };
+
+      this.setProduct = function(){
+        //console.log('set product called');
+        products = store.products;
+        for(var i=0;i<store.products.length;i++){
+          if(store.products[i].slug==slug){
+            product = store.product=store.products[i];
+
+            // setup variants array
+            variants=[];
+            for(var j=0; j<store.product.variants.length;j++){
+              variant = store.product.variants[j];
+              variants.push([variant.id,variant.width,variant.putup, variant.price, variant.can_supply,variant.sku,variant.diameter,variant.length, variant.tote, variant.color, variant.count])
+            }
+            
+            // setup options array
+            widths = store.product.widths;
+            diameters = store.product.diameters;
+            totes = store.product.totes;
+            putups = store.product.putups;
+            lengths = store.product.lengths;
+            colors = store.product.colors;
+            counts = store.product.counts;
+
+
+            //sharing plugins
+            store.myModel.ImageUrl = store.product.image;
+            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '?taxon_id=<%=@taxon.id%>'
+
+            store.myModel.Name = store.product.name;
+
+            setTimeout(function(){
+
+              //console.log('in set timeout');
+              // calculate value from default product below.
+
+              $('#color-selector').unbind('click');
+              $('colors_page').unbind('click');              
+              $('.v_color').unbind('click');
+
+
+              store.selected_image = store.product.image;
+
+              // remove dots from sliders
+              $('.ui-slider-segment').remove()
+
+              wslider = $("#width-slider");
+              if (wslider.length > 0) {
+                wslider.slider({
+                  min: 1,
+                  max: widths.length,
+                  value: widths.indexOf(selected_width)+1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(widths.length);
+              }
+
+              dslider = $("#diameter-slider");
+              if (dslider.length > 0) {
+                dslider.slider({
+                  min: 1,
+                  max: diameters.length,
+                  value: 1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(diameters.length);
+              }
+
+              tslider = $("#tote-slider");
+              if (tslider.length > 0) {
+                tslider.slider({
+                  min: 1,
+                  max: totes.length,
+                  value: 1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(totes.length);
+              }
+
+              pslider = $("#putup-slider");
+              if (pslider.length > 0) {
+                pslider.slider({
+                  min: 1,
+                  max: putups.length,
+                  value: putups.indexOf(selected_putup)+1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(putups.length);
+              }
+
+              lslider = $("#length-slider");
+              if (lslider.length > 0) {
+                lslider.slider({
+                  min: 1,
+                  max: lengths.length,
+                  value: 1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(lengths.length);
+              }
+
+              cslider = $("#count-slider");
+              if (cslider.length > 0) {
+                cslider.slider({
+                  min: 1,
+                  max: counts.length,
+                  value: 1,
+                  orientation: "horizontal",
+                  range: "min",
+                  change: change_variant
+                }).addSliderSegments(counts.length);
+              }
+
+              store.set_options_for_color_select();
+
+
+              change_variant();
+      
+              if($('.price span span').text()=="Not Available")
+                change_variant_by_id(variants[0][0]);
+              
+              set_slider_width('#width-slider',widths);
+              set_slider_width('#diameter-slider',diameters);
+              set_slider_width('#tote-slider',totes);
+              set_slider_width('#putup-slider',putups);
+              set_slider_width('#length-slider',lengths);
+              set_slider_width('#count-slider',counts);
+
+              
+              // images carousel
+              jQuery('#multiple-items').jcarousel('reload');   
+
+
+            },500);
+
+
+            //console.log('set product');
+          }    
+        }
+      };
+
+
+      this.products = [
+        <%= raw render :partial =>  'show.json.jbuilder', :locals => {:product => @product} %>
+      ];
+      this.setProduct();
+
+      <% if @product.colors.uniq.length == 1 %>
+        $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
+          store.products = data;
+          store.setProduct();
+        }).
+          error(function(data, status, headers, config) {
+            alert('Unable to load some parts of the page, please try and reload to get complete data.');
+          });;
+      <% end %>
+
+      $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
+        store.related_products = data.products;
+        setTimeout(function(){
+          jQuery('#related-items').jcarousel('reload');   
+        },500);
+      })
+
+    }]);
+
+
+
+
+  })();
+
+  (function(){
+    function template(tmpl, context, filter) {
+        'use strict';
+
+        return tmpl.replace(/\{([^\}]+)\}/g, function (m, key) {
+            // If key don't exists in the context we should keep template tag as is
+            return key in context ? (filter ? filter(context[key]) : context[key]) : m;
+        });
     }
-    
-    set_slider_width('#width-slider',widths);
-    set_slider_width('#diameter-slider',diameters);
-    set_slider_width('#tote-slider',totes);
-    set_slider_width('#putup-slider',putups);
-    set_slider_width('#length-slider',lengths);
 
- 
-    $(document).on('click','.v_color',function(event){
-      console.log('here');
-      var color_clicked = $(this).find('img').attr('title');
+    var app = angular.module('ngSocial', []);
 
-      if(color_clicked){
-        $('#color-selector').val(color_clicked);
-        $('#color-selector').trigger('change');
-      }
+    app.directive('ngSocialButtons', ['$compile', '$q', '$parse', '$http', '$location',
+        function ($compile, $q, $parse, $http, $location) {
+            'use strict';
 
-      // change product main image
-      $('.product_main img').attr('src',$(this).find('img').attr('purl'));
+            return {
+                restrict: 'A',
+                scope: {
+                    'url': '=',
+                    'title': '=',
+                    'description': '=',
+                    'image': '=',
+                    'showcounts': '='
+                },
+                replace: true,
+                transclude: true,
+                template: '<div class="ng-social-container ng-cloak"><ul class="ng-social" ng-transclude></ul></div>',
+                controller: ['$scope', '$q', '$http', function ($scope, $q, $http) {
+                    var getUrl = function () {
+                        return $scope.url || $location.absUrl();
+                    }, ctrl = this;
+                    this.init = function (scope, element, options) {
+                        if (options.counter) {
+                            ctrl.getCount(scope.options).then(function (count) {
+                                scope.count = count;
+                            });
+                        }
+                    };
+                    this.link = function (options) {
+                            options = options || {};
+                            var urlOptions = options.urlOptions || {};
+                            urlOptions.url = getUrl();
+                            urlOptions.title = $scope.title;
+                            urlOptions.image = $scope.image;
+                            urlOptions.description = $scope.description || '';
+                            return ctrl.makeUrl(options.clickUrl || options.popup.url, urlOptions);
+                    };
+                    this.clickShare = function (e, options) {
+                        if (e.shiftKey || e.ctrlKey) {
+                            return;
+                        }
+                        e.preventDefault();
 
-      event.preventDefault();
+                        if (options.track && typeof _gaq != 'undefined' && angular.isArray(_gaq)) {
+                            _gaq.push(['_trackSocial', options.track.name, options.track.action, $scope.url]);
+                        }
+
+                        var process = true;
+                        if (angular.isFunction(options.click)) {
+                            process = options.click.call(this, options);
+                        }
+                        if (process) {
+                            var url = ctrl.link(options);
+                            ctrl.openPopup(url, options.popup);
+                        }
+                    };
+                    this.openPopup = function (url, params) {
+                        var left = Math.round(screen.width / 2 - params.width / 2),
+                            top = 0;
+                        if (screen.height > params.height) {
+                            top = Math.round(screen.height / 3 - params.height / 2);
+                        }
+
+                        var win = window.open(
+                            url,
+                            'sl_' + this.service,
+                            'left=' + left + ',top=' + top + ',' +
+                            'width=' + params.width + ',height=' + params.height +
+                            ',personalbar=0,toolbar=0,scrollbars=1,resizable=1'
+                        );
+                        if (win) {
+                            win.focus();
+                        } else {
+                            location.href = url;
+                        }
+                    };
+                    this.getCount = function (options) {
+                        var def = $q.defer();
+                        var urlOptions = options.urlOptions || {};
+                        urlOptions.url = getUrl();
+                        urlOptions.title = $scope.title;
+                        var url = ctrl.makeUrl(options.counter.url, urlOptions),
+                            showcounts = angular.isUndefined($scope.showcounts) ? true : $scope.showcounts;
+
+                        if (showcounts) {
+                            if (options.counter.get) {
+                                options.counter.get(url, def, $http);
+                            } else {
+                                $http.jsonp(url).success(function (res) {
+                                    if (options.counter.getNumber) {
+                                        def.resolve(options.counter.getNumber(res));
+                                    } else {
+                                        def.resolve(res);
+                                    }
+                                });
+                            }
+                        }
+                        return def.promise;
+                    };
+                    this.makeUrl = function (url, context) {
+                        return template(url, context, encodeURIComponent);
+                    };
+                    return this;
+                }]
+            };
+        }
+        ]);
+
+    app.directive('ngSocialFacebook', function() {
+        'use strict';
+
+        var options = {
+            counter: {
+                url: 'http://graph.facebook.com/fql?q=SELECT+total_count+FROM+link_stat+WHERE+url%3D%22{url}%22' +
+                     '&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+            if (0 === data.data.length) {
+              return 0;
+            }
+
+                    return data.data[0].total_count;
+                }
+            },
+            popup: {
+                url: 'http://www.facebook.com/sharer/sharer.php?u={url}',
+                width: 600,
+                height: 500
+            },
+            track: {
+                'name': 'facebook',
+                'action': 'send'
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li>' +
+                        '<a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)"' +
+                            ' class="btn btn-default btn-sm btn-social-facebook">' +
+                            '<span class="fui-facebook"></span>' +
+                            '<span class="ng-social-text" ng-transclude></span>' +
+                            '<span ng-show="count" class="btn-tip">{{ count }}</span>' +
+                        '</a>' +
+                       '</li>',
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-facebook');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        };
     });
-  // });
-  
-  
+
+    app.directive('ngSocialTwitter', function() {
+        'use strict';
+
+        var options = {
+            counter: {
+                url: 'http://urls.api.twitter.com/1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+                    return data.count;
+                }
+            },
+            popup: {
+                url: 'http://twitter.com/intent/tweet?url={url}&text={title}',
+                width: 600,
+                height: 450
+            },
+            click: function(options) {
+                // Add colon to improve readability
+                if (!/[\.:\-–—]\s*$/.test(options.pageTitle)) options.pageTitle += ':';
+                return true;
+            },
+            track: {
+                'name': 'twitter',
+                'action': 'tweet'
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li> \
+                        <a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)" class="btn btn-default btn-sm btn-social-twitter"> \
+                            <span class="fui-twitter"></span> \
+                            <span class="ng-social-text" ng-transclude></span> \
+                          <span ng-show="count" class="btn-tip">{{ count }}</span> \
+                        </a> \
+                       </li>',
+            controller: function($scope) {
+            },
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-twitter');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        }
+    });
+    
+
+
+    angular.module("ngSocial").directive('ngSocialPinterest', function() {
+        'use strict';
+ 
+        var options = {
+            counter: {
+                url: 'http://api.pinterest.com/v1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                getNumber: function(data) {
+                    return data.count;
+                }
+            },
+            popup: {
+                url: 'http://pinterest.com/pin/create/button/?url={url}&description={title}&media={image}',
+                width: 630,
+                height: 270
+            }
+        };
+        return {
+            restrict: 'C',
+            require: '^?ngSocialButtons',
+            scope: true,
+            replace: true,
+            transclude: true,
+            template: '<li> \
+                        <a ng-href="{{ctrl.link(options)}}" target="_blank" ng-click="ctrl.clickShare($event, options)" class="btn btn-default btn-sm btn-social-pinterest"> \
+                            <span class="fui-pinterest"></span> \
+                            <span class="ng-social-text" ng-transclude></span> \
+                            <span ng-show="count" class="btn-tip">{{ count }}</span> \
+                        </a> \
+                       </li>',
+            controller: function($scope) {
+            },
+            link: function(scope, element, attrs, ctrl) {
+                element.addClass('ng-social-pinterest');
+                if (!ctrl) {
+                    return;
+                }
+                scope.options = options;
+                scope.ctrl = ctrl;
+                ctrl.init(scope, element, options);
+            }
+        }
+    });
+
+
+
+  })();
+
+
 
 
 </script>
