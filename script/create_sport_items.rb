@@ -302,11 +302,10 @@ CSV.open(csv_error_file, "wb") do |csv|
 
               if !@rcpbs.width.blank?
                 prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}X#{@rcpbs.putup_pack},#{@rcpbs.ws_color.gsub('spool','-')} }
-                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}X#{@rcpbs.putup_pack},#{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
+                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width} x #{@rcpbs.putup_pack},#{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
               else
                 prod_name = %Q{#{@rcpbs.ws_subcat} 4-PACK SPECIAL }
                 p_des =  %Q{#{@rcpbs.ws_color}. #{@rcpbs.ws_subcat.titlecase}. #{@rcpbs.desc.scan( /Ribbon patterns*.*/).first}}
-
               end
 
             end
@@ -634,6 +633,8 @@ BEGIN{
 
 
               #if (@item_type == 'Flower')
+
+=begin
                 found_image = false
                 if wi
                   #create product image
@@ -651,6 +652,7 @@ BEGIN{
                     puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
                 end
+=end
 
 =begin
                 if found_image == false
