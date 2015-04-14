@@ -302,7 +302,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 p_des = %Q{#{master_rec.strip} rcpbs.ws_color.titlecase}
               end
 
-              p_meta = taxonrec.descripton
+              p_meta = taxonrec.description
               p_key =  taxonrec.permalink.split('/').join(',')
 
 
@@ -403,6 +403,15 @@ CSV.open(csv_error_file, "wb") do |csv|
                 itm_ar.last.gsub!(/\d+/,'')
                 src_image = itm_ar.join('-')
                 src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
+                src_image = rcpbs.item.gsub('/','-')
+                src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
+                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+                if File.file?(src_image)
+                  File.rename(src_image_bad,src_image)
+                end
               end
 
 
@@ -635,6 +644,16 @@ BEGIN{
                       itm_ar.last.gsub!(/\d+/,'')
                       src_image = itm_ar.join('-')
                       src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+                    end
+
+
+                    if !File.file?(src_image)
+                      src_image = rcpbs.item.gsub('/','-')
+                      src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
+                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+                      if File.file?(src_image)
+                        File.rename(src_image_bad,src_image)
+                      end
                     end
 
 
