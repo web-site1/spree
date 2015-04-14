@@ -267,7 +267,8 @@ CSV.open(csv_error_file, "wb") do |csv|
             @item_type = 'Ribbon'
 
           end
-          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
+          #prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
+          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip} #{@rcpbs.item}}
 
 
 
@@ -295,9 +296,18 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
               p_des += %Q{ All come 3 to a pack.}
             else
-              p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
-              p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
-              p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
+              #p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
+              #p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
+              #p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
+
+              if !@rcpbs.width.blank?
+                prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")}, #{@rcpbs.ws_color.gsub('spool','-')} }
+                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")}, #{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
+              else
+                prod_name = %Q{#{@rcpbs.ws_subcat} 4-PACK SPECIAL }
+                p_des =  %Q{#{@rcpbs.ws_color}. #{@rcpbs.ws_subcat.titlecase}. #{@rcpbs.desc.scan( /Ribbon patterns*.*/).first}}
+              end
+
             end
 
 
@@ -623,6 +633,8 @@ BEGIN{
 
 
               #if (@item_type == 'Flower')
+
+=begin
                 found_image = false
                 if wi
                   #create product image
@@ -640,6 +652,7 @@ BEGIN{
                     puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
                 end
+=end
 
 =begin
                 if found_image == false

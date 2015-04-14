@@ -86,6 +86,10 @@ Rails.application.routes.draw do
   get '/1-love-foiled-category', to: redirect('/t/categories/tulle-and-trims/love-foiled')
   get '/1-jasmine-category', to: redirect('/t/categories/tulle-and-trims/jasmine')
   get '1-newest-ribbon-category.htm', to: redirect('/show_new_arrivals')
+  get '1-MLB-ribbon-category', to: redirect('/t/categories/sports/MLB-ribbon')
+  get '1-:team-MLB-ribbon', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+  get 'NFL-licensed-ribbon-:team', to: redirect('/t/categories/sports/NFL-licensed-ribbon/%{team}')
+  get 'CLC-licensed-ribbon-:team', to: redirect('/t/categories/sports/CLC-licensed-ribbon/%{team}')
 
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
@@ -106,6 +110,7 @@ Rails.application.routes.draw do
   get 'show_new_arrivals' => 'spree/products#show_new_arrivals'
   get 'show_new_flowers' => 'spree/products#show_new_flower_arrivals'
   get 'why_shop/:id' => 'spree/home#why_shop'
+  get 'site/:id' => 'spree/home#why_shop'
   post 'change_art_state' => 'spree/orders#change_art_state'
   # get '1-:prod-description', to: redirect  { |path_params|
   #         Rails.logger.debug "!!! /products/#{path_params[:prod]}"
