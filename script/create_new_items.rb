@@ -1,5 +1,5 @@
 # create Items -
-# - creates Items and associated records om Web item file
+# - creates Items and associated records from Web item file
 #
 # Run from scripts directory  ruby
 
@@ -21,14 +21,14 @@ spree_option_values_variants
 =end
 
 
-log_file_name = %Q{sport_Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
+log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
 log_file =  %Q{#{Rails.root}/log/#{log_file_name}}
 logger = Logger.new(log_file)
 logger.info "Starting to create Items"
 puts "Starting to create Items"
 puts Spree::Image.attachment_definitions[:attachment].inspect
 
-csv_error_file =  %Q{#{Rails.root}/log/sport_item_import_errors.csv}
+csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 
 
 
@@ -44,7 +44,7 @@ if Rails.env == 'staging'
   @local_site_path =   "/var/www/artspree3/"
 else
   @local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
-  #@local_site_path = "/tmp/t/"
+  @local_site_path = "/tmp/t/"
 end
 
 puts "Local image directory is #{@local_site_path}"
@@ -135,8 +135,7 @@ if ribbon_putup_option.nil?
   )
 end
 @ribbon_option_hash.merge!(putup: ribbon_putup_option)
-# no color for sports
-#@ribbon_option_hash.merge!(color: all_color_option)
+@ribbon_option_hash.merge!(color: all_color_option)
 
 
 #Bow Options
@@ -169,20 +168,6 @@ end
 @flower_option_hash.merge!(width: flower_width_option)
 @flower_option_hash.merge!(color: all_color_option)
 
-
-#NFL Accessories option
-@nfl_accessories_option_hash = {}
-
-count_option = Spree::OptionType.find_by_name('count')
-
-if count_option.nil?
-  count_option = Spree::OptionType.create(
-      name: 'count',
-      presentation: 'Count'
-  )
-end
-
-@nfl_accessories_option_hash.merge!(count: count_option)
 
 
 
@@ -232,22 +217,22 @@ CSV.open(csv_error_file, "wb") do |csv|
     #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
     #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
     #r = RcPbs.where(ws_subcat: "CQA-62.")
-    #r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
-
-    r = Sport.where("ws_cat IN( 'NFL Licensed Ribbon','MLB Ribbon', 'Collegiate Licensed Ribbon')").order(:ws_cat,:ws_subcat,:ws_color).limit(10)
+     r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
     r.each do |rcpbs|
 
-      web_item = rcpbs.web_item
+      #web_item = WebItem.find_by_item(rcpbs.item)
       item_with_multiple_variants = false
       product_created = false
 
+=begin
       if !web_item.nil?
         item_with_multiple_variants =  (WebItem.where(page: web_item.page).count > 1)
       end
+=end
 
         begin
           @rcpbs = rcpbs
-          @wi = web_item
+          #@wi = web_item
 
           @is_master = false
 
@@ -256,64 +241,58 @@ CSV.open(csv_error_file, "wb") do |csv|
           @item_type = item_type(rcpbs) ||  ''
 
 
+          flow_sub =  @rcpbs.item.split('-')[0..1].join('-')  #@rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
 
-          #
-          if @rcpbs.ws_cat.downcase == 'nfl accessories'
-            prod_name =  %Q{#{@rcpbs.new_pbs_desc_3}}.gsub(@rcpbs.width,'').strip.titlecase
 
-            @item_type = 'NFL Accessories'
-          else
-            prod_name = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}.titlecase
-            @item_type = 'Ribbon'
-
+          # find main cat taxon record
+          main_cat = Spree::Taxon.find_by_name(get_formed_cat_name(@rcpbs.ws_cat))
+          if main_cat.nil?
+            logger.info "Product #{@rcpbs.item} cannot determine main cat taxon"
+            puts "Product #{@rcpbs.item} cannot determine main cat taxon"
           end
-          #prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip}}
-          prod_sku = %Q{#{@rcpbs.ws_subcat.strip} #{@rcpbs.ws_cat.strip} #{@rcpbs.ws_color.strip} #{@rcpbs.item}}
 
+          taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
 
-
-
-
-          #@product = Spree::Product.find_by_name(prod_name)
-          prod_var = Spree::Variant.find_by_sku(prod_sku)
-
-          if !prod_var.nil?
-            @product = prod_var.product
-          else
-            @product = nil
+          if taxonrec.nil?
+            logger.info "Product #{@rcpbs.item} cannot determine taxon"
+            puts "Product #{@rcpbs.item} cannot determine taxon"
           end
+
+
+          prod_sku = suggest_sku(@rcpbs,logger,flow_sub,csv)
+
+          if @item_type == 'Flower'
+            p_var = Spree::Variant.find_by_sku(flow_sub)
+            if p_var
+              @product = p_var.product
+            else
+              @product = nil
+            end
+          else
+            @product = Spree::Product.find_by_name(prod_sku)
+          end
+
 
 
           if !@product.nil?
             create_variant(rcpbs,@wi,logger)
           else
 
+              p_title = @wi.title.strip.titlecase
 
-            p_meta = @wi.description
-            p_key = @wi.keywords
-
-            if @rcpbs.ws_cat.downcase == 'nfl accessories'
-              p_des = %Q{These NFL Accessories are fun to wear or for decorating to show team spirit at it's best.}
-              p_des += %Q{ All come 3 to a pack.}
-            else
-              #p_des = %Q{This #{@rcpbs.ws_subcat.strip.titlecase} ribbon captures team spirit at its best. }
-              #p_des += %Q{Manufactured as a 100% polyester woven-edge satin ribbon, this pattern is offered }
-              #p_des += %Q{in a #{@rcpbs.ws_color.strip.downcase.gsub('spool','').gsub('spools','').titlecase} spool. Select your desired putup, width and pattern.}
-
-              if !@rcpbs.width.blank?
-                prod_name = %Q{#{@rcpbs.ws_subcat} #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")} }
-                p_des =  %Q{#{@rcpbs.ws_subcat.titlecase} #{@rcpbs.ws_cat.titlecase}. 100% polyester woven-edge satin. Offered in #{@rcpbs.width}x#{@rcpbs.putup_pack.gsub('feet',"'")}, #{@rcpbs.ws_color.gsub('spool','-spool').gsub('pack','')} packs.}
+              if @wi.top_description && !@wi.top_description.empty?
+                p_des = @wi.top_description
               else
-                prod_name = %Q{#{@rcpbs.ws_subcat} 4-PACK SPECIAL }
-                p_des =  %Q{#{@rcpbs.ws_color}. #{@rcpbs.ws_subcat.titlecase}. #{@rcpbs.desc.scan( /Ribbon patterns*.*/).first}}
+                p_des = @wi.description
               end
+              p_meta = @wi.description
+              p_key = @wi.keywords
 
-            end
-
+              p_title = %Q{#{@rcpbs.ws_cat.titlecase} (#{prod_sku})} if (@item_type == 'Flower')
 
 
             @product = Spree::Product.new(
-              name: prod_name,
+              name: p_title,
               description: p_des,
               available_on: Date.today()-1.day,
               shipping_category_id: 1 ,
@@ -322,18 +301,6 @@ CSV.open(csv_error_file, "wb") do |csv|
               price: rcpbs.rc_price.to_f,
               sku: prod_sku #rcpbs.item
             )
-
-            # find taxon record
-            main_cat = Spree::Taxon.find_by_name(@rcpbs.ws_cat.titleize)
-
-            taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
-
-            if taxonrec.nil?
-              logger.info "Product #{@rcpbs.item} cannot determine taxon"
-              puts "Product #{@rcpbs.item} cannot determine taxon"
-              next
-            end
-
 
 
             @product.save!
@@ -381,8 +348,10 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             if @item_type == "Ribbon"
               option_hash = @ribbon_option_hash
-            else
-              option_hash = @nfl_accessories_option_hash
+            elsif @item_type == "Bow"
+              option_hash = @bow_option_hash
+            elsif @item_type == "Flower"
+              option_hash = @flower_option_hash
             end
 
             option_hash.each do |k,v|
@@ -413,16 +382,12 @@ CSV.open(csv_error_file, "wb") do |csv|
                   found_image = true
                   @product.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                   @product.save!
-                else
-                  logger.info "no image #{@rcpbs.item} file #{@wi.image_file}"
-                  puts "no image #{@rcpbs.item} file #{@wi.image_file}"
                 end
               rescue Exception => e
                 puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
               end
 
 
-=begin
               if (@wi.image_file.nil? || @wi.image_file.blank?)
                 begin
                   #create swatch image if it exsists
@@ -435,13 +400,11 @@ CSV.open(csv_error_file, "wb") do |csv|
                   puts "#{e.to_s} error loading image rcpbs id #{@rcpbs.id}"
                 end
               end
-=end
 
 
 
             end
 
-=begin
             if found_image == false
               # try directory for sku named file
               src_sku_image = %Q{#{@local_site_path}/images/#{@rcpbs.new_pbs_desc_1.strip}*} rescue ''
@@ -451,7 +414,6 @@ CSV.open(csv_error_file, "wb") do |csv|
                 @product.save!
               end
            end
-=end
 
 
             logger.info "Product #{@rcpbs.item} created in Spree"
@@ -527,6 +489,33 @@ BEGIN{
             %Q{#{t[0]}-#{t[1]}}
           end
 
+
+          def suggest_sku(rcpbs,logger,flow_sub,csv)
+            if !(@item_type == 'Flower') #@wi
+              width = rcpbs.width.scan(/[^-"\s]/).join('')  rescue ''
+              if (!width.strip.empty? && (rcpbs.item.count('-') > 1))
+                item_array = rcpbs.item.split('-')
+                if item_array.include?(width)
+                  item_array.delete(width)
+                else
+                  # assume 2nd portion of array is width?
+                  item_array.delete_at(1)
+                end
+              else
+                # lost cause log and next
+                wid = (@wi) ? @wi.id : ''
+                logger.info "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
+                puts "Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"
+                @error_items += 1
+                csv << [rcpbs.id,wid,"Cannot use remove width logic  RcPBS Id: #{rcpbs.id} Using ws_cat ws_subcat ws_color"]
+                item_array = [rcpbs.ws_cat,rcpbs.ws_subcat,rcpbs.ws_color] #next
+              end
+              prod_sku =  item_array.join('-')
+            else
+              prod_sku = flow_sub
+            end
+
+          end
 
           def get_flower_taxon(rcpbs)
             cat = ''
@@ -605,9 +594,6 @@ BEGIN{
                   elsif av.last == 'color'
                     val = rcpbs.ws_color.titlecase rescue ''
                     srcval = val
-                  elsif av.last == 'count'
-                    val = rcpbs.width rescue ''
-                    srcval = val
                   else
                     val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
                     srcval = val
@@ -632,9 +618,7 @@ BEGIN{
               end
 
 
-              #if (@item_type == 'Flower')
-
-=begin
+              if (@item_type == 'Flower')
                 found_image = false
                 if wi
                   #create product image
@@ -644,17 +628,12 @@ BEGIN{
                       found_image = true
                       v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
                       v.save!
-                    else
-                      logger.info "no image #{@rcpbs.item} file #{@wi.image_file}"
-                      puts "no image #{@rcpbs.item} file #{@wi.image_file}"
                     end
                   rescue Exception => e
                     puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
                 end
-=end
 
-=begin
                 if found_image == false
                   begin
                     # lets try an image with sku as the name
@@ -668,15 +647,13 @@ BEGIN{
                     puts "#{e.to_s} error loading image rcpbs id #{rcpbs.id}"
                   end
                 end
-=end
-              #end
+              end
 
               logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
               puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
               @variants_created += 1
 
 
-=begin
               # At this point check if the product has an empty description and if
               # it does attempt to fill it if a Web item exsists
               var_prod = v.product
@@ -688,7 +665,6 @@ BEGIN{
                 end
                 var_prod.save
               end
-=end
 
 
             else
