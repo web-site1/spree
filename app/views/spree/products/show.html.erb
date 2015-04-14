@@ -604,7 +604,7 @@
 
             //sharing plugins
             store.myModel.ImageUrl = store.product.image;
-            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '?taxon_id=<%=@taxon.id%>'
+            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>'
 
             store.myModel.Name = store.product.name;
 
@@ -715,7 +715,7 @@
               jQuery('#multiple-items').jcarousel('reload');   
 
 
-            },500);
+            },100);
 
 
             //console.log('set product');
@@ -739,7 +739,7 @@
           });;
       <% end %>
 
-      $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
+      $http.get('/products/'+slug+'/related_products.json<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>').success(function(data){
         store.related_products = data.products;
         setTimeout(function(){
           jQuery('#related-items').jcarousel('reload');   
