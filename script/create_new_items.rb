@@ -409,7 +409,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 src_image = rcpbs.item.gsub('/','-')
                 src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
                 src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                if File.file?(src_image)
+                if File.file?(src_image_bad)
                   File.rename(src_image_bad,src_image)
                 end
               end
@@ -651,7 +651,7 @@ BEGIN{
                       src_image = rcpbs.item.gsub('/','-')
                       src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
                       src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                      if File.file?(src_image)
+                      if File.file?(src_image_bad)
                         File.rename(src_image_bad,src_image)
                       end
                     end
