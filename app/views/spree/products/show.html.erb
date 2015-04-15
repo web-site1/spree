@@ -14,7 +14,7 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
             <div class="item active product_main">
-              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image}}">
+              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}">
             </div>
           </div>
           <!-- Controls -->
@@ -50,15 +50,15 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
                     <li ng-repeat="product in store.products" >
-                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
                 <ul ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
                   <li ng-show="store.product.master.image_mini">
-                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="v_color img-responsive" title="{{product.colors[0]}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
                   <li ng-repeat="variant in store.product.variants">
-                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="v_color img-responsive" title="{{variant.color}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ><img ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color img-responsive" title="{{variant.color}}"/></a>
                   </li>
                 </ul>
               </div>
@@ -452,6 +452,9 @@
       var store = this;
       this.product=null;
 
+      this.no_image = '<%=image_path("noimage/small.png")%>';
+      this.no_image_mini = '<%=image_path("noimage/mini.png")%>';
+      
       this.myModel={
         Name: '',
         ImageUrl: '',
