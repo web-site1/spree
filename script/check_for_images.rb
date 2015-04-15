@@ -27,16 +27,29 @@ r.each do |rcpbs|
     @rcpbs = rcpbs
 
     if !File.file?(src_image)
-      puts "No image for item #{rcpbs.item}"
-      logger.info "No image for item #{rcpbs.item}"
+      puts "No image for item #{rcpbs.item} #{rcpbs.brand}"
+      logger.info "No image for item #{rcpbs.item} #{rcpbs.brand}"
     end
   rescue Exception => e
-    puts "#{e.to_s} item# #{@rcpbs.item}"
+    puts "#{e.to_s} item# #{@rcpbs.item} #{@rcpbs.brand}  "
   end
 
 end
 
 BEGIN{
+
+  WIDTH_CODES = {
+      '1/4' => '001',
+      '1/2' => '002',
+      '5/8' => '003',
+      '5/8' => '005',
+      '11/2'=> '009',
+      '21/2'=> '040',
+      '3/8' => '105',
+      '6'   => '300'
+  }
+
+
 
   def get_replaced_inches_name(rcpbs,find_by_des = false)
     width = rcpbs.item_prod_sub_cat
@@ -54,25 +67,30 @@ BEGIN{
 
   def get_image_path(rcpbs)
     src_image = rcpbs.item.gsub('/','-')
-    src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
 
     if !File.file?(src_image)
       #try removing
       itm_ar = rcpbs.item.gsub('/','-').split('-')
       itm_ar.last.gsub!(/\d+/,'')
       src_image = itm_ar.join('-')
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+    end
+
+    if !File.file?(src_image)
+      src_image = rcpbs.item.gsub('/','-').upcase
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
 
     if !File.file?(src_image)
       src_image = get_replaced_inches_name(rcpbs)
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
 
     if !File.file?(src_image)
       src_image = rcpbs.item.gsub('/','-')
-      src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip}} rescue ''
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}} rescue ''
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
       if File.file?(src_image_bad)
         File.rename(src_image_bad,src_image)
       end
@@ -81,8 +99,8 @@ BEGIN{
     if !File.file?(src_image)
       #try Flowers
       color = rcpbs.ws_color.downcase
-      src_image = rcpbs.item.gsub(rcpbs.ws_color.strip,color.strip)
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      src_image = rcpbs.item.gsub(rcpbs.ws_color.strip,color.strip.gsub(' ','-'))
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
 
 
@@ -90,51 +108,85 @@ BEGIN{
     if !File.file?(src_image)
       replaced_item = get_replaced_inches_name(rcpbs)
       src_image = replaced_item.sub(/-/,'')
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
-    end
-
-
-    src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
-    src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
-
-    if !File.file?(src_image)
-      #try removing
-      itm_ar = rcpbs.new_pbs_desc_1.gsub('/','-').split('-')
-      itm_ar.last.gsub!(/\d+/,'')
-      src_image = itm_ar.join('-')
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
-    end
-
-    if !File.file?(src_image)
-      src_image = get_replaced_inches_name(rcpbs,true)
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
 
     if !File.file?(src_image)
       src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
-      src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip}} rescue ''
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
-      if File.file?(src_image_bad)
-        File.rename(src_image_bad,src_image)
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+
+      if !File.file?(src_image)
+        #try removing
+        itm_ar = rcpbs.new_pbs_desc_1.gsub('/','-').split('-')
+        itm_ar.last.gsub!(/\d+/,'')
+        src_image = itm_ar.join('-')
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+      end
+
+      if !File.file?(src_image)
+        src_image = get_replaced_inches_name(rcpbs,true)
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+      end
+
+      if !File.file?(src_image)
+        src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
+        src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}} rescue ''
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+        if File.file?(src_image_bad)
+          File.rename(src_image_bad,src_image)
+        end
+      end
+
+      if !File.file?(src_image)
+        #try Flowers
+        color = rcpbs.ws_color.downcase
+        src_image = rcpbs.new_pbs_desc_1.gsub(rcpbs.ws_color.strip,color.strip)
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+      end
+
+      if !File.file?(src_image)
+        replaced_item = get_replaced_inches_name(rcpbs,true)
+        src_image = replaced_item.sub(/-/,'')
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
       end
     end
 
     if !File.file?(src_image)
-      #try Flowers
-      color = rcpbs.ws_color.downcase
-      src_image = rcpbs.new_pbs_desc_1.gsub(rcpbs.ws_color.strip,color.strip)
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
-    end
+      src_image = get_mapped_code_item(rcpbs)
+      if src_image.class == Array
+        f = src_image.first
+        src_image = %Q{#{@local_site_path}images/#{f.strip.gsub(' ','-')}.jpg} rescue ''
+        if !File.file?(src_image)
+          f = src_image.last
+          src_image = %Q{#{@local_site_path}images/#{f.strip.gsub(' ','-')}.jpg} rescue ''
+        end
+      else
+        src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+      end
 
-    if !File.file?(src_image)
-      replaced_item = get_replaced_inches_name(rcpbs,true)
-      src_image = replaced_item.sub(/-/,'')
-      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
     end
 
 
 
     return src_image
   end
+
+
+  def get_mapped_code_item(rcpbs)
+    ba = rcpbs.new_pbs_desc_1.split('-')
+
+    is_array_rtn = false
+    # '5/8' => '005'
+    if ba[1] == '5/8'
+      is_array_rtn = true
+    end
+
+    if is_array_rtn
+      ["#{ba[0]}-003-#{ba[3]}-#{ba[2]}","#{ba[0]}-005-#{ba[3]}-#{ba[2]}"]
+    else
+      "#{ba[0]}-#{WIDTH_CODES[ba[1]]}-#{ba[3]}-#{ba[2]}"
+    end
+  end
+
 
 }

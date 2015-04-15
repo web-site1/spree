@@ -38,7 +38,7 @@
             <% end %>
 
           <% else %>
-              <% if @taxon.name.downcase = 'newest'
+              <% if @taxon.name.downcase == 'newest'
                    prods = new_arrivals
                  else
                     prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []
