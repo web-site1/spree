@@ -507,6 +507,8 @@
             }
           }
           change_variant_by_id(item.id);
+          jQuery('#multiple-items').jcarousel('reload');   
+
         }
         
         // if(p.variants){ // check if product or variant;
@@ -537,7 +539,9 @@
                     store.selected_image = store.myModel.ImageUrl = img_url;
                   }
                 }
-                change_variant()
+                change_variant();
+                jQuery('#multiple-items').jcarousel('reload');   
+
 
         }
 
@@ -731,6 +735,9 @@
         <%= raw render :partial =>  'show.json.jbuilder', :locals => {:product => @product} %>
       ];
       this.setProduct();
+      setTimeout(function(){
+        jQuery('#multiple-items').jcarousel('reload');   
+      },500);
 
       <% if @product.colors.uniq.length == 1 %>
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
