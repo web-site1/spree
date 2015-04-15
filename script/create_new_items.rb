@@ -225,17 +225,25 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
           # find main cat taxon record
-          main_cat = Spree::Taxon.find_by_name_and_parent_id(get_formed_cat_name(@rcpbs.ws_cat),type_taxon.id)
+          main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).gsub('checks','check')
+
+
+          if @type == 'Flower'
+            main_cat = type_taxon
+          else
+            main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src,type_taxon.id)
+          end
+
           if main_cat.nil?
             logger.info "No Main cat taxon #{get_formed_cat_name(@rcpbs.ws_cat)}"
             puts "Product #{@rcpbs.item} cannot determine main cat taxon"
-            raise Exception.new("No type Taxon")
+            raise Exception.new("No main Taxon")
           end
 
           taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
 
 
-          master_rec = NewItem.find_by_item(master_desc_item(rcpbs))
+          master_rec = NewMaster.find_by_item(master_desc_item(rcpbs))
 
 
           if taxonrec.nil?
@@ -256,13 +264,51 @@ CSV.open(csv_error_file, "wb") do |csv|
                 meta_keywords: meta_keywords,
                 description: tdes
             )
+
+
+
+
           else
             if taxonrec.description.blank? && master_rec
               taxonrec.update_attribute(:description,master_rec.description.strip.titlecase)
             end
+
           end
 
 
+          if taxonrec.icon_file_name.blank?
+
+            #create product image
+            begin
+              src_image = rcpbs.item.gsub('/','-')
+              src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+
+              if !File.file?(src_image)
+                #try removing
+                itm_ar = rcpbs.item.gsub('/','-').split('-')
+                itm_ar.last.gsub!(/\d+/,'')
+                src_image = itm_ar.join('-')
+                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
+                src_image = rcpbs.item.gsub('/','-')
+                src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
+                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+                if File.file?(src_image_bad)
+                  File.rename(src_image_bad,src_image)
+                end
+              end
+
+              if File.file?(src_image)
+                taxonrec.icon <<  Spree::Image.create!(:attachment => File.open(src_image))
+                taxonrec.save!
+              end
+            rescue Exception => e
+              puts "#{e.to_s} error loading taxon image image id #{taxon.name}"
+            end
+
+          end
 
 
 
@@ -473,8 +519,6 @@ BEGIN{
                 itemtype =  "Bow"
               when  pbs_item_rec.desc =~ /flower/i
                 itemtype = "Flower"
-              when pbs_item_rec.ws_cat =~ /flowers/i
-                itemtype =  "Flower"
               else
                 itemtype = pbs_item_rec.ws_cat.strip.titlecase
             end
