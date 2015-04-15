@@ -38,13 +38,18 @@ end
 
 BEGIN{
 
-  def get_replaced_inches_name(rcpbs)
+  def get_replaced_inches_name(rcpbs,find_by_des = false)
     width = rcpbs.item_prod_sub_cat
     width = width.split('/')
     first =  width.first.scan(/./).join('-')
     second = width.last
     new_width = %Q{#{first}-#{second}}
-    rcpbs.item.gsub(rcpbs.item_prod_sub_cat,new_width)
+    if find_by_des
+      rcpbs.new_pbs_desc_1.gsub(rcpbs.item_prod_sub_cat,new_width)
+    else
+      rcpbs.item.gsub(rcpbs.item_prod_sub_cat,new_width)
+    end
+
   end
 
   def get_image_path(rcpbs)
@@ -79,6 +84,55 @@ BEGIN{
       src_image = rcpbs.item.gsub(rcpbs.ws_color.strip,color.strip)
       src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
     end
+
+
+
+    if !File.file?(src_image)
+      replaced_item = get_replaced_inches_name(rcpbs)
+      src_image = replaced_item.sub(/-/,'')
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    end
+
+
+    src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
+    src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+
+    if !File.file?(src_image)
+      #try removing
+      itm_ar = rcpbs.new_pbs_desc_1.gsub('/','-').split('-')
+      itm_ar.last.gsub!(/\d+/,'')
+      src_image = itm_ar.join('-')
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    end
+
+    if !File.file?(src_image)
+      src_image = get_replaced_inches_name(rcpbs,true)
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    end
+
+    if !File.file?(src_image)
+      src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
+      src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip}} rescue ''
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+      if File.file?(src_image_bad)
+        File.rename(src_image_bad,src_image)
+      end
+    end
+
+    if !File.file?(src_image)
+      #try Flowers
+      color = rcpbs.ws_color.downcase
+      src_image = rcpbs.new_pbs_desc_1.gsub(rcpbs.ws_color.strip,color.strip)
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    end
+
+    if !File.file?(src_image)
+      replaced_item = get_replaced_inches_name(rcpbs,true)
+      src_image = replaced_item.sub(/-/,'')
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+    end
+
+
 
     return src_image
   end
