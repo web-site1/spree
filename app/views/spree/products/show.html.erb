@@ -444,6 +444,7 @@
   
   var slug = '<%=params[:id]%>';
 
+  fblikeurl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + slug + '<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>';
     
   (function(){
     var app = angular.module('spreeStore', ['ngSocial'])
@@ -507,6 +508,7 @@
             }
           }
           change_variant_by_id(item.id);
+          store.myModel.FbLikeUrl = fblikeurl + '&variant_id='+item.id;
           jQuery('#multiple-items').jcarousel('reload');   
 
         }
@@ -540,7 +542,9 @@
                   }
                 }
                 change_variant();
-                jQuery('#multiple-items').jcarousel('reload');   
+                store.myModel.FbLikeUrl = fblikeurl + '&variant_id=' + $('#variant_id').val();
+                jQuery('#multiple-items').jcarousel('reload');
+
 
 
         }
@@ -611,7 +615,7 @@
 
             //sharing plugins
             store.myModel.ImageUrl = store.product.image;
-            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>'
+            store.myModel.FbLikeUrl = fblikeurl;
 
             store.myModel.Name = store.product.name;
 
