@@ -194,7 +194,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r = NewItem.where('id = 1310') #("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -228,7 +228,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
 
 
-          if @type == 'Flower'
+          if @item_type == 'Flower'
             main_cat = type_taxon
           else
             main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src,type_taxon.id)
@@ -290,6 +290,12 @@ CSV.open(csv_error_file, "wb") do |csv|
                 src_image = itm_ar.join('-')
                 src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
               end
+
+              if !File.file?(src_image)
+                src_image = get_replaced_inches_name(rcpbs)
+                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+              end
+
 
               if !File.file?(src_image)
                 src_image = rcpbs.item.gsub('/','-')
@@ -452,6 +458,11 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
 
               if !File.file?(src_image)
+                src_image = get_replaced_inches_name(rcpbs)
+                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
                 src_image = rcpbs.item.gsub('/','-')
                 src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
                 src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
@@ -513,11 +524,13 @@ BEGIN{
                 itemtype = "Ribbon"
               when pbs_item_rec.ws_cat =~ /bow/i
                 itemtype =  "Bow"
-              when  pbs_item_rec.desc =~ /ribbon/i
+              when pbs_item_rec.ws_cat =~ /flower/i
+                itemtype =  "Flower"
+              when  pbs_item_rec.description =~ /ribbon/i
                 itemtype = "Ribbon"
-              when pbs_item_rec.desc =~ /bow/i
+              when pbs_item_rec.description =~ /bow/i
                 itemtype =  "Bow"
-              when  pbs_item_rec.desc =~ /flower/i
+              when  pbs_item_rec.description =~ /flower/i
                 itemtype = "Flower"
               else
                 itemtype = pbs_item_rec.ws_cat.strip.titlecase
@@ -611,6 +624,16 @@ BEGIN{
           end
 
 
+          def get_replaced_inches_name(rcpbs)
+            width = rcpbs.item_prod_sub_cat
+            width = width.split('/')
+            first =  width.first.scan(/./).join('-')
+            second = width.last
+            new_width = %Q{#{first}-#{second}}
+            rcpbs.item.gsub(rcpbs.item_prod_sub_cat,new_width)
+         end
+
+
           def create_variant(rcpbs,logger)
 
             @position += 1
@@ -687,6 +710,11 @@ BEGIN{
                       itm_ar = rcpbs.item.gsub('/','-').split('-')
                       itm_ar.last.gsub!(/\d+/,'')
                       src_image = itm_ar.join('-')
+                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
+                    end
+
+                    if !File.file?(src_image)
+                      src_image = get_replaced_inches_name(rcpbs)
                       src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
                     end
 
