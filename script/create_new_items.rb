@@ -345,7 +345,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_des = ''
 
               if master_rec
-                p_des = %Q{#{master_rec.description.strip.title_case} rcpbs.ws_color.titlecase}
+                p_des = %Q{#{master_rec.description.strip.titlecase} rcpbs.ws_color.titlecase}
               end
 
               p_meta = taxonrec.description

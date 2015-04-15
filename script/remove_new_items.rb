@@ -42,7 +42,7 @@ prod_to_delete_array = []
 Spree::Product.where('id > 3978')
 
 
-array_of_ids =  prod_to_delete_array.map{|p| p.id}
+array_of_ids =  Spree::Product.where('id > 3978').map{|p| p.id} #prod_to_delete_array.map{|p| p.id}
 
 variants_to_del = Spree::Variant.where("product_id IN(?)",array_of_ids)
 
