@@ -235,7 +235,7 @@ CSV.open(csv_error_file, "wb") do |csv|
           end
 
           if main_cat.nil?
-            logger.info "No Main cat taxon #{get_formed_cat_name(@rcpbs.ws_cat)}"
+            logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)}"
             puts "Product #{@rcpbs.item} cannot determine main cat taxon"
             raise Exception.new("No main Taxon")
           end
@@ -301,8 +301,8 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
 
               if File.file?(src_image)
-                taxonrec.icon <<  Spree::Image.create!(:attachment => File.open(src_image))
-                taxonrec.save!
+                taxonrec.icon =  File.open(src_image)
+                taxonrec.save
               end
             rescue Exception => e
               puts "#{e.to_s} error loading taxon image image id #{taxon.name}"
