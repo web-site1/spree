@@ -194,7 +194,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat).limit(10)
+    r = NewItem.where('id = 786') #("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat).limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -225,7 +225,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
           # find main cat taxon record
-          main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).gsub('checks','check')
+          main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
 
 
           if @type == 'Flower'
@@ -345,7 +345,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_des = ''
 
               if master_rec
-                p_des = %Q{#{master_rec.description.strip.titlecase} rcpbs.ws_color.titlecase}
+                p_des = %Q{#{master_rec.description.strip.titlecase} #{rcpbs.ws_color.titlecase}}
               end
 
               p_meta = taxonrec.description
