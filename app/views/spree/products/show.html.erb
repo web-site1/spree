@@ -14,7 +14,7 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
             <div class="item active product_main">
-              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image}}">
+              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}">
             </div>
           </div>
           <!-- Controls -->
@@ -50,15 +50,15 @@
               <div class="jcarousel multiple-items" id="multiple-items">
                 <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
                     <li ng-repeat="product in store.products" >
-                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
                     </li>
                 </ul>
                 <ul ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
                   <li ng-show="store.product.master.image_mini">
-                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini}}" purl="store.product.master.image" class="img-responsive" title="{{product.colors[0]}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color img-responsive" title="{{product.colors[0]}}"/></a>
                   </li>
                   <li ng-repeat="variant in store.product.variants">
-                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ng-show="variant.image"><img ng-src="{{variant.image_mini}}" purl="{{variant.image}}" class="img-responsive" title="{{variant.color}}"/></a>
+                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ><img ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color img-responsive" title="{{variant.color}}"/></a>
                   </li>
                 </ul>
               </div>
@@ -338,12 +338,12 @@
         $('.price span').html(variants[selected_variant][3]);
         $('#add-to-cart-button').show();
         $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
-        for(var i = 0; i < product.variants.length; i++){
-          if(product.variants[i].id == variants[selected_variant][0]){
-            if(product.variants[i].image)
-              $('.product_main img').attr('src',product.variants[i].image);
-          }
-        }
+        // for(var i = 0; i < product.variants.length; i++){
+        //   if(product.variants[i].id == variants[selected_variant][0]){
+        //     if(product.variants[i].image)
+        //       $('.product_main img').attr('ng-src',product.variants[i].image);
+        //   }
+        // }
         // console.log("variant_found");
       }else{ // out of stock
         $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
@@ -383,8 +383,10 @@
     var lindex = lengths.indexOf(value[7])+1
     if(lindex)
       $("#length-slider").slider("value",lindex);
-    if(value[9]!='')
+    if(value[9]!=''){
       $('.colors').val(value[9]);
+      selected_color=value[9];
+    }
     var cindex = counts.indexOf(value[10])+1
     if(value[10]!='')
       $('#count-slider').slider("value",cindex);
@@ -450,6 +452,9 @@
       var store = this;
       this.product=null;
 
+      this.no_image = '<%=image_path("noimage/small.png")%>';
+      this.no_image_mini = '<%=image_path("noimage/mini.png")%>';
+      
       this.myModel={
         Name: '',
         ImageUrl: '',
@@ -489,7 +494,21 @@
         }
 
         if(item_type=='variant'){
+          // set color as well.
+          if(item.color!=''){
+            selected_color = store.selected_color = item.color;
+            setTimeout(function(){$("select").select2({dropdownCssClass: 'dropdown-inverse'});},1000);
+            var selected_imgs = $('img[title="'+selected_color+'"]');
+            if(selected_imgs.length>0){
+              var img_url = $(selected_imgs[0]).attr('purl');
+              if(img_url!=""){
+                store.selected_image = store.myModel.ImageUrl = img_url;
+              }
+            }
+          }
           change_variant_by_id(item.id);
+          jQuery('#multiple-items').jcarousel('reload');   
+
         }
         
         // if(p.variants){ // check if product or variant;
@@ -512,13 +531,17 @@
         }else{
                 
                 selected_color = store.selected_color; //$(this).val();
-                var selected_imgs = $('.v_color img[title='+selected_color+']');
+                var selected_imgs = $('img[title="'+selected_color+'"]');
                 if(selected_imgs.length>0){
-                  $('.product_main img').attr('src', $(selected_imgs[0]).attr('purl'));
-                }else{
-                  $('.product_main img').attr('src', $('.v_color img').attr('purl'));
+                  var img_url = $(selected_imgs[0]).attr('purl');
+                  if(img_url!=""){
+                    console.log('set img url');
+                    store.selected_image = store.myModel.ImageUrl = img_url;
+                  }
                 }
-                change_variant()
+                change_variant();
+                jQuery('#multiple-items').jcarousel('reload');   
+
 
         }
 
@@ -588,7 +611,7 @@
 
             //sharing plugins
             store.myModel.ImageUrl = store.product.image;
-            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '?taxon_id=<%=@taxon.id%>'
+            store.myModel.FbLikeUrl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + store.product.slug + '<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>'
 
             store.myModel.Name = store.product.name;
 
@@ -699,7 +722,7 @@
               jQuery('#multiple-items').jcarousel('reload');   
 
 
-            },500);
+            },100);
 
 
             //console.log('set product');
@@ -712,6 +735,9 @@
         <%= raw render :partial =>  'show.json.jbuilder', :locals => {:product => @product} %>
       ];
       this.setProduct();
+      setTimeout(function(){
+        jQuery('#multiple-items').jcarousel('reload');   
+      },500);
 
       <% if @product.colors.uniq.length == 1 %>
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
@@ -723,7 +749,7 @@
           });;
       <% end %>
 
-      $http.get('/products/'+slug+'/related_products.json?taxon_id=<%=@taxon.id%>').success(function(data){
+      $http.get('/products/'+slug+'/related_products.json<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>').success(function(data){
         store.related_products = data.products;
         setTimeout(function(){
           jQuery('#related-items').jcarousel('reload');   
