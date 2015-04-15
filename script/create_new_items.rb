@@ -280,31 +280,8 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             #create product image
             begin
-              src_image = rcpbs.item.gsub('/','-')
-              src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
 
-              if !File.file?(src_image)
-                #try removing
-                itm_ar = rcpbs.item.gsub('/','-').split('-')
-                itm_ar.last.gsub!(/\d+/,'')
-                src_image = itm_ar.join('-')
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-              end
-
-              if !File.file?(src_image)
-                src_image = get_replaced_inches_name(rcpbs)
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-              end
-
-
-              if !File.file?(src_image)
-                src_image = rcpbs.item.gsub('/','-')
-                src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                if File.file?(src_image_bad)
-                  File.rename(src_image_bad,src_image)
-                end
-              end
+              src_image = get_image_path(rcpbs)
 
               if File.file?(src_image)
                 taxonrec.icon =  File.open(src_image)
@@ -446,32 +423,9 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             #create product image
             begin
-              src_image = rcpbs.item.gsub('/','-')
-              src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-
-              if !File.file?(src_image)
-                #try removing
-                itm_ar = rcpbs.item.gsub('/','-').split('-')
-                itm_ar.last.gsub!(/\d+/,'')
-                src_image = itm_ar.join('-')
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-              end
-
-              if !File.file?(src_image)
-                src_image = get_replaced_inches_name(rcpbs)
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-              end
-
-              if !File.file?(src_image)
-                src_image = rcpbs.item.gsub('/','-')
-                src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                if File.file?(src_image_bad)
-                  File.rename(src_image_bad,src_image)
-                end
-              end
 
 
+              src_image = get_image_path(rcpbs)
 
               if File.file?(src_image)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(src_image))
@@ -702,32 +656,7 @@ BEGIN{
 
               if (@item_type == 'Flower')
                   begin
-                    src_image = rcpbs.item.gsub('/','-')
-                    src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-
-                    if !File.file?(src_image)
-                      #try removing
-                      itm_ar = rcpbs.item.gsub('/','-').split('-')
-                      itm_ar.last.gsub!(/\d+/,'')
-                      src_image = itm_ar.join('-')
-                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                    end
-
-                    if !File.file?(src_image)
-                      src_image = get_replaced_inches_name(rcpbs)
-                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                    end
-
-
-                    if !File.file?(src_image)
-                      src_image = rcpbs.item.gsub('/','-')
-                      src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
-                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                      if File.file?(src_image_bad)
-                        File.rename(src_image_bad,src_image)
-                      end
-                    end
-
+                    src_image = get_image_path(rcpbs)
 
                     if File.file?(src_image)
                       v.images <<  Spree::Image.create!(:attachment => File.open(src_image))
@@ -751,6 +680,45 @@ BEGIN{
               puts "Variant #{rcpbs.new_pbs_desc_1} exists"
             end
           end
+
+
+          def get_image_path(rcpbs)
+            src_image = rcpbs.item.gsub('/','-')
+            src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+
+            if !File.file?(src_image)
+              #try removing
+              itm_ar = rcpbs.item.gsub('/','-').split('-')
+              itm_ar.last.gsub!(/\d+/,'')
+              src_image = itm_ar.join('-')
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = get_replaced_inches_name(rcpbs)
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = rcpbs.item.gsub('/','-')
+              src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip}} rescue ''
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+              if File.file?(src_image_bad)
+                File.rename(src_image_bad,src_image)
+              end
+            end
+
+            if !File.file?(src_image)
+              #try Flowers
+              color = rcpbs.ws_color.downcase
+              src_image = rcpbs.item.gsub(rcpbs.ws_color.strip,color.strip)
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip}.jpg} rescue ''
+            end
+
+
+            return src_image
+          end
+
 
 
 
