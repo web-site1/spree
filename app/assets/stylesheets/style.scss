@@ -72,6 +72,15 @@ Version: 1.0-artribbon
   margin-bottom: 100px !important;
 }
 
+.social-icons label{
+  position: absolute;
+  line-height: 32px;
+}
+
+.social-icons .ng-social-container{
+  margin-left:10px;
+}
+
 ul.ng-social li{
   display:block;
   float:left;
