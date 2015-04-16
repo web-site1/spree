@@ -20,35 +20,43 @@
 
   <section class="results row">
     <ul>
-      <% if @taxon.parent_id.nil? || @taxon.products.empty? || @taxon.parent_id < 2 %>
-        <% subcats = get_taxons_subcats(@taxon) %>
-        <% subcats.each do |sct| %>
-          <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-            <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),%Q{/t/#{sct.permalink}}, :itemprop => 'url',
-               title: sct.name
-            %>
-            <div class="item-label" title="<%=sct.name %>">
-                <%# link_to sct.name,%Q{/t/#{sct.permalink}} %>
-                <%= truncate(sct.name, :length => 45) %>
-            </div>
-          </li>
-        <% end %>
+          <%
+             if ((@taxon.parent_id.nil? || @taxon.products.empty? || @taxon.parent_id < 2) &&
+                  !(@taxon.name.downcase == 'newest'))
+          %>
+            <% subcats = get_taxons_subcats(@taxon) %>
+            <% subcats.each do |sct| %>
+              <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),%Q{/t/#{sct.permalink}}, :itemprop => 'url',
+                   title: sct.name
+                %>
+                <div class="item-label" title="<%=sct.name %>">
+                    <%# link_to sct.name,%Q{/t/#{sct.permalink}} %>
+                    <%= truncate(sct.name, :length => 45) %>
+                </div>
+              </li>
+            <% end %>
 
-      <% else %>
-          <% prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []%>
-          <% prods.each do |product| %>
-              <% cache [I18n.locale, product] do %>
-                  <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
-                  <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-                    <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
-                                title: product.name %>
-                    <div class="item-label" title="<%=product.name %>">
-                      <%= truncate(product.name, :length => 45) %>
-                    </div>
-                  </li>
+          <% else %>
+              <% if @taxon.name.downcase == 'newest'
+                   prods = new_arrivals
+                 else
+                    prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []
+                 end
+              %>
+              <% prods.each do |product| %>
+                  <% cache [I18n.locale, product] do %>
+                      <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
+                      <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                        <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                                    title: product.name %>
+                        <div class="item-label" title="<%=product.name %>">
+                          <%= truncate(product.name, :length => 45) %>
+                        </div>
+                      </li>
+                  <% end %>
               <% end %>
           <% end %>
-      <% end %>
     </ul>
   </section>
 

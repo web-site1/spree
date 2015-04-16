@@ -194,7 +194,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat).limit(10)
+    r = NewItem.where('id = 1310') #("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -202,6 +202,17 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
         begin
+
+
+          # Skipping no image records
+          src_image = get_image_path(rcpbs)
+          if !File.file?(src_image)
+            logger.info "Skipped no image #{rcpbs.new_pbs_desc_1}"
+            puts "Skipped no image #{rcpbs.new_pbs_desc_1}"
+            next
+          end
+          #
+
           @rcpbs = rcpbs
 
           @is_master = false
@@ -225,17 +236,25 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
           # find main cat taxon record
-          main_cat = Spree::Taxon.find_by_name_and_parent_id(get_formed_cat_name(@rcpbs.ws_cat),type_taxon.id)
+          main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
+
+
+          if @item_type == 'Flower'
+            main_cat = type_taxon
+          else
+            main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src,type_taxon.id)
+          end
+
           if main_cat.nil?
-            logger.info "No Main cat taxon #{get_formed_cat_name(@rcpbs.ws_cat)}"
+            logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)}"
             puts "Product #{@rcpbs.item} cannot determine main cat taxon"
-            raise Exception.new("No type Taxon")
+            raise Exception.new("No main Taxon")
           end
 
           taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
 
 
-          master_rec = NewItem.find_by_item(master_desc_item(rcpbs))
+          master_rec = NewMaster.find_by_item(master_desc_item(rcpbs))
 
 
           if taxonrec.nil?
@@ -256,13 +275,34 @@ CSV.open(csv_error_file, "wb") do |csv|
                 meta_keywords: meta_keywords,
                 description: tdes
             )
+
+
+
+
           else
             if taxonrec.description.blank? && master_rec
               taxonrec.update_attribute(:description,master_rec.description.strip.titlecase)
             end
+
           end
 
 
+          if taxonrec.icon_file_name.blank?
+
+            #create product image
+            begin
+
+              src_image = get_image_path(rcpbs)
+
+              if File.file?(src_image)
+                taxonrec.icon =  File.open(src_image)
+                taxonrec.save
+              end
+            rescue Exception => e
+              puts "#{e.to_s} error loading taxon image image id #{taxon.name}"
+            end
+
+          end
 
 
 
@@ -299,7 +339,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               p_des = ''
 
               if master_rec
-                p_des = %Q{#{master_rec.strip} rcpbs.ws_color.titlecase}
+                p_des = %Q{#{master_rec.description.strip.titlecase} #{rcpbs.ws_color.titlecase}}
               end
 
               p_meta = taxonrec.description
@@ -394,27 +434,9 @@ CSV.open(csv_error_file, "wb") do |csv|
 
             #create product image
             begin
-              src_image = rcpbs.item.gsub('/','-')
-              src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-
-              if !File.file?(src_image)
-                #try removing
-                itm_ar = rcpbs.item.gsub('/','-').split('-')
-                itm_ar.last.gsub!(/\d+/,'')
-                src_image = itm_ar.join('-')
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-              end
-
-              if !File.file?(src_image)
-                src_image = rcpbs.item.gsub('/','-')
-                src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
-                src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                if File.file?(src_image_bad)
-                  File.rename(src_image_bad,src_image)
-                end
-              end
 
 
+              src_image = get_image_path(rcpbs)
 
               if File.file?(src_image)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(src_image))
@@ -467,14 +489,14 @@ BEGIN{
                 itemtype = "Ribbon"
               when pbs_item_rec.ws_cat =~ /bow/i
                 itemtype =  "Bow"
-              when  pbs_item_rec.desc =~ /ribbon/i
-                itemtype = "Ribbon"
-              when pbs_item_rec.desc =~ /bow/i
-                itemtype =  "Bow"
-              when  pbs_item_rec.desc =~ /flower/i
-                itemtype = "Flower"
-              when pbs_item_rec.ws_cat =~ /flowers/i
+              when pbs_item_rec.ws_cat =~ /flower/i
                 itemtype =  "Flower"
+              when  pbs_item_rec.description =~ /ribbon/i
+                itemtype = "Ribbon"
+              when pbs_item_rec.description =~ /bow/i
+                itemtype =  "Bow"
+              when  pbs_item_rec.description =~ /flower/i
+                itemtype = "Flower"
               else
                 itemtype = pbs_item_rec.ws_cat.strip.titlecase
             end
@@ -635,27 +657,7 @@ BEGIN{
 
               if (@item_type == 'Flower')
                   begin
-                    src_image = rcpbs.item.gsub('/','-')
-                    src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-
-                    if !File.file?(src_image)
-                      #try removing
-                      itm_ar = rcpbs.item.gsub('/','-').split('-')
-                      itm_ar.last.gsub!(/\d+/,'')
-                      src_image = itm_ar.join('-')
-                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                    end
-
-
-                    if !File.file?(src_image)
-                      src_image = rcpbs.item.gsub('/','-')
-                      src_image_bad = %Q{#{@local_site_path}images/#{src_image}} rescue ''
-                      src_image = %Q{#{@local_site_path}images/#{src_image}.jpg} rescue ''
-                      if File.file?(src_image_bad)
-                        File.rename(src_image_bad,src_image)
-                      end
-                    end
-
+                    src_image = get_image_path(rcpbs)
 
                     if File.file?(src_image)
                       v.images <<  Spree::Image.create!(:attachment => File.open(src_image))
@@ -679,6 +681,158 @@ BEGIN{
               puts "Variant #{rcpbs.new_pbs_desc_1} exists"
             end
           end
+
+
+
+          WIDTH_CODES = {
+              '1/4' => '001',
+              '1/2' => '002',
+              '5/8' => '003',
+              '5/8' => '005',
+              '11/2'=> '009',
+              '21/2'=> '040',
+              '3/8' => '105',
+              '6'   => '300'
+          }
+
+
+          def get_replaced_inches_name(rcpbs,find_by_des = false)
+            width = rcpbs.item_prod_sub_cat
+            width = width.split('/')
+            first =  width.first.scan(/./).join('-')
+            second = width.last
+            new_width = %Q{#{first}-#{second}}
+            if find_by_des
+              rcpbs.new_pbs_desc_1.gsub(rcpbs.item_prod_sub_cat,new_width)
+            else
+              rcpbs.item.gsub(rcpbs.item_prod_sub_cat,new_width)
+            end
+
+          end
+
+          def get_image_path(rcpbs)
+            src_image = rcpbs.item.gsub('/','-')
+            src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+
+            if !File.file?(src_image)
+              #try removing
+              itm_ar = rcpbs.item.gsub('/','-').split('-')
+              itm_ar.last.gsub!(/\d+/,'')
+              src_image = itm_ar.join('-')
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = rcpbs.item.gsub('/','-').upcase
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = get_replaced_inches_name(rcpbs)
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = rcpbs.item.gsub('/','-')
+              src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}} rescue ''
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              if File.file?(src_image_bad)
+                File.rename(src_image_bad,src_image)
+              end
+            end
+
+            if !File.file?(src_image)
+              #try Flowers
+              color = rcpbs.ws_color.downcase
+              src_image = rcpbs.item.gsub(rcpbs.ws_color.strip,color.strip.gsub(' ','-'))
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+            end
+
+
+
+            if !File.file?(src_image)
+              replaced_item = get_replaced_inches_name(rcpbs)
+              src_image = replaced_item.sub(/-/,'')
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+            end
+
+            if !File.file?(src_image)
+              src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
+              src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+
+              if !File.file?(src_image)
+                #try removing
+                itm_ar = rcpbs.new_pbs_desc_1.gsub('/','-').split('-')
+                itm_ar.last.gsub!(/\d+/,'')
+                src_image = itm_ar.join('-')
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
+                src_image = get_replaced_inches_name(rcpbs,true)
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
+                src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
+                src_image_bad = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}} rescue ''
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+                if File.file?(src_image_bad)
+                  File.rename(src_image_bad,src_image)
+                end
+              end
+
+              if !File.file?(src_image)
+                #try Flowers
+                color = rcpbs.ws_color.downcase
+                src_image = rcpbs.new_pbs_desc_1.gsub(rcpbs.ws_color.strip,color.strip)
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              end
+
+              if !File.file?(src_image)
+                replaced_item = get_replaced_inches_name(rcpbs,true)
+                src_image = replaced_item.sub(/-/,'')
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              end
+            end
+
+            if !File.file?(src_image)
+              src_image = get_mapped_code_item(rcpbs)
+              if src_image.class == Array
+                f = src_image.first
+                src_image = %Q{#{@local_site_path}images/#{f.strip.gsub(' ','-')}.jpg} rescue ''
+                if !File.file?(src_image)
+                  f = src_image.last
+                  src_image = %Q{#{@local_site_path}images/#{f.strip.gsub(' ','-')}.jpg} rescue ''
+                end
+              else
+                src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+              end
+
+            end
+
+
+
+            return src_image
+          end
+
+
+          def get_mapped_code_item(rcpbs)
+            ba = rcpbs.new_pbs_desc_1.split('-')
+
+            is_array_rtn = false
+            # '5/8' => '005'
+            if ba[1] == '5/8'
+              is_array_rtn = true
+            end
+
+            if is_array_rtn
+              ["#{ba[0]}-003-#{ba[3]}-#{ba[2]}","#{ba[0]}-005-#{ba[3]}-#{ba[2]}"]
+            else
+              "#{ba[0]}-#{WIDTH_CODES[ba[1]]}-#{ba[3]}-#{ba[2]}"
+            end
+          end
+
 
 
 

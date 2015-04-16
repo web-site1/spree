@@ -5,15 +5,22 @@
       <ul>
         <% products.each do |product| %>
             <li>
-              <%
-                 taxon = product.cat_taxon
-                next if taxon.nil?
-              %>
 
-              <% url = "/t/#{taxon.permalink}" %>
-              <%= link_to image_tag(taxon.icon(:normal), :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
-                          title: taxon.name%>
+              <% if ref == 'new-arrivals' %>
 
+                  <% url = product_url(product, :taxon_id => @taxon.try(:id))  %>
+                  <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                              title: product.name %>
+              <% else %>
+                  <%
+                     taxon = product.cat_taxon
+                    next if taxon.nil?
+                  %>
+
+                  <% url = "/t/#{taxon.permalink}" %>
+                  <%= link_to image_tag(taxon.icon(:normal), :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
+                              title: taxon.name%>
+              <% end %>
 
             </li>
         <% end %>
