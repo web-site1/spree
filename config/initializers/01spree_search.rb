@@ -73,8 +73,8 @@ module Spree::Search
     end
 
     def retrieve_products
-      if @search_result.group(:pattern)
-        @search_result.group(:pattern).groups
+      if @search_result.group(:cat_pattern)
+        @search_result.group(:cat_pattern).groups
       else
         @search_result.results
       end
