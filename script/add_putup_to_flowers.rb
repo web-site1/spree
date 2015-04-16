@@ -58,4 +58,6 @@ flower_variants.each do |v|
   v.option_values << option_value
   v.save!
 
+  puts %Q{putup added #{p.name} #{v.sku}}
+
 end
