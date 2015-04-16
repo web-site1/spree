@@ -45,6 +45,9 @@ module Spree::Search
             end
 
             if params.has_key?(:for_new_arrivals)
+
+              date = 30.days.ago
+              with(:available_on).between(date..Date.today)
               group :pattern do
                 limit 1
               end
