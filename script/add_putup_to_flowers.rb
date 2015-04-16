@@ -2,7 +2,6 @@ require File.expand_path('../../config/environment', __FILE__)
 
 flower_variants = []
 
-=begin
 flower_cat = Spree::Taxon.find_by_name('flowers')
 
 flower_cat.products.each{|p|
@@ -18,7 +17,7 @@ flower_cat.children.each{|t|
     }
   }
 }
-=end
+
 
 putup_option = Spree::OptionType.find_by_name('ribbon-putup')
 
@@ -34,11 +33,13 @@ if option_value.nil?
   )
 end
 
+=begin
 prod = Spree::Product.find_by_name('Artificial Flowers (CQA-102)')
 
 prod.variants.each do |v|
   flower_variants << v
 end
+=end
 
 
 flower_variants.each do |v|
