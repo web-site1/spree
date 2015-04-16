@@ -65,7 +65,7 @@
           <li class="nav-new-items"><a href="/show_new_arrivals">New Items</a></li>
           <li class="nav-specials"><a href="/t/categories/closeouts">Specials</a></li>
           <li class="nav-featured"><a href="/t/tags/featured">Featured</a></li>
-          <li class="nav-search">               1 hr
+          <li class="nav-search">
             <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
                 <div id="search">
                     <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
