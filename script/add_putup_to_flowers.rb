@@ -41,6 +41,8 @@ flower_variants.each do |v|
   ot = p.option_types
   array_ot_id = ot.map{|o|o.id}
   if !array_ot_id.include?(putup_option.id)
+    p.option_types << putup_option
+    p.save!
     opval = Spree::ProductOptionType.create(
         product_id:p.id,
         option_type_id: v.id
