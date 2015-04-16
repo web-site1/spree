@@ -736,7 +736,7 @@
 
 
       this.products = [
-        <%= raw render :partial =>  'show.json.jbuilder', :locals => {:product => @product} %>
+        <%= raw render :partial =>  'show.html.jbuilder', :locals => {:product => @product} %>
       ];
       this.setProduct();
       setTimeout(function(){

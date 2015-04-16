@@ -1,2 +1,2 @@
 
-json.partial! partial: 'show', collection: @products, as: :product
+json.partial! partial: 'show.html.jbuilder', collection: @products, as: :product
