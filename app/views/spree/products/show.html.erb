@@ -745,7 +745,9 @@
 
 
       <% if params[:variant_id] %>
-        change_variant_by_id(<%= params[:variant_id]%>);
+        setTimeout(function(){
+          change_variant_by_id(<%= params[:variant_id]%>);
+        },500);
       <% end %>
 
       <% if @product.colors.uniq.length == 1 %>

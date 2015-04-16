@@ -58,14 +58,38 @@ Version: 1.0-artribbon
   content:"";
 }
 
-#width-slider.ui-slider.ui-slider-horizontal,
-#length-slider.ui-slider.ui-slider-horizontal {
+.slider-col .ui-slider.ui-slider-horizontal {
     .labels {
         background: none !important;
         min-width: initial !important;
     }
 }
 
+
+.jcarousel li{
+  width:106px;
+}
+
+.multiple-items.jcarousel img{
+  width:60px;
+}
+
+.jcarousel img{
+  max-width: 85%;
+}
+
+.product_main{
+  height:240px;
+  line-height: 240px;
+  text-align:center;
+}
+
+.product_main img{
+  max-height: 240px;
+  vertical-align: middle;
+  display: inline !important;
+  max-width: 100%;
+}
 
 .social-icons{
   margin-top: 25px !important;
