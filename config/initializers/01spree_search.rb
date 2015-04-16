@@ -48,7 +48,7 @@ module Spree::Search
 
               date = 30.days.ago
               with(:available_on).between(date..Date.today)
-              group :pattern do
+              group :cat_pattern do
                 limit 1
               end
             end
