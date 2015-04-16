@@ -1,6 +1,11 @@
 <% if params[:controller] == 'spree/products' and params[:action] == 'show' %>
 	<meta property="og:title"              content="<%= @product.name %>" />
-	<meta property="og:url"                content="<%="#{request.protocol}#{request.host_with_port}/products/#{@product.slug}#{@taxon ? '?taxon_id='+@taxon.id.to_s : ''} "%>" />
+	<% h = {} 
+	h[:taxon_id]=@taxon.id if @taxon
+	h[:variant_id]=params[:variant_id] if params[:variant_id]
+	%>
+
+	<meta property="og:url"                content="<%="#{request.protocol}#{request.host_with_port}/products/#{@product.slug}?#{h.to_query} "%>" />
 	
 	<% variant_image = nil %>
 	<% variant_image =  @product.variant_images.where(:viewable_id => params[:variant_id],:viewable_type=> "Spree::Variant").first if params[:variant_id] %>

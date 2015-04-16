@@ -377,7 +377,7 @@
     var tindex = totes.indexOf(value[8].toLowerCase())+1
     if(tindex)     
       $("#tote-slider").slider("value",tindex);
-    var pindex = putups.indexOf(value[2])+1;
+    var pindex = putups.indexOf(value[2].replace(' ','-'))+1;
     if(pindex)
       $("#putup-slider").slider("value",pindex);
     var lindex = lengths.indexOf(value[7])+1
@@ -742,6 +742,11 @@
       setTimeout(function(){
         jQuery('#multiple-items').jcarousel('reload');   
       },500);
+
+
+      <% if params[:variant_id] %>
+        change_variant_by_id(<%= params[:variant_id]%>);
+      <% end %>
 
       <% if @product.colors.uniq.length == 1 %>
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
