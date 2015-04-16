@@ -36,6 +36,10 @@ Spree::Product.class_eval do
     end
   end
 
+  def cat_pattern
+    self.cat_taxon.name rescue ' '
+  end
+
   def cat_taxon
     self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }.first rescue nil
   end
@@ -53,7 +57,7 @@ Spree::Product.class_eval do
       pattern
     end
 
-    date :available_on
+    time :available_on
 
     text :brand do
       product_brand
@@ -84,6 +88,11 @@ Spree::Product.class_eval do
     string :pattern do
       pattern
     end
+
+    string :cat_pattern do
+      cat_pattern
+    end
+
 
     string :product_sku, :multiple => true do
       self.variants.map{|s| s.sku}.reject{|e| e.nil?}

@@ -44,6 +44,15 @@ module Spree::Search
               with(:wired).any_of(params[:wired])
             end
 
+            if params.has_key?(:for_new_arrivals)
+
+              date = 30.days.ago
+              with(:available_on).between(date..Date.today)
+              group :cat_pattern do
+                limit 1
+              end
+            end
+
             order_by :available_on, :desc
 
             facet :pattern,:limit => -1
@@ -64,7 +73,11 @@ module Spree::Search
     end
 
     def retrieve_products
-      @search_result.results
+      if @search_result.group(:cat_pattern)
+        @search_result.group(:cat_pattern).groups
+      else
+        @search_result.results
+      end
     end
 
     def get_search_obj

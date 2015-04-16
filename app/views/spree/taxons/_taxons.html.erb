@@ -27,7 +27,15 @@
             <% subcats = get_taxons_subcats(@taxon) %>
             <% subcats.each do |sct| %>
               <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
-                <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),%Q{/t/#{sct.permalink}}, :itemprop => 'url',
+                <%
+                  if sct.name.downcase == 'newest'
+                    t_link = '/products?for_new_arrivals=true'
+                  else
+                   t_link = %Q{/t/#{sct.permalink}}
+                  end
+                %>
+
+                <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),t_link , :itemprop => 'url',
                    title: sct.name
                 %>
                 <div class="item-label" title="<%=sct.name %>">
@@ -38,13 +46,20 @@
             <% end %>
 
           <% else %>
-              <% if @taxon.name.downcase == 'newest'
+              <%
+                 if @taxon.name.downcase == 'newest'
                    prods = new_arrivals
                  else
                     prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []
                  end
               %>
               <% prods.each do |product| %>
+                <%
+                   if @taxon.name.downcase == 'newest'
+                     product = product.results.first
+                   end
+                %>
+
                   <% cache [I18n.locale, product] do %>
                       <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
                       <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
