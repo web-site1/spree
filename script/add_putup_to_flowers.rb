@@ -21,20 +21,20 @@ flower_cat.children.each{|t|
 
 putup_option = Spree::OptionType.find_by_name('ribbon-putup')
 
-@option_value = Spree::OptionValue.find_by_option_type_id_and_name(
-    putup_option.id,'1 dozen'
+option_value = Spree::OptionValue.find_by_option_type_id_and_name(
+    putup_option.id,'1-Dozen'
 )
 
-if @option_value.nil?
-  @option_value = Spree::OptionValue.create(
+if option_value.nil?
+  option_value = Spree::OptionValue.create(
       option_type_id: putup_option.id,
       presentation: '1 dozen',
-      name: '1 dozen'
+      name: '1-dozen'
   )
 end
 
 
-ot = v.product.option_types
+
 
 flower_variants.each do |v|
   p = v.product
@@ -47,7 +47,15 @@ flower_variants.each do |v|
     )
   end
 
+  opt_vals = v.option_values
 
+  opt_vals.each{|ov|
+    if ov.option_type.id  == putup_option.id
+      ov.delete
+    end
+  }
 
+  v.option_values << option_value
+  v.save!
 
 end
