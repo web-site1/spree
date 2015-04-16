@@ -131,7 +131,9 @@ module ApplicationHelper
   end
 
   def new_arrivals
-    na = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
+    #na = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
+    @new_searcher = search_solr({:for_new_arrivals=> true})
+    na = @new_searcher.retrieve_products
   end
 
 

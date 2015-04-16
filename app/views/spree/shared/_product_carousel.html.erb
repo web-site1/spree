@@ -7,9 +7,9 @@
             <li>
 
               <% if ref == 'new-arrivals' %>
-
+                   <% product = product.results.first %>
                   <% url = product_url(product, :taxon_id => @taxon.try(:id))  %>
-                  <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                  <%= link_to product_image(product, :itemprop => "image",class: "img-responsive",width: '240px', height: '240px'), url, :itemprop => 'url',
                               title: product.name %>
               <% else %>
                   <%

@@ -44,6 +44,12 @@ module Spree::Search
               with(:wired).any_of(params[:wired])
             end
 
+            if params.has_key?(:for_new_arrivals)
+              group :pattern do
+                limit 1
+              end
+            end
+
             order_by :available_on, :desc
 
             facet :pattern,:limit => -1
@@ -64,7 +70,11 @@ module Spree::Search
     end
 
     def retrieve_products
-      @search_result.results
+      if @search_result.group(:pattern)
+        @search_result.group(:pattern).groups
+      else
+        @search_result.results
+      end
     end
 
     def get_search_obj
