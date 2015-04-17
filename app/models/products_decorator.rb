@@ -44,6 +44,10 @@ Spree::Product.class_eval do
     self.taxons.select{|t| t.permalink.split('/')[0] == 'categories' }.first rescue nil
   end
 
+  def sub_cat
+    self.cat_taxon.parent.name rescue ' '
+  end
+
 
   def wired_product?
     !(self.description =~ /wired/i || self.name =~ /wired/i).nil?
@@ -83,6 +87,10 @@ Spree::Product.class_eval do
       widths
     end
 
+    text :sub_cat do
+      sub_cat
+    end
+
     string :name, :stored => true
 
     string :pattern do
@@ -91,6 +99,10 @@ Spree::Product.class_eval do
 
     string :cat_pattern do
       cat_pattern
+    end
+
+    string :sub_cat do
+      sub_cat
     end
 
 

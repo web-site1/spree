@@ -168,6 +168,11 @@
     </div> <!-- panel -->
   </div> <!-- panel group -->
 
+  <% params.each do |k,v| %>
+    <% if %w{keywords for_new_arrivals}.include?(k) %>
+      <%= hidden_field_tag k,v %>
+    <% end %>
+  <% end %>
   <button id="" type="submit" class="btn btn-lg btn-info btn-embossed mlm">Refine</button>
 
   </form>
