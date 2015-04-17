@@ -97,7 +97,7 @@ Rails.application.routes.draw do
   get '/1-:subcat-:cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}/%{subcat}')
 
   # Redirect correctly formatted CATEGORY  pages:
-  get '1-:cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}-ribbon')
+  get '1-:cat-ribbon-category', to: redirect('/t/categories/ribbons/%{cat}')
 
   # Tulle & Trims
   get '1-:cat-category', to: redirect('/t/categories/%{cat}')
