@@ -318,13 +318,13 @@
       // console.log('selected_putup: '+selected_putup);
       selected_variant = -1;
       $.each(variants,function(index,value){
-        if( value[1]==selected_width && 
-            value[2].replace(' ','-')==selected_putup && 
-            value[6]==selected_diameter && 
-            value[7]==selected_length && 
-            value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase() && 
-            value[9] == selected_color &&
-            value[10] == selected_count){
+        if( value[1].toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-') && 
+            value[2].toLowerCase().replace(' ','-')==selected_putup.toLowerCase().replace(' ','-') && 
+            value[6].toLowerCase().replace(' ','-')==selected_diameter.toLowerCase().replace(' ','-') && 
+            value[7].toLowerCase().replace(' ','-')==selected_length.toLowerCase().replace(' ','-') && 
+            value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase().replace(' ','-') && 
+            value[9].toLowerCase().replace(' ','-') == selected_color.toLowerCase().replace(' ','-') &&
+            value[10].toLowerCase().replace(' ','-') == selected_count.toLowerCase().replace(' ','-')){
           selected_variant = index;
         }
       });
@@ -359,6 +359,16 @@
 
   }
 
+
+  function find_option_from_labels(labels, option){
+    for(var i=0;i<labels.length;i++){
+      if(labels[i].toLowerCase().replace(' ','-')==option.toLowerCase().replace(' ','-'))
+        return i;
+    }
+    return -1
+  }
+
+
   function change_variant_by_id(variant_id){
     for(var i = 0; i < variants.length; i++){
       if(variants[i][0]==variant_id){
@@ -368,21 +378,26 @@
     }
 
     value = variants[selected_variant_index];
-    var windex = widths.indexOf(value[1])+1;
+    var windex = find_option_from_labels(widths,value[1])+1;
     if(windex) 
       $("#width-slider").slider("value", windex);
-    var dindex = diameters.indexOf(value[6])+1;
+    var dindex = find_option_from_labels(diameters,value[6])+1;
     if(dindex)
       $("#diameter-slider").slider("value",dindex);
-    var tindex = totes.indexOf(value[8].toLowerCase())+1
+    var tindex = find_option_from_labels(totes,value[8])+1
     if(tindex)     
       $("#tote-slider").slider("value",tindex);
-    var pindex = putups.indexOf(value[2].replace(' ','-'))+1;
+    var pindex = find_option_from_labels(putups,value[2])+1;
     if(pindex)
       $("#putup-slider").slider("value",pindex);
-    var lindex = lengths.indexOf(value[7])+1
+    var lindex = find_option_from_labels(lengths,value[7])+1;
     if(lindex)
       $("#length-slider").slider("value",lindex);
+    var cindex = find_option_from_labels(counts, value[10])*1;
+    if(cindex)
+      $("#count-slider").slider("value",cindex);
+    
+
     if(value[9]!=''){
       $('.colors').val(value[9]);
       selected_color=value[9];
@@ -543,7 +558,8 @@
                 }
                 change_variant();
                 store.myModel.FbLikeUrl = fblikeurl + '&variant_id=' + $('#variant_id').val();
-                jQuery('#multiple-items').jcarousel('reload');
+                if(store.product.variant_images_count > 1)
+                  jQuery('#multiple-items').jcarousel('reload');
 
 
 
@@ -723,7 +739,7 @@
 
               
               // images carousel
-              jQuery('#multiple-items').jcarousel('reload');   
+              setTimeout(function(){jQuery('#multiple-items').jcarousel('reload')},500);   
 
 
             },100);
