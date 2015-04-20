@@ -169,7 +169,7 @@ end
 
 @flower_option_hash.merge!(width: flower_width_option)
 @flower_option_hash.merge!(color: all_color_option)
-
+@flower_option_hash.merge!(putup: ribbon_putup_option)
 
 
 
@@ -196,7 +196,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r =  NewestFlower.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -257,6 +257,9 @@ CSV.open(csv_error_file, "wb") do |csv|
           end
 
           taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
+          if taxonrec.nil?
+            taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat,main_cat.id)
+          end
 
 
           master_rec = NewMaster.find_by_item(master_desc_item(rcpbs))
