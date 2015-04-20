@@ -257,6 +257,9 @@ CSV.open(csv_error_file, "wb") do |csv|
           end
 
           taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
+          if taxonrec.nil?
+            taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat,main_cat.id)
+          end
 
 
           master_rec = NewMaster.find_by_item(master_desc_item(rcpbs))

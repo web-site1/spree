@@ -236,6 +236,13 @@ BEGIN{
     src_image = rcpbs.item.gsub('/','-')
     src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
 
+
+    if !File.file?(src_image)
+      src_image = rcpbs.item.gsub('/','-').downcase
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+    end
+
+
     if !File.file?(src_image)
       #try removing
       itm_ar = rcpbs.item.gsub('/','-').split('-')
@@ -243,6 +250,8 @@ BEGIN{
       src_image = itm_ar.join('-')
       src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
+
+
 
     if !File.file?(src_image)
       src_image = rcpbs.item.gsub('/','-').upcase
@@ -389,9 +398,6 @@ BEGIN{
 
 
     end
-
-
-
 
 
     return src_image
