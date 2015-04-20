@@ -9,6 +9,8 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'csv'
 #local run code
 
+require %Q{#{Rails.root.to_s}/script/import_functions}
+
 =begin
 Spree::Product.where('id > 23').delete_all
 Spree::Variant.where('id > 51').delete_all
@@ -478,6 +480,7 @@ end
 
 
 
+=begin
 BEGIN{
           # functions
           def item_type(pbs_item_rec)
@@ -837,6 +840,7 @@ BEGIN{
 
 
 }
+=end
 
 
 
