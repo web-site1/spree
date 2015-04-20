@@ -169,7 +169,7 @@ end
 
 @flower_option_hash.merge!(width: flower_width_option)
 @flower_option_hash.merge!(color: all_color_option)
-
+@flower_option_hash.merge!(putup: ribbon_putup_option)
 
 
 
