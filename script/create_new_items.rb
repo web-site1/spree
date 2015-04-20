@@ -196,7 +196,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r = NewItem.where('id = 1310') #("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -241,10 +241,13 @@ CSV.open(csv_error_file, "wb") do |csv|
           main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
 
 
-          if @item_type == 'Flower'
+          if @item_type == 'Flower' || @item_type == 'tulle & trim'
             main_cat = type_taxon
           else
             main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src,type_taxon.id)
+            if main_cat.nil?
+              main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src.pluralize,type_taxon.id)
+            end
           end
 
           if main_cat.nil?

@@ -25,7 +25,7 @@
     <td class="lead" colspan><%= order_form.object.display_total %></td>
     <td></td>
   </tr>
-  <% tease_amt = 500 - order_form.object.item_total %>
+  <% tease_amt = 300 - order_form.object.item_total %>
   <% if tease_amt > 0 %>
     <tr class="cart-subtotal">
       <td colspan="5" align='right'><h6><%= "Spend #{number_to_currency(tease_amt)} more for free shipping" %></h6></td>

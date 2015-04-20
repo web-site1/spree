@@ -3,6 +3,8 @@ BEGIN{
   def item_type(pbs_item_rec)
     itemtype = ''
     case
+      when pbs_item_rec.ws_cat =~ /tulle & trim/i
+        itemtype = "tulle & trim"
       when pbs_item_rec.item.strip[0..1].downcase == 'cq'
         itemtype = "Flower"
       when pbs_item_rec.ws_cat =~ /ribbon/i
@@ -337,7 +339,7 @@ BEGIN{
       coded = get_mapped_code_item(rcpbs)
       coded_array = coded.split('-')
       code = coded_array.first(3).join('-')
-      chk_array = Dir.glob(%Q{#{@local_site_path}/images/#{code}*})
+      chk_array = Dir.glob(%Q{#{@local_site_path}images/#{code}*})
 
       if !chk_array.empty?
         src_image = chk_array.first
@@ -359,14 +361,14 @@ BEGIN{
         srch = %Q{#{prod_array.first}*#{prod_array.last.gsub(/[^\d]/, '')}}
       end
 
-      chk_array = Dir.glob(%Q{#{@local_site_path}/images/#{srch}*})
+      chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
 
       if !chk_array.empty?
         src_image = chk_array.first
       else
         # check sub
         srch = flow_sub.gsub('-','*')
-        chk_array = Dir.glob(%Q{#{@local_site_path}/images/#{srch}*})
+        chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
         src_image = chk_array.first if !chk_array.empty?
       end
 
@@ -375,7 +377,7 @@ BEGIN{
       if !File.file?(src_image)
         if prod_array.count > 2
           srch = %Q{#{prod_array.first}*#{prod_array.last.gsub(/[^\d]/, '')}}
-          chk_array = Dir.glob(%Q{#{@local_site_path}/images/#{srch}*})
+          chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
           if !chk_array.empty?
             src_image = chk_array.first
           end
