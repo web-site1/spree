@@ -39,7 +39,7 @@ puts("Destroying Products before DELETEing...")
 
 prod_to_delete_array = []
 
-Spree::Product.where('id > 3978')
+Spree::Product.where('id > 6675')
 
 
 array_of_ids =  Spree::Product.where('id > 3978').map{|p| p.id} #prod_to_delete_array.map{|p| p.id}
