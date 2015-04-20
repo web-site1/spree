@@ -1,4 +1,5 @@
-<div class="main-content search-results-content" ng-app="spreeStore">
+
+<div class="main-content search-results-content" itemscope itemtype="http://schema.org/Product" ng-app="spreeStore">
 
   <div class="container" ng-controller="StoreController as store">
 
@@ -14,7 +15,8 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner">
             <div class="item active product_main">
-              <img itemprop="image" alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}">
+              <meta itemprop="image" content="<%=@product.variant_images.first.attachment.url rescue ''%>" />
+              <img alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}">
             </div>
           </div>
           <!-- Controls -->
@@ -95,10 +97,10 @@
 
         <div ng-show="store.product.is_new"><span class="label label-danger">New</span></div>
 
-        <h1>{{store.product.name}}</h1>
+        <h1 itemprop="name" content="<%=@product.name%>">{{store.product.name}}</h1>
 
         <!-- TODO set has no description text later if no discription -->
-        <p>
+        <p itemprop="description" content="<%@product.description%>">
           {{store.product.description}}
         </p>
 
@@ -217,7 +219,9 @@
 
               <div ng-show="store.product.colors.length!=0" class="col-lg-7 col-md-5 col-sm-5 col-xs-5">
                   <h3>Color</h3>
-                  <select ng-model="store.selected_color" ng-change="store.color_changed()" id="{{store.colors_class}}" class="form-control select select-primary colors {{store.colors_class}}" data-toggle="select">
+                  <meta itemprop="color" content="<%=@product.colors.uniq.join(', ')%>">
+
+                  <select ng-model="store.selected_color" ng-change="store.color_changed()" id="{{store.colors_class}}" class="form-control select select-primary colors {{store.colors_class}}" data-toggle="select" itemprop = "color" content="<%= @product_color %>" >
                     <option ng-repeat="item in store.options_for_colors track by item.value" value="{{item.key}}">{{item.value}}</option>
                   </select>
               </div>
@@ -235,10 +239,20 @@
             
 
             <%= hidden_field_tag "variant_id", "{{store.product.master.id}}" %>
-            <div class="row bottom-row">
 
+            <% @product.variants.each do |variant|%>
+              <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                  <meta itemprop="sku" content="<%=variant.sku%>">
+                  <meta itemprop="price" content="<%=variant.price%>" />
+                  <meta itemprop="priceCurrency" content="USD" />
+                  <meta itemprop="availability" content="http://schema.org/InStock" />
+              </div>
+            <% end %>
+
+            <div class="row bottom-row">
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 price columns left">
-                <span>$15.00</span>
+                <span>
+                </span>
               </div>
                 
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 add-col right">
