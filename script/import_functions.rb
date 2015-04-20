@@ -333,57 +333,58 @@ BEGIN{
 
     end
 
-    #Widcard match first found on sku
-    if !File.file?(src_image)
-      # try wilcard mapped coded item first with last section removed
-      coded = get_mapped_code_item(rcpbs)
-      coded_array = coded.split('-')
-      code = coded_array.first(3).join('-')
-      chk_array = Dir.glob(%Q{#{@local_site_path}images/#{code}*})
+    if !(@item_type == 'Flower')
+      #Widcard match first found on sku
+      if !File.file?(src_image)
+        # try wilcard mapped coded item first with last section removed
+        coded = get_mapped_code_item(rcpbs)
+        coded_array = coded.split('-')
+        code = coded_array.first(3).join('-')
+        chk_array = Dir.glob(%Q{#{@local_site_path}images/#{code}*})
 
-      if !chk_array.empty?
-        src_image = chk_array.first
+        if !chk_array.empty?
+          src_image = chk_array.first
+        end
+
+        #flow_sub =  rcpbs.item.split('-')[0..1].join('-')
+        #prod_sku = suggest_sku(rcpbs,nil,flow_sub,nil)
       end
-
-      #flow_sub =  rcpbs.item.split('-')[0..1].join('-')
-      #prod_sku = suggest_sku(rcpbs,nil,flow_sub,nil)
-    end
-
-    if !File.file?(src_image)
-      # try wilcard mapped coded item first with last section removed
-      flow_sub =  rcpbs.item.split('-')[0..1].join('-') rescue ''
-      prod_sku = suggest_sku(rcpbs,nil,flow_sub,nil)
-      prod_array = prod_sku.split('-')
-
-      if prod_array.count > 2
-        srch = %Q{#{prod_array.first(2).join('-')}*#{prod_array.last.gsub(/[^\d]/, '')}}
-      else
-        srch = %Q{#{prod_array.first}*#{prod_array.last.gsub(/[^\d]/, '')}}
-      end
-
-      chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
-
-      if !chk_array.empty?
-        src_image = chk_array.first
-      else
-        # check sub
-        srch = flow_sub.gsub('-','*')
-        chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
-        src_image = chk_array.first if !chk_array.empty?
-      end
-
-
 
       if !File.file?(src_image)
+        # try wilcard mapped coded item first with last section removed
+        flow_sub =  rcpbs.item.split('-')[0..1].join('-') rescue ''
+        prod_sku = suggest_sku(rcpbs,nil,flow_sub,nil)
+        prod_array = prod_sku.split('-')
+
         if prod_array.count > 2
+          srch = %Q{#{prod_array.first(2).join('-')}*#{prod_array.last.gsub(/[^\d]/, '')}}
+        else
           srch = %Q{#{prod_array.first}*#{prod_array.last.gsub(/[^\d]/, '')}}
+        end
+
+        chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
+
+        if !chk_array.empty?
+          src_image = chk_array.first
+        else
+          # check sub
+          srch = flow_sub.gsub('-','*')
           chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
-          if !chk_array.empty?
-            src_image = chk_array.first
+          src_image = chk_array.first if !chk_array.empty?
+        end
+
+
+
+        if !File.file?(src_image)
+          if prod_array.count > 2
+            srch = %Q{#{prod_array.first}*#{prod_array.last.gsub(/[^\d]/, '')}}
+            chk_array = Dir.glob(%Q{#{@local_site_path}images/#{srch}*})
+            if !chk_array.empty?
+              src_image = chk_array.first
+            end
           end
         end
       end
-
 
 
 

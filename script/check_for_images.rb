@@ -19,7 +19,7 @@ else
 end
 
 
-r = NewItem.where("item like 'CQF-9%'") #("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat)
+r = NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat)
 
 
 r.each do |rcpbs|
@@ -27,6 +27,7 @@ r.each do |rcpbs|
   begin
 
     @rcpbs = rcpbs
+    @item_type = item_type(rcpbs) ||  ''
     src_image = get_image_path(rcpbs)
 
 
@@ -34,7 +35,7 @@ r.each do |rcpbs|
       puts "No image for item #{rcpbs.item} #{rcpbs.brand}"
       logger.info "No image for item #{rcpbs.item} #{rcpbs.brand}"
     else
-      puts %Q{#{src_image}}
+      #puts %Q{#{src_image}}
     end
   rescue Exception => e
     puts "#{e.to_s} item# #{@rcpbs.item} #{@rcpbs.brand}  "
