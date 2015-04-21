@@ -130,9 +130,9 @@ module ApplicationHelper
     return featured_products_array
   end
 
-  def new_arrivals
+  def new_arrivals(per_page = 30)
     #na = Spree::Product.where("available_on <= ?",Date.today).order(available_on: :desc).limit(10)
-    @new_searcher = search_solr({:for_new_arrivals=> true,:per_page => 30})
+    @new_searcher = search_solr({:for_new_arrivals=> true,:per_page => per_page})
     na = @new_searcher.retrieve_products
   end
 
