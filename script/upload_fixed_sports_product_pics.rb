@@ -21,6 +21,7 @@ p.each do |i|
     i.images.each{|img| img.delete}
     i.images <<  Spree::Image.create!(:attachment => File.open(image_path))
     i.save!
+    puts %Q{#{i.name} saved}
   end
 
 
