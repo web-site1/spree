@@ -928,7 +928,7 @@
 
         var options = {
             counter: {
-                url: '<%=request.protocol %>://graph.facebook.com/fql?q=SELECT+total_count+FROM+link_stat+WHERE+url%3D%22{url}%22' +
+                url: '<%=request.protocol %>graph.facebook.com/fql?q=SELECT+total_count+FROM+link_stat+WHERE+url%3D%22{url}%22' +
                      '&callback=JSON_CALLBACK',
                 getNumber: function(data) {
             if (0 === data.data.length) {
@@ -979,7 +979,7 @@
 
         var options = {
             counter: {
-                url: '<%=request.protocol %>://urls.api.twitter.com/1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                url: '<%=request.protocol %>urls.api.twitter.com/1/urls/count.json?url={url}&callback=JSON_CALLBACK',
                 getNumber: function(data) {
                     return data.count;
                 }
@@ -1033,7 +1033,7 @@
  
         var options = {
             counter: {
-                url: '<%=request.protocol %>://api.pinterest.com/v1/urls/count.json?url={url}&callback=JSON_CALLBACK',
+                url: '<%=request.protocol %>api.pinterest.com/v1/urls/count.json?url={url}&callback=JSON_CALLBACK',
                 getNumber: function(data) {
                     return data.count;
                 }
