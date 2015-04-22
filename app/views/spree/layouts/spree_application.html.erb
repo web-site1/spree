@@ -10,10 +10,13 @@
   <meta name="author" content="">
 
   <%== meta_data_tags %>
+  <%= canonical_tag(current_store.url) %>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= csrf_meta_tags %>
 
   <link rel="icon" href="../../favicon.ico">
 
-  <title>Artistic Ribbon</title>
+  <title><%= title %></title>
 
   <%= render partial: 'spree/products/og_meta_tags' %>
 
