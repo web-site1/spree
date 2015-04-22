@@ -13,7 +13,7 @@
         </div>
         <div class="row">
           <%# render partial: 'spree/shared/new_arrivals' %>
-          <% new_products = new_arrivals %>
+          <% new_products = new_arrivals(16) %>
           <%= render partial: 'spree/shared/product_carousel',locals: {products: new_products,
             section_name: 'New Arrivals',ref: 'new-arrivals' } %>
 

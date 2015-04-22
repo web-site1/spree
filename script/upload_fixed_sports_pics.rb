@@ -19,6 +19,7 @@ itms.each do |i|
     v.images.each{|i| i.delete}
     v.images <<  Spree::Image.create!(:attachment => File.open(image_path))
     v.save!
+    puts %Q{#{v.sku} saved}
   end
 
 

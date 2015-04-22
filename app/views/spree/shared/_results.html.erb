@@ -38,7 +38,7 @@
           <ul>
             <% @products.each do |product| %>
                 <%
-                   if params[:for_new_arrivals]
+                   if (params[:for_new_ribbons]) #  || params[:for_new_flowers])
                        product = product.results.first
                    end
                 %>

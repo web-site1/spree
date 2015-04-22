@@ -29,7 +29,11 @@
               <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
                 <%
                   if sct.name.downcase == 'newest'
-                    t_link = '/products?for_new_arrivals=true&per_page=30'
+                    if @taxon.name.downcase == 'ribbons'
+                        t_link = '/products?for_new_ribbons=true&per_page=30'
+                    else
+                      t_link = '/products?for_new_flowers=true&per_page=30'
+                    end
                   else
                    t_link = %Q{/t/#{sct.permalink}}
                   end

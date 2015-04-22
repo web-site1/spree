@@ -44,14 +44,21 @@ module Spree::Search
               with(:wired).any_of(params[:wired])
             end
 
-            if params.has_key?(:for_new_arrivals)
-
+            if (params.has_key?(:for_new_arrivals) || params.has_key?(:for_new_flowers) ||
+                params.has_key?(:for_new_ribbons) )
               date = 30.days.ago
               with(:available_on).between(date..Date.today)
-              group :cat_pattern do
-                limit 1
+
+              if params.has_key?(:for_new_flowers)
+                with(:type,'flowers')
+              elsif params.has_key?(:for_new_ribbons)
+                with(:type,'ribbons')
+                group :cat_pattern do
+                  limit 1
+                end
               end
             end
+
 
             order_by :available_on, :desc
 
