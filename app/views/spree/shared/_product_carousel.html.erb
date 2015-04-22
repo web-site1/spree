@@ -3,15 +3,17 @@
     <div class="headline"><h3><%= section_name %></h3></div>
     <div class="jcarousel <%=ref%>" id="<%=ref%>">
       <ul>
-        <% products.each do |product| %>
-            <li>
-
-              <% if ref == 'new-arrivals' %>
-                   <%# product = product.results.first %>
+        <% if ref == 'new-arrivals' %>
+            <% products.each do |product| %>
+                <li style="width: 174px">
                   <% url = product_url(product, :taxon_id => @taxon.try(:id))  %>
-                  <%= link_to product_image(product, :itemprop => "image",class: "img-responsive",width: '240px', height: '240px'), url, :itemprop => 'url',
+                  <%= link_to product_image(product, :itemprop => "image",class: "img-responsive"), url, :itemprop => 'url',
                               title: product.name %>
-              <% else %>
+                </li>
+            <% end %>
+        <% else %>
+            <% products.each do |product| %>
+                <li>
                   <%
                      taxon = product.cat_taxon
                     next if taxon.nil?
@@ -20,9 +22,8 @@
                   <% url = "/t/#{taxon.permalink}" %>
                   <%= link_to image_tag(taxon.icon(:normal), :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
                               title: taxon.name%>
-              <% end %>
-
-            </li>
+                </li>
+            <% end %>
         <% end %>
 
       </ul>

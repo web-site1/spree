@@ -11,7 +11,7 @@
                 } else if (width >= 350) {
                     width = width / 2;
                 }
-
+                width = Math.floor(width);
                 jcarousel.jcarousel('items').css('width', width + 'px');
             })
             .jcarousel({
