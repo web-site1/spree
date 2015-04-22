@@ -1,0 +1,151 @@
+/*
+Theme Name: Artistic Ribbon
+Version: 1.0-artribbon
+*/
+
+// Here we import our partials
+
+@import "_partials/mixins";
+@import "_partials/variables";
+@import "_partials/media-queries";
+@import "_partials/typography";
+
+// Here we import our overrides
+// Dan had to rename David's bootstrap.scss to bootstrap_overrides.scss so spree backend didn't pickup the wrong file.
+// Note the order in which these load is extremely important
+
+@import "david_bootstrap";
+@import "flat-ui-pro";
+@import "bootstrap_overrides";
+@import "jcarousel.responsive";
+
+// Here we import our theme-specific files
+
+@import "main";
+@import "header";
+@import "footer";
+@import "homepage";
+@import "search-results";
+@import "cart";
+@import "product-page";
+
+
+/*CSS Changes by Fahad*/
+
+#width-slider .ui-slider-range,
+#length-slider .ui-slider-range{
+  /*background: transparent;*/
+}
+
+.ui-slider ol.labels {
+  display: table;
+  table-layout: fixed; /* the magic dust that ensure equal width */
+  padding-left:0px;
+  background: transparent;
+  list-style-type: none;
+  top:12px !important;
+  padding-top:2px;
+}
+
+.ui-slider ol.labels > li {
+  display: table-cell;
+  text-align: center;
+  background:transparent;
+  font-size:12px;
+}
+
+.ui-slider ol.labels li:before{
+  content:"";
+}
+
+.slider-col .ui-slider.ui-slider-horizontal {
+    .labels {
+        background: none !important;
+        min-width: initial !important;
+    }
+}
+
+
+.jcarousel li{
+  width:106px;
+}
+
+.multiple-items.jcarousel img{
+  width:60px;
+}
+
+.jcarousel img{
+  max-width: 85%;
+}
+
+.product_main{
+  height:240px;
+  line-height: 240px;
+  text-align:center;
+}
+
+.product_main img{
+  max-height: 240px;
+  vertical-align: middle;
+  display: inline !important;
+  max-width: 100%;
+}
+
+.social-icons{
+  margin-top: 25px !important;
+  margin-bottom: 100px !important;
+}
+
+.social-icons label{
+  position: absolute;
+  line-height: 32px;
+}
+
+.social-icons .ng-social-container{
+  margin-left:10px;
+}
+
+ul.ng-social li{
+  display:block;
+  float:left;
+}
+
+
+/*END CSS Changes by Fahad*/
+
+/* Louie Css Changes for alerts
+Start
+*/
+
+.alert-error{
+  color: red;
+  font-size: 20pt;
+}
+
+.alert-notice, .alert-success{
+  font-size: 20pt;
+  padding-left: 190px;
+}
+
+span.rate-cost{
+  color: black;
+}
+
+.line-separator{
+  height:5px;
+  width: 140%;
+  background:lightgray;
+}
+
+.format_td{
+  vertical-align: top;
+  padding-top: 10PX;
+}
+
+footer{
+  margin-top: 65px;
+}
+
+/* End */
+
+

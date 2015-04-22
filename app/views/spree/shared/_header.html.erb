@@ -1,0 +1,87 @@
+<!--<section class="topbar">-->
+  <!--<div class="container">-->
+    <!--<ul>-->
+      <!--<li class="connect"><a href="#">Connect With Us!</a></li>-->
+      <!--<li><a href="#"><span class="fa fa-pinterest"></span></a></li>-->
+      <!--<li><a href="#"><span class="fa fa-facebook-official"></span></a></li>-->
+      <!--<li><a href="#"><span class="fa fa-twitter"></span></a></li>-->
+    <!--</ul>-->
+  <!--</div>-->
+<!--</section>-->
+
+<nav class="navbar navbar-default navbar-ar">
+  <div class="container">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand-logo" href="/">
+        <%= image_tag 'logo_caption.png', class: "img-responsive large-logo", alt: "Artistic Ribbon" %>
+        <%= image_tag 'logo.png',class: "img-responsive small-logo" ,alt: "Artistic Ribbon" %>
+      </a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+
+      <div class="col-lg-12">
+
+        <ul class="nav navbar-nav navbar-right mini-nav-right" id="mini-nav">
+          <% if spree_current_user %>
+              <li class="my-account">
+                <%= link_to '<span class="fa fa-user"></span> My Account'.html_safe, spree.account_path %></li>
+              <li><%= link_to Spree.t(:logout), spree.logout_path %></li>
+          <% else %>
+              <li id="my-account link-to-login">
+                <%= link_to '<span class="fa fa-user"></span> Login '.html_safe, spree.login_path %></li>
+              <li><a href="#">|</a></li>
+              <li id="link-to-login">
+                <%= link_to "Register", spree.signup_path %></li>
+           <% end %>
+          <li id="link-to-cart" data-hook>
+            <noscript>
+              <%= link_to Spree.t(:cart), '/cart' %>
+            </noscript>
+            &nbsp;
+          </li>
+          <script>Spree.fetch_cart()</script>
+        <!--
+          <li class="my-account"><a href="#"><span class="fa fa-user"></span> My Account</a></li>
+          <li><a href="#">Login</a></li>
+          <li><a href="#">Register</a></li>
+        -->
+        </ul>
+
+      </div>
+
+      <div class="col-lg-12">
+
+        <ul class="nav navbar-nav navbar-right main-nav-right" id="main-nav">
+          <li class="nav-home active"><%= link_to Spree.t(:home), spree.root_path %></li>
+          <li class="nav-ribbons"><a href="/t/categories/ribbons">Ribbons</a></li>
+          <li class="nav-new-items"><a href="/products?for_new_arrivals=true&per_page=30">New Items</a></li>
+          <li class="nav-specials"><a href="/t/categories/closeouts">Specials</a></li>
+          <li class="nav-featured"><a href="/t/tags/featured">Featured</a></li>
+          <li class="nav-search">
+            <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
+                <div id="search">
+                    <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
+                      <button type="submit">
+                        <i class="fa fa-search"></i>
+                      </button>
+                </div>
+
+            <% end %>
+
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+    <!--/.nav-collapse -->
+  </div>
+</nav>

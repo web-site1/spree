@@ -1,0 +1,82 @@
+<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+
+  <div class="well well-lg">
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <%# if @taxon.products.first
+                @product = @taxon.products.first
+            %>
+            <%# render :partial => 'spree/products/image' %>
+            <%= image_tag(@taxon.icon(:normal)) %>
+        <%# end %>
+       <!-- <img src="assets/dist/images/placeholders/misc-2.jpg" alt="" class="img-responsive" /> -->
+      </div>
+      <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+        <h3 class="headline drill-down-headline"><%= @taxon.name %></h3>
+        <p><%= @taxon.description%></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="results row">
+    <ul>
+          <%
+             if ((@taxon.parent_id.nil? || @taxon.products.empty? || @taxon.parent_id < 2) &&
+                  !(@taxon.name.downcase == 'newest'))
+          %>
+            <% subcats = get_taxons_subcats(@taxon) %>
+            <% subcats.each do |sct| %>
+              <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                <%
+                  if sct.name.downcase == 'newest'
+                    if @taxon.name.downcase == 'ribbons'
+                        t_link = '/products?for_new_ribbons=true&per_page=30'
+                    else
+                      t_link = '/products?for_new_flowers=true&per_page=30'
+                    end
+                  else
+                   t_link = %Q{/t/#{sct.permalink}}
+                  end
+                %>
+
+                <%= link_to image_tag(sct.icon(:normal),width: '100px', height: '100px'),t_link , :itemprop => 'url',
+                   title: sct.name
+                %>
+                <div class="item-label" title="<%=sct.name %>">
+                    <%# link_to sct.name,%Q{/t/#{sct.permalink}} %>
+                    <%= truncate(sct.name, :length => 45) %>
+                </div>
+              </li>
+            <% end %>
+
+          <% else %>
+              <%
+                 if @taxon.name.downcase == 'newest'
+                   prods = new_arrivals
+                 else
+                    prods = @taxon.products.sort{|a,b| b[:available_on] <=> a[:available_on]} rescue []
+                 end
+              %>
+              <% prods.each do |product| %>
+                <%
+                   if @taxon.name.downcase == 'newest'
+                     product = product.results.first
+                   end
+                %>
+
+                  <% cache [I18n.locale, product] do %>
+                      <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
+                      <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
+                        <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '100px', height: '100px'), url, :itemprop => 'url',
+                                    title: product.name %>
+                        <div class="item-label" title="<%=product.name %>">
+                          <%= truncate(product.name, :length => 45) %>
+                        </div>
+                      </li>
+                  <% end %>
+              <% end %>
+          <% end %>
+    </ul>
+  </section>
+
+</div> <!-- row -->

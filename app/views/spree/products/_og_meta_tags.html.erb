@@ -1,0 +1,14 @@
+<% if params[:controller] == 'spree/products' and params[:action] == 'show' %>
+	<meta property="og:title"              content="<%= @product.name %>" />
+	<% h = {} 
+	h[:taxon_id]=@taxon.id if @taxon
+	h[:variant_id]=params[:variant_id] if params[:variant_id]
+	%>
+
+	<meta property="og:url"                content="<%="#{request.protocol}#{request.host_with_port}/products/#{@product.slug}?#{h.to_query} "%>" />
+	
+	<% variant_image = nil %>
+	<% variant_image =  @product.variant_images.where(:viewable_id => params[:variant_id],:viewable_type=> "Spree::Variant").first if params[:variant_id] %>
+	<% variant_image = @product.variant_images.first if variant_image.nil? %>
+	<meta property="og:image"              content="<%= variant_image.attachment.url rescue '/assets/noimage/small.png' %>" />
+<% end %>

@@ -1,103 +1,54 @@
-# This is a sample Capistrano config file for rubber
+# config valid only for current version of Capistrano
+lock '3.3.5'
 
-set :rails_env, Rubber.env
+set :application, 'artspree3'
+set :repo_url, 'git@github.com:web-site1/spree.git'
 
-on :load do
-  set :application, rubber_env.app_name
-  set :runner,      rubber_env.app_user
-  set :deploy_to,   "/mnt/#{application}-#{Rubber.env}"
-  set :copy_exclude, [".git/*", ".bundle/*", "log/*", ".rvmrc", ".rbenv-version", "tmp/*"]
-  set :assets_role, [:app]
-end
+# Default branch is :master
+ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
-# Use a simple directory tree copy here to make demo easier.
-# You probably want to use your own repository for a real app
-set :scm, :none
-set :repository, "."
-set :deploy_via, :copy
+# Default deploy_to directory is /var/www/my_app_name
+set :deploy_to, "/var/www/#{fetch(:application)}"
 
-# Easier to do system level config as root - probably should do it through
-# sudo in the future.  We use ssh keys for access, so no passwd needed
-set :user, 'root'
-set :password, nil
+# Default value for :scm is :git
+set :scm, :git
+set :ssh_options, { :forward_agent => true }
+set :deploy_via, :remote_cache
 
-# Use sudo with user rails for cap deploy:[stop|start|restart]
-# This way exposed services (mongrel) aren't running as a privileged user
-set :use_sudo, true
+# Setup rvm
+set :rvm_type, :user                     # Defaults to: :auto
+set :rvm_ruby_version, '2.1.5@artspree3 --create'      # Defaults to: 'default'
 
-# How many old releases should be kept around when running "cleanup" task
-set :keep_releases, 3
+# Default value for :format is :pretty
+# set :format, :pretty
 
-# Lets us work with staging instances without having to checkin config files
-# (instance*.yml + rubber*.yml) for a deploy.  This gives us the
-# convenience of not having to checkin files for staging, as well as 
-# the safety of forcing it to be checked in for production.
-set :push_instance_config, Rubber.env != 'production'
+# Default value for :log_level is :debug
+# set :log_level, :debug
 
-# don't waste time bundling gems that don't need to be there 
-set :bundle_without, [:development, :test, :staging] if Rubber.env == 'production'
+# Default value for :pty is false
+# set :pty, true
 
-# Allow us to do N hosts at a time for all tasks - useful when trying
-# to figure out which host in a large set is down:
-# RUBBER_ENV=production MAX_HOSTS=1 cap invoke COMMAND=hostname
-max_hosts = ENV['MAX_HOSTS'].to_i
-default_run_options[:max_hosts] = max_hosts if max_hosts > 0
+# Default value for :linked_files is []
+set :linked_files, fetch(:linked_files, []).push('config/database.yml')
 
-# Allows the tasks defined to fail gracefully if there are no hosts for them.
-# Comment out or use "required_task" for default cap behavior of a hard failure
-rubber.allow_optional_tasks(self)
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'public/spree')
 
-# Wrap tasks in the deploy namespace that have roles so that we can use FILTER
-# with something like a deploy:cold which tries to run deploy:migrate but can't
-# because we filtered out the :db role
-namespace :deploy do
-  rubber.allow_optional_tasks(self)
-  tasks.values.each do |t|
-    if t.options[:roles]
-      task t.name, t.options, &t.body
-    end
-  end
-end
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value fmor keep_releases is 5
+# set :keep_releases, 5
 
 namespace :deploy do
-  namespace :assets do
-    rubber.allow_optional_tasks(self)
-    tasks.values.each do |t|
-      if t.options[:roles]
-        task t.name, t.options, &t.body
-      end
+
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
     end
   end
-end
 
-# load in the deploy scripts installed by vulcanize for each rubber module
-Dir["#{File.dirname(__FILE__)}/rubber/deploy-*.rb"].sort.each do |deploy_file|
-  load deploy_file
-end
-
-# capistrano's deploy:cleanup doesn't play well with FILTER
-after "deploy", "cleanup"
-after "deploy:migrations", "cleanup"
-task :cleanup, :except => { :no_release => true } do
-  count = fetch(:keep_releases, 5).to_i
-  rsudo "chown -R #{rubber_env.app_user}:#{rubber_env.app_user} #{latest_release}"
-
-  rsudo <<-CMD
-    all=$(ls -x1 #{releases_path} | sort -n);
-    keep=$(ls -x1 #{releases_path} | sort -n | tail -n #{count});
-    remove=$(comm -23 <(echo -e "$all") <(echo -e "$keep"));
-    for r in $remove; do rm -rf #{releases_path}/$r; done;
-  CMD
-end
-
-# We need to ensure that rubber:config runs before asset precompilation in Rails, as Rails tries to boot the environment,
-# which means needing to have DB access.  However, if rubber:config hasn't run yet, then the DB config will not have
-# been generated yet.  Rails will fail to boot, asset precompilation will fail to complete, and the deploy will abort.
-if Rubber::Util.has_asset_pipeline?
-  load 'deploy/assets'
-
-  callbacks[:after].delete_if {|c| c.source == "deploy:assets:precompile"}
-  callbacks[:before].delete_if {|c| c.source == "deploy:assets:symlink"}
-  before "deploy:assets:precompile", "deploy:assets:symlink"
-  after "rubber:config", "deploy:assets:precompile"
 end

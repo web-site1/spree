@@ -1,0 +1,92 @@
+<section class="quick-search">
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+        <h3>Ribbon Quick Search</h3>
+      </div>
+      <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 quick-search-form">
+
+        <%= form_tag spree.products_path,id: 'quick_srch_frm',class: "form-inline", method: 'get' %>
+          <%= hidden_field_tag :quick_search,"Y" %>
+          <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select type='search' name='color[]' class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Colors</option>
+              <% srch_opts('color').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('color',o.first)%> ><%= %Q{#{o.first}} %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select name='type[]' class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Types</option>
+              <% srch_opts('type').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('type',o.first)%> ><%= %Q{#{o.first.gsub('-',' ').titlecase}} %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select name="widths[]" class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Widths</option>
+              <% position_sort(srch_opts('widths'),'width').each do |o| %>
+                  <option class="mblo" value="<%= o %>" <%=src_selected('widths',o)%> ><%= %Q{#{o}} %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select name="ribbon_putups[]" class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Put Ups</option>
+              <% position_sort(srch_opts('ribbon_putups'),'ribbon-putup').each do |o| %>
+                  <option class="mblo" value="<%= o %>" <%=src_selected('ribbon_putups',o)%> ><%= %Q{#{o}} %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="mbl form-color col-lg-2 col-md-2 col-sm-2 col-xs-12">
+            <select name='pattern[]' class="form-control select select-primary select-block mbl">
+              <option class="mblo" value="place-holder">All Patterns</option>
+              <% srch_opts('pattern').each do |o| %>
+                  <option class="mblo" value="<%= o.first %>" <%=src_selected('pattern',o.first)%> ><%= %Q{#{o.first}} %></option>
+              <% end %>
+            </select>
+          </div>
+
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 ">
+            <button id="quickclear" type="" class="btn btn-lg btn-info btn-embossed mlm">Clear</button>
+          </div>
+
+        </form>
+
+        <div class="nav-search hidden-lg hidden-md hidden-sm col-xs-12 mbl">
+          <!-- <form class="alt-form" role="search" action="#" method="post">
+            <div id="search">
+              <input type="text" placeholder="Search" />
+              <button type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </form> -->
+          <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
+              <div id="search">
+                <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
+                <button type="submit">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
