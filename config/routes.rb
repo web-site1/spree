@@ -91,6 +91,13 @@ Rails.application.routes.draw do
   get 'NFL-licensed-ribbon-:team', to: redirect('/t/categories/sports/NFL-licensed-ribbon/%{team}')
   get 'CLC-licensed-ribbon-:team', to: redirect('/t/categories/sports/CLC-licensed-ribbon/%{team}')
 
+  get '1-plaid-ribbon-category', to: redirect('/t/categories/ribbons/check-and-plaid')
+  get 'about_artistic_ribbon', to: redirect('/why_shop/about_us')
+  get 'flowers-huge', to: redirect('/t/categories/flowers/4-4-dot-5-inches')
+  get 'paisley-punch-collection', to: redirect('/products/euro-totes-paisley-punch-collection')
+  get 'personalized_ribbon', to: redirect('/why_shop/custom')
+
+
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
 
