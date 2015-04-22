@@ -7,7 +7,7 @@
             <% products.each do |product| %>
                 <li style="width: 174px">
                   <% url = product_url(product, :taxon_id => @taxon.try(:id))  %>
-                  <%= link_to product_image(product, :itemprop => "image",class: "img-responsive"), url, :itemprop => 'url',
+                  <%= link_to product_image(product, :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',
                               title: product.name %>
                 </li>
             <% end %>
