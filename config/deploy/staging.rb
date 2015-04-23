@@ -20,7 +20,7 @@ set :rails_env, 'staging'
 # used to set extended properties on the server.
 
 # TODO remove live after testing
-server 'staging001.artisticribbon.com', user: 'ubuntu', roles: %w{web app live}, my_property: :my_value
+server 'staging001.artisticribbon.com', user: 'ubuntu', roles: %w{web app}, my_property: :my_value
 
 
 # Custom SSH Options
