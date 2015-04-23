@@ -78,5 +78,9 @@ gem 'progress_bar'
 gem 'spree_print_invoice', github: 'spree-contrib/spree_print_invoice', branch: '3-0-stable'
 gem 'spree_mail_settings', github: 'spree-contrib/spree_mail_settings', branch: '3-0-stable'
 
+gem 'spree_sitemap', github: 'spree-contrib/spree_sitemap', branch: '3-0-stable'
+
+
+
 
 #gem 'activemerchant', '~> 1.47'
