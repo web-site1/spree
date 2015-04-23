@@ -19,7 +19,6 @@ set :rails_env, 'staging'
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-# TODO remove live after testing
 server 'staging001.artisticribbon.com', user: 'ubuntu', roles: %w{web app}, my_property: :my_value
 
 
