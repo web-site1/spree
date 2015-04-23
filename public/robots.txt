@@ -15,3 +15,4 @@ Disallow: /user_sessions
 Disallow: /user_registrations
 Disallow: /users
 Disallow: /account
+Sitemap: http://www.artisticribbon.com/sitemap.xml.gz
