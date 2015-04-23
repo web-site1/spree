@@ -34,7 +34,8 @@ grid([1,0], [6,4]).bounding_box do
     address_cell_billing  = make_cell(content: Spree.t(:billing_address), font_style: :bold)
     address_cell_shipping = make_cell(content: Spree.t(:shipping_address), font_style: :bold)
 
-    billing =  "#{bill_address.firstname} #{bill_address.lastname}"
+    billing =  "#{bill_address.company rescue ''}"
+    billing << "\n#{bill_address.firstname} #{bill_address.lastname}"
     billing << "\n#{bill_address.address1}"
     billing << "\n#{bill_address.address2}" unless bill_address.address2.blank?
     billing << "\n#{bill_address.city}, #{bill_address.state_text} #{bill_address.zipcode}"
@@ -44,7 +45,8 @@ grid([1,0], [6,4]).bounding_box do
     billing << "\n#{email}"
 
 
-    shipping =  "#{ship_address.firstname} #{ship_address.lastname}"
+    shipping = "#{ship_address.company rescue ''}"
+    shipping << "\n#{ship_address.firstname} #{ship_address.lastname}"
     shipping << "\n#{ship_address.address1}"
     shipping << "\n#{ship_address.address2}" unless ship_address.address2.blank?
     shipping << "\n#{ship_address.city}, #{ship_address.state_text} #{ship_address.zipcode}"
