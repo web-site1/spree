@@ -38,7 +38,7 @@ Spree::BaseHelper.module_eval do
     end
 
     if params.has_key?(:keywords)
-      meta[:keywords] = %Q{#{meta[:keywords]},#{params[:keywords]}}
+      meta[:keywords] = %Q{#{meta[:keywords]} #{params[:keywords]}}
     end
 
     meta
