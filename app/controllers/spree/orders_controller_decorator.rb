@@ -43,7 +43,7 @@ Spree::OrdersController.class_eval do
           render :json => json_rtn.to_json
       else
           json_rtn.merge!(status: 'success')
-          json_rtn.merge!(mess: %Q{#{variant.sku} Added to cart})
+          json_rtn.merge!(mess: %Q{Item #{variant.sku} Added to cart})
           render :json => json_rtn.to_json
       end
     else
