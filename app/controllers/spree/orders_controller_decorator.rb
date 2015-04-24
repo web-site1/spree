@@ -38,7 +38,7 @@ Spree::OrdersController.class_eval do
     else
       respond_with(order) do |format|
         flash[:notice] = "Item added to cart"
-        format.html { redirect_to request.referer }
+        format.html { redirect_to %Q{#{request.referer}?variant_id=#{variant.id}} }
       end
     end
   end
