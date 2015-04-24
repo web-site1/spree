@@ -37,6 +37,7 @@ Spree::OrdersController.class_eval do
       redirect_back_or_default(spree.root_path)
     else
       respond_with(order) do |format|
+        flash[:notice] = "Item added to cart"
         format.html { redirect_to request.referer }
       end
     end
