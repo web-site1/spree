@@ -32,15 +32,32 @@ Spree::OrdersController.class_eval do
       error = Spree.t(:please_enter_reasonable_quantity)
     end
 
-    if error
-      flash[:error] = error
-      redirect_back_or_default(spree.root_path)
+    json_rtn = {}
+
+    if request.xhr?
+      if error
+          flash[:error] = error
+          #redirect_back_or_default(spree.root_path)
+          json_rtn.merge!(status: 'error')
+          json_rtn.merge!(mess: error)
+          render :json => json_rtn.to_json
+      else
+          json_rtn.merge!(status: 'success')
+          json_rtn.merge!(mess: %Q{#{variant.sku} Added to cart})
+          render :json => json_rtn.to_json
+      end
     else
-      respond_with(order) do |format|
-        flash[:notice] = "Item added to cart"
-        format.html { redirect_to %Q{#{request.referer}?variant_id=#{variant.id}} }
+      if error
+        flash[:error] = error
+        redirect_back_or_default(spree.root_path)
+      else
+        respond_with(order) do |format|
+          flash[:notice] = "Item added to cart"
+          format.html { redirect_to %Q{#{request.referer}?variant_id=#{variant.id}} }
+        end
       end
     end
+
   end
 
 end

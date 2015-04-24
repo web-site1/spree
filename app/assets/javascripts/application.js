@@ -19,6 +19,7 @@
 //= require jcarousel.responsive.js
 //= require main.js
 //= require src_cntrls.js
+//= require add_to_cart_form.js
 
 //= require angular.min.js
 
