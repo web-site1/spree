@@ -111,6 +111,10 @@
 
         </div>
 
+        <div>
+          <a href="<%= request.referer %>" class="continue_shop">Continue Shopping</a>  |  <span class="continue_shop" id="cart2"></span>
+        </div>
+
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-information">
@@ -326,6 +330,9 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/Javascript">
+
+
+
   thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
   function change_variant(event,ui){
     // console.log('=============================')

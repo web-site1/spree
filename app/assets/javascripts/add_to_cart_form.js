@@ -1,6 +1,8 @@
 jQuery(document).ready(function ($) {
 
-
+    setTimeout(function() {
+        $('#cart2').html($('#link-to-cart').html());
+    }, 3000);
     $('#add_to_cart_form').submit(function(){
         $('#add-to-cart-button').attr('disabled', 'disabled');
         data = $(this).serialize();
@@ -13,6 +15,7 @@ jQuery(document).ready(function ($) {
                 if (data.status == 'success') {
                     var o = Spree.fetch_cart();
                     $('#link-to-cart').html(o.responseText);
+                    $('#cart2').html(o.responseText);
 
                 }
                 $('#art_message').html(data.mess) //.fadeIn().delay(3000).fadeOut();
