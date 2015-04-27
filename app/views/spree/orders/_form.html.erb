@@ -10,12 +10,7 @@
     </tr>
   </thead>
   <tbody id="line_items" data-hook>
-    <%
-       if show_delete.nil?
-         show_delete = true
-       end
-    %>
-    <%= render partial: 'spree/orders/line_item', collection: order_form.object.line_items, locals: { order_form: order_form, show_delete: show_delete } %>
+    <%= render partial: 'spree/orders/line_item', collection: order_form.object.line_items, locals: { order_form: order_form } %>
   </tbody>
   <% if @order.adjustments.nonzero.exists? || @order.line_item_adjustments.nonzero.exists? || @order.shipment_adjustments.nonzero.exists? || @order.shipments.any? %>
     <tr class="cart-subtotal">
