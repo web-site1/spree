@@ -34,6 +34,28 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
+    $('#view_cart_btn').click(function(){
+        $('#itm_ord').modal('hide');
+        $.ajax({
+            type: 'GET',
+            url:  '/ajax_cart',
+            data: data,
+            success: function (data)
+            {
+                $('#cart_view_body').html(data);
+                $('#cart_view').modal('show');
+
+            },
+            error: function (data) {
+                alert("Please check your cart!");
+            }
+
+        });
+
+    });
+
+
+
 
 
 

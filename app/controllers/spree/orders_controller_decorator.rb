@@ -14,6 +14,13 @@ Spree::OrdersController.class_eval do
     associate_user
   end
 
+  def ajax_cart
+    @order = current_order || Order.incomplete.find_or_initialize_by(guest_token: cookies.signed[:guest_token])
+    @continue_shopping_path = product_path(@order.line_items.last.variant.product) rescue products_path
+    associate_user
+    render partial: 'ajax_cart',layout: false
+  end
+
   # Adds a new item to the order (creating a new order if none already exists)
   def populate
     order    = current_order(create_order_if_necessary: true)
