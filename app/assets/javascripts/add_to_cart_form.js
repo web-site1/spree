@@ -1,8 +1,5 @@
 jQuery(document).ready(function ($) {
 
-    setTimeout(function() {
-        $('#cart2').html($('#link-to-cart').html());
-    }, 3000);
     $('#add_to_cart_form').submit(function(){
         $('#add-to-cart-button').attr('disabled', 'disabled');
         data = $(this).serialize();
@@ -15,7 +12,6 @@ jQuery(document).ready(function ($) {
                 if (data.status == 'success') {
                     var o = Spree.fetch_cart();
                     var linkinfo =  o.responseText;
-                    $('#cart2').html(linkinfo);
                     $('#link-to-cart').html(linkinfo);
 
 
