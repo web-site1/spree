@@ -155,4 +155,8 @@ module ApplicationHelper
     return rtn.html_safe
   end
 
+  def mobile_agent?
+    request.user_agent =~ /Mobile|webOS/
+  end
+
 end
