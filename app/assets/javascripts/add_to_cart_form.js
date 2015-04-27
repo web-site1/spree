@@ -1,5 +1,17 @@
 jQuery(document).ready(function ($) {
 
+
+    $('#cart_view').on('show', function () {
+        $(this).find('.modal-body').css({
+            width:'auto', //probably not needed
+            height:'auto', //probably not needed
+            'max-height':'100%'
+        });
+    });
+
+
+
+
     $('#add_to_cart_form').submit(function(){
         $('#add-to-cart-button').attr('disabled', 'disabled');
         data = $(this).serialize();
