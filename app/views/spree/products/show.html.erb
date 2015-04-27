@@ -111,8 +111,8 @@
 
         </div>
 
-        <div class="continue_shop">
-          <a href="<%= request.referer %>" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
+        <div>
+          <a href="<%= @product.taxon.permalink rescue request.referer %>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
         </div>
 
       </div>
