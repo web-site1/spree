@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def mobile_agent?
+    request.user_agent =~ /Mobile|webOS/
+  end
+
 end
