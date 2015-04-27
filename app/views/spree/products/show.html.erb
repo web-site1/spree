@@ -13,6 +13,8 @@
           <span id="art_message"></span>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn" id="view_cart_btn" >View Cart</button>
         </div>
       </div>
     </div>
@@ -130,7 +132,7 @@
         </div>
 
         <div>
-          <a href="<%= %Q{/t/@product.cat_taxon.permalink}  rescue request.referer%>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
+          <a href="<%= %Q{/t/#{@product.cat_taxon.permalink}}  rescue request.referer%>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
         </div>
 
       </div>
