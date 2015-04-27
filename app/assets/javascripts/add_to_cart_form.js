@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
                 setTimeout(function() {   //calls click event after a certain time
                     $('#itm_ord').modal('hide');
                     $('#add-to-cart-button').prop("disabled", false);
-                }, 2000);
+                }, 3000);
 
             },
             error: function (data) {
