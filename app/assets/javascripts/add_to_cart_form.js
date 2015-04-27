@@ -15,8 +15,9 @@ jQuery(document).ready(function ($) {
                 if (data.status == 'success') {
                     var o = Spree.fetch_cart();
                     var linkinfo =  o.responseText;
-                    $('#link-to-cart').html(linkinfo);
                     $('#cart2').html(linkinfo);
+                    $('#link-to-cart').html(linkinfo);
+
 
                 }
                 $('#art_message').html(data.mess) //.fadeIn().delay(3000).fadeOut();
