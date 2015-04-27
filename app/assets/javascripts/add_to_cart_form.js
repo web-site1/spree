@@ -21,7 +21,7 @@ jQuery(document).ready(function ($) {
                 setTimeout(function() {   //calls click event after a certain time
                     $('#itm_ord').modal('hide');
                     $('#add-to-cart-button').prop("disabled", false);
-                }, 3000);
+                }, 5000);
 
             },
             error: function (data) {
@@ -33,5 +33,8 @@ jQuery(document).ready(function ($) {
 
         return false;
     });
+
+
+
 
 });

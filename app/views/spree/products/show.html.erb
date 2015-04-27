@@ -19,6 +19,24 @@
   </div>
 
 
+  <div class="modal fade" id="cart_view" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel"></h4>
+        </div>
+        <div class="modal-body" id="cart_view_body">
+
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
   <div class="container" ng-controller="StoreController as store">
@@ -112,7 +130,7 @@
         </div>
 
         <div>
-          <a href="<%= @product.cat_taxon.permalink  rescue request.referer%>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
+          <a href="<%= %Q{/t/@product.cat_taxon.permalink}  rescue request.referer%>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
         </div>
 
       </div>
