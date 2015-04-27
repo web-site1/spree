@@ -179,7 +179,10 @@ div.alert-notice{
       width: 100%;
   }
   */
-  #cart_view .modal-dialog  {width:75%;}
+  #cart_view .modal-dialog  {width:80%;}
+  #cart_view .modal-dialog  {width:60%;}
+  #cart_view .modal-body    {overflow-y: auto;}
+
 
 /* End */
 
