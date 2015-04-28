@@ -25,15 +25,18 @@ jQuery(document).ready(function ($) {
                     var o = Spree.fetch_cart();
                     var linkinfo =  o.responseText;
                     $('#link-to-cart').html(linkinfo);
-
+                    $('#view_cart_btn').click();
 
                 }
                 $('#art_message').html(data.mess) //.fadeIn().delay(3000).fadeOut();
-                $('#itm_ord').modal('show');
+
+
+                //$('#itm_ord').modal('show');
                 setTimeout(function() {   //calls click event after a certain time
-                    $('#itm_ord').modal('hide');
+                    //$('#itm_ord').modal('hide');
                     $('#add-to-cart-button').prop("disabled", false);
                 }, 5000);
+
 
             },
             error: function (data) {
