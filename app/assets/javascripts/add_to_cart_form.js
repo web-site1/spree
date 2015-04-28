@@ -14,7 +14,8 @@ jQuery(document).ready(function ($) {
 
     $('#add_to_cart_form').submit(function(){
         $('#add-to-cart-button').attr('disabled', 'disabled');
-        data = $(this).serialize();
+        var device_type = $('#device_check').val();
+        var data = $(this).serialize();
         $.ajax({
             type: 'POST',
             url:  $(this).attr("action"),
@@ -25,15 +26,25 @@ jQuery(document).ready(function ($) {
                     var o = Spree.fetch_cart();
                     var linkinfo =  o.responseText;
                     $('#link-to-cart').html(linkinfo);
-
+                    if (device_type == 'desktop')
+                    {
+                        see_ajax_cart();
+                    }
 
                 }
                 $('#art_message').html(data.mess) //.fadeIn().delay(3000).fadeOut();
-                $('#itm_ord').modal('show');
+
+
+                if (device_type == 'mobile') {
+                    $('#itm_ord').modal('show');
+                }
                 setTimeout(function() {   //calls click event after a certain time
-                    $('#itm_ord').modal('hide');
+                    if (device_type == 'mobile') {
+                        $('#itm_ord').modal('hide');
+                    }
                     $('#add-to-cart-button').prop("disabled", false);
                 }, 5000);
+
 
             },
             error: function (data) {
@@ -46,12 +57,13 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    $('#view_cart_btn').click(function(){
+    //$('#view_cart_btn').click(function(){
+    function see_ajax_cart(){
         $('#itm_ord').modal('hide');
         $.ajax({
             type: 'GET',
             url:  '/ajax_cart',
-            data: data,
+            data: '',
             success: function (data)
             {
                 $('#cart_view_body').html(data);
@@ -64,7 +76,7 @@ jQuery(document).ready(function ($) {
 
         });
 
-    });
+    };
 
 
 
