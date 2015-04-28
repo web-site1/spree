@@ -22,13 +22,13 @@
         </div>
         <div class="modal-footer ">
           <div class="col-md-4 text-left">
-            <button type="submit" class="btn btn-lg " data-dismiss="modal" >
+            <button type="submit" class="btn btn-sm " data-dismiss="modal" >
               Continue Shopping
             </button>
           </div>
           <div class="col-md-4 text-right">
             <a href="/cart">
-              <%= button_tag class: 'btn btn-lg btn-primary', id: 'update-button' do %>
+              <%= button_tag class: 'btn btn-sm btn-primary', id: 'update-button' do %>
                   Edit Cart
               <% end %>
             </a>
@@ -37,7 +37,7 @@
 
 
             <a href="/checkout">
-              <%= button_tag class: 'btn btn-lg btn-success', id: 'checkout-link', name: 'checkout' do %>
+              <%= button_tag class: 'btn btn-sm btn-success', id: 'checkout-link', name: 'checkout' do %>
                   <%= Spree.t(:checkout) %>
               <% end %>
             </a>
