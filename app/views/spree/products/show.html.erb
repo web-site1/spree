@@ -588,7 +588,8 @@
         if(item_type == 'product'){
           slug = item.slug;
           store.setProduct();
-          setTimeout(function(){$('.colors').trigger('change')},1000);
+          setTimeout(function(){$('#colors_page').select2('val',selected_color,false);},500);
+            //setTimeout(function(){$('.colors').trigger('change')},1000);
         }
 
         if(item_type=='variant'){
