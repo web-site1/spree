@@ -68,9 +68,13 @@ Rails.application.routes.draw do
   get '/1-grosgrain-prints-ribbon-category', to: redirect('/t/categories/ribbons/grosgrain/grosgrain-prints')
   get '/1-velvet-grosgrain-ribbon-category', to: redirect('t/categories/ribbons/velvet/velvet-grosgrain')
   get '/1-:subcat-grosgrain-ribbon-category', to: redirect('/t/categories/ribbons/grosgrain/%{subcat}-grosgrain')
+  get 'grosgrain_ribbon', to: redirect('t/categories/ribbons/grosgrain')
 
   get '/1-dotted-ribbon-category', to: redirect('/t/categories/ribbons/dot-ribbon')
   get '/1-:subcat-velvet-ribbon-category', to: redirect('/t/categories/ribbons/velvet/%{subcat}-velvet')
+  get 'Velvet', to: redirect('/t/categories/ribbons/velvet')
+  get 'crushed_velvet_ribbon', to: redirect('/t/categories/ribbons/velvet/crushed-velvet')
+
   get '/eurototes-:subcat', to: redirect('/t/categories/eurototes/%{subcat}')
   get '/eurototes', to: redirect('/t/categories/eurototes')
 
@@ -92,13 +96,24 @@ Rails.application.routes.draw do
   get '1-:team-MLB-ribbon', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
   get 'NFL-licensed-ribbon-:team', to: redirect('/t/categories/sports/NFL-licensed-ribbon/%{team}')
   get 'CLC-licensed-ribbon-:team', to: redirect('/t/categories/sports/CLC-licensed-ribbon/%{team}')
+  get '1-:team-ribbon-1', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+  get '1-:team-ribbon-2', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+  get '1-:team-ribbon-3', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+  get '1-:team-ribbon-4', to: redirect('/t/categories/sports/MLB-ribbon/%{team}')
+
+
 
   get '1-plaid-ribbon-category', to: redirect('/t/categories/ribbons/check-and-plaid')
   get 'about_artistic_ribbon', to: redirect('/why_shop/about_us')
   get 'flowers-huge', to: redirect('/t/categories/flowers/4-4-dot-5-inches')
   get 'paisley-punch-collection', to: redirect('/products/euro-totes-paisley-punch-collection')
   get 'personalized_ribbon', to: redirect('/why_shop/custom')
-
+  get 'Flowers:num', to: redirect('/t/categories/flowers')
+  get 'flowers', to: redirect('/t/categories/flowers')
+  get 'new-flowers:foo', to: redirect('/products?for_new_flowers=true')
+  get 'artificial_dry_flowers:foo', to: redirect('/t/categories/flowers')
+  get ':foo_flowers_:bar', to: redirect('/t/categories/flowers')
+  get 'happy-mothers-day-ribbon', to: redirect('/t/categories/ribbons/celebration/happy-mothers-day')
 
   # Redirect correctly formatted sub category ribbon requests to new url
   # This works for correctly formatted URLs:  /1-subcat-cat-ribbon-category.htm
