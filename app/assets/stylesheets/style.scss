@@ -110,6 +110,75 @@ ul.ng-social li{
   float:left;
 }
 
+.quick-search{
+  padding-top:0px!important;
+  padding-bottom:12px;
+  
+  h3{
+    padding-top:15px;
+  }
+  .quick-search-form{
+    padding-top:15px;
+    
+    .form-control, .select2-search input[type="text"]{
+      height:30px;
+    }
+    .select2-choice{
+      line-height:1.0;
+      min-height:30px;
+      padding:5px 39px 5px 15px;
+    }
+    #quickclear{
+      line-height: 0.8;
+    }
+  }
+}
+
+
+@media (min-width: 990px) {
+
+  footer{
+    margin-top:30px !important;
+  }
+
+  body.home .main-content.ng-scope {
+    margin-top:0px;
+  }
+
+  .container.ng-scope{
+    margin-top:-50px;
+  }
+
+  .product-display{
+    margin-top:20px;
+  }
+
+  .product-information{
+    margin-top:-28px;
+  }
+
+  .product-information{
+    h1, h2, h3 {
+      margin-top: 15px;
+      margin-bottom: 10px;  
+    }
+
+    .product-settings{
+      margin-top:15px;
+    
+      .row{
+        margin-bottom:10px;
+      }
+
+      #add_to_cart_form{
+        margin-top:-10px;
+      }
+
+    }
+  }
+
+}
+
 
 /*END CSS Changes by Fahad*/
 
