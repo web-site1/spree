@@ -174,7 +174,7 @@
         </div>
 
         <div class="social-icons">
-          <label>Share</label>
+          <label><%= 'Share' if !mobile_agent? %></label>
             <ul ng-social-buttons
                  data-url="store.myModel.FbLikeUrl"
                  data-title="store.myModel.Name"
