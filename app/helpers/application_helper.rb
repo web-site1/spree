@@ -159,4 +159,12 @@ module ApplicationHelper
     request.user_agent =~ /Mobile|webOS/
   end
 
+  def agent_device
+    if mobile_agent?
+      'mobile'
+    else
+      'desktop'
+    end
+  end
+
 end

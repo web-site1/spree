@@ -31,6 +31,7 @@
 </style>
 <div class="main-content search-results-content" itemscope itemtype="http://schema.org/Product" ng-app="spreeStore">
 
+  <input type="hidden" value="<%= agent_device %>" id="device_check">
 
   <div class="modal fade" id="itm_ord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -40,18 +41,35 @@
           <h4 class="modal-title" id="myModalLabel"></h4>
         </div>
         <div class="modal-body">
-          <span id="art_message"></span>
+          <% if mobile_agent? %>
+            <span id="art_message"></span>
+          <% end %>
         </div>
         <div class="modal-footer ">
-          <div class="col-md-12 text-center">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <% if mobile_agent? %>
-                <a href="/cart">
-                    <button type="button" class="btn" id="" >View Cart</button>
-                </a>
-              <% else %>
-                <button type="button" class="btn" id="view_cart_btn" >View Cart</button>
+          <div class="col-md-2 text-left">
+            <button type="submit" class="btn btn-sm " data-dismiss="modal" >
+              Continue Shopping
+            </button>
+          </div>
+          <div class="col-md-2 ">
+          </div>
+          <div class="col-md-2 text-right">
+            <a href="/cart">
+              <%= button_tag class: 'btn btn-sm btn-primary', id: 'update-button' do %>
+                  Edit Cart
               <% end %>
+            </a>
+          </div>
+          <div class="col-md-2 ">
+          </div>
+          <div class="col-md-2 text-right">
+            <a href="/checkout">
+              <%= button_tag class: 'btn btn-sm btn-success', id: 'checkout-link', name: 'checkout' do %>
+                  <%= Spree.t(:checkout) %>
+              <% end %>
+            </a>
+          </div>
+          <div class="col-md-2 ">
           </div>
         </div>
       </div>
@@ -64,12 +82,37 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Shopping Cart</h4>
+          <h4 class="modal-title" id="myModalLabel">
+            Shopping Cart<br>
+            <% if !mobile_agent? %>
+                <span id="art_message"></span>
+            <% end %>
+          </h4>
         </div>
         <div class="modal-body" id="cart_view_body">
 
         </div>
         <div class="modal-footer">
+          <div class="col-md-4 text-left">
+            <button type="submit" class="btn btn-lg " data-dismiss="modal" >
+              Continue Shopping
+            </button>
+          </div>
+          <div class="col-md-4 text-right">
+          </div>
+          <div class="col-md-4 text-right">
+              <a href="/cart">
+                  <%= button_tag class: 'btn btn-lg btn-primary', id: 'update-button' do %>
+                        Edit Cart
+                  <% end %>
+              </a>
+
+              <a href="/checkout">
+                  <%= button_tag class: 'btn btn-lg btn-success', id: 'checkout-link', name: 'checkout' do %>
+                    <%= Spree.t(:checkout) %>
+                  <% end %>
+              </a>
+          </div>
         </div>
       </div>
     </div>
@@ -160,7 +203,7 @@
         </div>
 
         <div class="social-icons">
-          <label>Share</label>
+          <label><%= 'Share' if !mobile_agent? %></label>
             <ul ng-social-buttons
                  data-url="store.myModel.FbLikeUrl"
                  data-title="store.myModel.Name"
@@ -174,7 +217,12 @@
         </div>
 
         <div>
-          <a href="<%= %Q{/t/#{@product.cat_taxon.permalink}}  rescue request.referer%>" class="continue_shop" >Continue Shopping</a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
+          <%
+            go_back_link = %Q{/t/#{@product.cat_taxon.permalink}}  rescue request.referer
+            go_back_text = %Q{Go back to #{@product.cat_taxon.name}} rescue 'Go Back'
+
+          %>
+          <a href="<%= go_back_link %>" class="continue_shop" ><%= go_back_text %></a>&nbsp;<!--|&nbsp; <div id="cart2"></div> -->
         </div>
 
       </div>
