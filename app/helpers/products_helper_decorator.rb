@@ -6,8 +6,8 @@ Spree::ProductsHelper.module_eval do
   end
 
   def calculate_product_image_dimensions(product)
-  	width = (product.variant_images.first.attachment_width*1.2 rescue 0)
-  	height = (product.variant_images.first.attachment_height*1.2 rescue 0)
+  	width = (product.variant_images.first.attachment_width*2.0 rescue 0)
+  	height = (product.variant_images.first.attachment_height*2.0 rescue 0)
   	if width ==0
   		width = 500
   	end
