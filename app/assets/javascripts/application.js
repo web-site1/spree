@@ -17,6 +17,8 @@
 //= require flat-ui-pro.min.js
 //= require jquery.jcarousel.js
 //= require jcarousel.responsive.js
+//= require imagezoom.js
+
 //= require main.js
 //= require src_cntrls.js
 //= require add_to_cart_form.js

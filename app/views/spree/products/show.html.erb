@@ -3,6 +3,31 @@
     max-width:70%;
   }
 
+  <% width,height = calculate_product_image_dimensions(@product) %>
+  #image_zoom{
+    width:<%= width.to_s %>px;
+    height:<%= height.to_s %>px; 
+    border:5px solid #eee;
+    background:#fff;
+    color:#333;
+    position:absolute;
+    top:0px;
+    left:<%= (550 - 240)/2 +280 %>px;
+    overflow:hidden;
+    -moz-box-shadow:0 0 10px #777;
+    -webkit-box-shadow:0 0 10px #777;
+    box-shadow:0 0 10px #777;
+    /* vertical and horizontal alignment used for preloader text */
+    line-height:<% height/2 %>px;
+    text-align:center;
+    z-index:99999;
+  }
+  
+  #image_zoom img{
+    width:150%;
+    height:150%;
+  }
+
 </style>
 <div class="main-content search-results-content" itemscope itemtype="http://schema.org/Product" ng-app="spreeStore">
 
@@ -66,10 +91,14 @@
             <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
           </ol>
           <!-- Wrapper for slides -->
+
+
           <div class="carousel-inner">
             <div class="item active product_main">
               <meta itemprop="image" content="<%=@product.variant_images.first.attachment.url rescue ''%>" />
-              <img alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}">
+              <a ng-href="{{store.selected_image_large || store.no_image }}" class="zoom">
+                <img alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}" >       
+              </a>
             </div>
           </div>
           <!-- Controls -->
@@ -362,9 +391,7 @@
 
 <!-- Non Reusable page specific Javascript -->
   
-<script type="text/Javascript">
-
-
+<script type="text/javascript">
 
   thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
   function change_variant(event,ui){
@@ -565,6 +592,13 @@
         }
       };
 
+      this.find_variant_by_color = function(color){
+        for(var i=0;i<store.product.variants.length;i++){
+          if(store.product.variants[i].color==color)
+            return store.product.variants[i]
+        }
+      }
+
       this.options_for_colors = [];
       
       this.colors_class=null;
@@ -580,15 +614,19 @@
       this.selected_count=null;
 
       this.selected_image=null;
+      this.selected_image_large=null;
+      
       this.related_products=null;
 
       this.thumb_clicked = function(item, item_type){
         i = item;
-        store.selected_image = item.image;
+        store.selected_image = store.myModel.ImageUrl = item.image;
+        store.selected_image_large = item.image_large;
+        
         if(item_type == 'product'){
           slug = item.slug;
           store.setProduct();
-          setTimeout(function(){$('#colors_page').select2('val',selected_color,false);},500);
+          setTimeout(function(){$('#colors_page').select2('val',selected_color,false);},100);
             //setTimeout(function(){$('.colors').trigger('change')},1000);
         }
 
@@ -596,21 +634,18 @@
           // set color as well.
           if(item.color!=''){
             selected_color = store.selected_color = item.color;
-            setTimeout(function(){$("select").select2({dropdownCssClass: 'dropdown-inverse'});},1000);
-            var selected_imgs = $('img[title="'+selected_color+'"]');
-            if(selected_imgs.length>0){
-              var img_url = $(selected_imgs[0]).attr('purl');
-              if(img_url!=""){
-                store.selected_image = store.myModel.ImageUrl = img_url;
-              }
-            }
+            setTimeout(function(){$("select").select2({dropdownCssClass: 'dropdown-inverse'});},100);
           }
+
           change_variant_by_id(item.id);
           store.myModel.FbLikeUrl = fblikeurl + '&variant_id='+item.id;
           jQuery('#multiple-items').jcarousel('reload');   
 
         }
-        
+        setTimeout(function(){
+          $('a.zoom').easyZoom({parent: '.product-display'});
+        },100);
+
         // if(p.variants){ // check if product or variant;
         //   store.selected_color = p.colors[0];
         // }else{
@@ -627,26 +662,31 @@
                 selected_color = store.selected_color;
                 slug = store.find_product_by_color(selected_color).slug;
                 store.setProduct();
-                setTimeout(function(){$('.colors').trigger('change')},1000);
+                setTimeout(function(){$('.colors').trigger('change')},100);
+                setTimeout(function(){
+                  $('a.zoom').easyZoom({parent: '.product-display'});
+                },100);
 
         }else{
                 
                 selected_color = store.selected_color; //$(this).val();
-                var selected_imgs = $('img[title="'+selected_color+'"]');
-                if(selected_imgs.length>0){
-                  var img_url = $(selected_imgs[0]).attr('purl');
-                  if(img_url!=""){
-                    console.log('set img url');
-                    store.selected_image = store.myModel.ImageUrl = img_url;
-                  }
+                variant = store.find_variant_by_color(selected_color);
+
+                if(variant.image){
+                  store.selected_image = store.myModel.ImageUrl = variant.image;
+                  selected_img_large = store.selected_image_large = variant.image_large;
+                    
+                  // update zoom plugin
+                  setTimeout(function(){
+                    $('a.zoom').easyZoom({parent: '.product-display'});
+                  },100);
                 }
+              
                 change_variant();
+                
                 store.myModel.FbLikeUrl = fblikeurl + '&variant_id=' + $('#variant_id').val();
                 if(store.product.variant_images_count > 1)
                   jQuery('#multiple-items').jcarousel('reload');
-
-
-
         }
 
       }
@@ -678,7 +718,7 @@
             $('.colors').val(col);
             // $('.colors').select2({dropdownCssClass: 'dropdown-inverse'});
             //setTimeout(function(){$('.colors').trigger('change')},1000);
-            setTimeout(function(){$('.colors').trigger('change')},1000);
+            setTimeout(function(){$('.colors').trigger('change')},100);
           }
         }else if(store.product.colors.length>1){
           store.colors_class = "color-selector";
@@ -689,7 +729,7 @@
             selected_color = this.selected_color = store.options_for_colors[0].value;
             $('.colors').val(store.selected_color.value);
           }
-          setTimeout(function(){$('.colors').trigger('change')},500);
+          setTimeout(function(){$('.colors').trigger('change')},100);
         }
 
         
@@ -737,6 +777,7 @@
 
 
               store.selected_image = store.product.image;
+              store.selected_image_large = store.product.image_large;
 
               // remove dots from sliders
               $('.ui-slider-segment').remove()
@@ -828,9 +869,8 @@
               set_slider_width('#length-slider',lengths);
               set_slider_width('#count-slider',counts);
 
-              
               // images carousel
-              setTimeout(function(){jQuery('#multiple-items').jcarousel('reload')},500);   
+              setTimeout(function(){jQuery('#multiple-items').jcarousel('reload')},100);   
 
 
             },100);
@@ -848,20 +888,23 @@
       this.setProduct();
       setTimeout(function(){
         jQuery('#multiple-items').jcarousel('reload');   
-      },500);
+      },100);
+      setTimeout(function(){
+        $('a.zoom').easyZoom({parent: '.product-display'});
+      },3000);
 
 
       <% if params[:variant_id] %>
         setTimeout(function(){
           change_variant_by_id(<%= params[:variant_id]%>);
-        },500);
+        },100);
       <% end %>
 
       <% if @product.colors.uniq.length == 1 %>
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
           store.products = data;
           store.setProduct();
-          setTimeout(function(){$('.colors').trigger('change')},1000);
+          setTimeout(function(){$('.colors').trigger('change')},100);
 
         }).
           error(function(data, status, headers, config) {
@@ -873,7 +916,7 @@
         store.related_products = data.products;
         setTimeout(function(){
           jQuery('#related-items').jcarousel('reload');   
-        },500);
+        },100);
       })
 
     }]);
@@ -1153,8 +1196,6 @@
 
 
   })();
-
-
 
 
 </script>

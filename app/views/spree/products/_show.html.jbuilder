@@ -5,6 +5,7 @@
 	json.taxon product.taxons.first.name rescue ''
 	json.taxon_parent product.taxons.first.parent.name rescue ''
 	json.image product.images.first.attachment.url(:product) rescue ''
+	json.image_large product.images.first.attachment.url(:large) rescue ''
 	json.variant_images_count product.variant_images.count
 	json.colors product.colors.uniq
 	json.counts product.counts.uniq.sort{ |a,b| a.to_f <=> b.to_f }
@@ -33,9 +34,10 @@
 		json.id variant.id
 		json.sku variant.sku
 		json.price display_price(variant)
-		json.image variant.images.first.attachment.url(:product) rescue ''
+		json.image variant.images.first.attachment.url(:large) rescue ''
 		json.image_mini variant.images.first.attachment.url(:mini) rescue '' 
-		
+		json.image_large variant.images.first.attachment.url(:large) rescue '' 
+
 		json.can_supply variant.can_supply?	
 		json.width variant.option_value('width') || ''
 		json.putup variant.option_value('ribbon-putup') || ''
