@@ -163,28 +163,13 @@ button.add-to-cart {
 		max-width: 130px;
 	}
 	.product-settings {
-		#width-slider.ui-slider.ui-slider-horizontal {
+		.ui-slider.ui-slider-horizontal {
 			max-width: 320px;
 			min-width: 320px;
 			.labels {
-//				background: url('../images/product-page/labels-slider-width-2.png') no-repeat;
 				width: 100%;
-				
-				height: 22px;
-				top: 17px;
-				position: absolute;
-				left: -17px;
-			}
-		}
-		#length-slider.ui-slider.ui-slider-horizontal {
-			max-width: 320px;
-			min-width: 320px;
-			.labels {
-//				background: url('../images/product-page/labels-slider-length-2.png') no-repeat;
-				width: 100%;
-				max-width: 320px;
-				overflow: hidden;
-				height: 22px;
+/*				max-width: 320px;
+*/				height: 22px;
 				top: 17px;
 				position: absolute;
 				left: -17px;
@@ -194,26 +179,11 @@ button.add-to-cart {
 }
 @media (max-width: 990px) {
 	.product-settings {
-		#width-slider.ui-slider.ui-slider-horizontal {
+		.ui-slider.ui-slider-horizontal {
 			max-width: 460px;
 			min-width: 460px;
 			.labels {
-//				background: url('../images/product-page/labels-slider-width.png') no-repeat;
 				width: 100%;
-//				min-width: 484px;
-				height: 22px;
-				top: 17px;
-				position: absolute;
-				left: -17px;
-			}
-		}
-		#length-slider.ui-slider.ui-slider-horizontal {
-			max-width: 460px;
-			min-width: 460px;
-			.labels {
-//				background: url('../images/product-page/labels-slider-length.png') no-repeat;
-				width: 100%;
-//				min-width: 484px;
 				height: 22px;
 				top: 17px;
 				position: absolute;
@@ -224,31 +194,16 @@ button.add-to-cart {
 }
 @media (max-width: 600px) {
 	.product-settings {
-		#width-slider.ui-slider.ui-slider-horizontal {
+		.ui-slider.ui-slider-horizontal {
 			max-width: 320px;
 			min-width: 320px;
 			.labels {
-//				background: url('../images/product-page/labels-slider-width-2.png') no-repeat;
 				width: 100%;
 				overflow: hidden;
 				height: 22px;
 				top: 17px;
 				position: absolute;
 				left: -17px;
-			}
-		}
-		#length-slider.ui-slider.ui-slider-horizontal {
-			max-width: 320px;
-			min-width: 320px;
-			.labels {
-                background:image-url('labels-slider-length-2.png') no-repeat;
-				width: 100%;
-				max-width: 320px;
-				overflow: hidden;
-				height: 22px;
-				top: 17px;
-				position: absolute;
-				left: -14px;
 			}
 		}
 	}
@@ -272,7 +227,8 @@ button.add-to-cart {
   		margin: 10px auto 20px auto;
   		display: table;
   		label {
-	  		width: 100%;
+	  		width: auto;
+	  		line-height:69px;
   			text-align: center;
   			display: block;
   		}
