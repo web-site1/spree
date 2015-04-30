@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_headers(expiry)
+    expires_in expiry, public: true
+  end
+
 end
