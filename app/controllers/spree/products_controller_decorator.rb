@@ -21,6 +21,8 @@ Spree::ProductsController.class_eval do
 
 
   def show
+    # Do not async load javascript for this page.
+    @async = false
   	# select correct taxon
   	if params[:taxon_id]
 	  	@taxon = Spree::Taxon.find(params[:taxon_id]) 
