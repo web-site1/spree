@@ -28,7 +28,8 @@ Version: 1.0-artribbon
 @import "search-results";
 @import "cart";
 @import "product-page";
-
+@import "slick";
+@import "slick-theme";
 
 /*CSS Changes by Fahad*/
 
@@ -66,8 +67,8 @@ Version: 1.0-artribbon
 }
 
 
-.jcarousel li{
-  width:106px;
+.jcarousel.related-items li{
+  width:106px !important;
 }
 
 .multiple-items.jcarousel img{
@@ -80,7 +81,6 @@ Version: 1.0-artribbon
 
 .product_main{
   height:240px;
-  line-height: 240px;
   text-align:center;
 }
 
@@ -92,8 +92,8 @@ Version: 1.0-artribbon
 }
 
 .social-icons{
-  margin-top: 25px !important;
-  margin-bottom: 100px !important;
+  margin-top: 25px;
+  margin-bottom: 100px;
 }
 
 .social-icons label{

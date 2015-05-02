@@ -4,15 +4,17 @@
   }
 
   <% width,height = calculate_product_image_dimensions(@product) %>
-  #image_zoom{
+  .easyzoom--adjacent .easyzoom-flyout{
     width:<%= width.to_s %>px;
     height:<%= height.to_s %>px; 
+  }
+
+  .easyzoom-flyout{
     border:5px solid #eee;
     background:#fff;
     color:#333;
     position:absolute;
     top:0px;
-    left:<%= (550 - 240)/2 +280 %>px;
     overflow:hidden;
     -moz-box-shadow:0 0 10px #777;
     -webkit-box-shadow:0 0 10px #777;
@@ -23,9 +25,67 @@
     z-index:99999;
   }
   
-  #image_zoom img{
+  .slider-for .slick-list{
+    overflow: visible;
+  }  
+
+  .slider-nav.ng-scope.slick-initialized.slick-slider{
+    z-index:3;
+  }
+
+  .slider-for .slick-slide img{
+    display:none !important;
+  }
+
+  .slider-for .slick-active img{
+    display:block !important;
+  }
+
+  .slider-for .slick-track{
+    height:240px;
+  }
+
+  html, body {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  
+  .back-btn{
+    display:none;
+    background: white;
+    border: 1px solid;
+    margin: 20px;
+    position: absolute;
+  }
+  
+  .h .back-btn{
+    display:block;
+    z-index:500;
+  }
+
+<% if (@product.variant_images.first.attachment_width rescue 0) <= 300 or (@product.variant_images.first.attachment_height rescue 0) <= 200  %>
+ 
+  .easyzoom-flyout img{
     width:150%;
     height:150%;
+  }
+<% end %>
+
+  .h{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    background: white;
+    margin-bottom: 0px;
+  }
+
+  .b{
+    bottom:0px;
+    position:absolute;
+    margin-left:0px;
+    width:100%;
   }
 
 </style>
@@ -129,6 +189,8 @@
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 product-display">
 
         <div id="homepage-carousel" class="carousel slide" data-interval="false">
+          <button class="btn back-btn">Back</button>
+
           <!-- Indicators -->
           <ol class="carousel-indicators">
             <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
@@ -136,69 +198,89 @@
           <!-- Wrapper for slides -->
 
 
-          <div class="carousel-inner">
+          <div style="overflow:visible;z-index:400;">
             <div class="item active product_main">
               <meta itemprop="image" content="<%=@product.variant_images.first.attachment.url rescue ''%>" />
-              <a ng-href="{{store.selected_image_large || store.no_image }}" class="zoom">
-                <img alt="{{store.product.name}}" ng-src="{{store.selected_image || store.no_image }}" >       
-              </a>
+              
+              <div ng-if="(store.product.colors.length<=1 || store.product.variant_images_count==0)&& store.products.length==1" class="image_zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent' %>" style="margin-top:60px;">
+                <a ng-href="{{store.product.image_large || store.no_image }}">
+                  <img alt="{{store.product.name}}" ng-src="{{store.product.image || store.no_image }}" >       
+                </a>
+              </div>
+              
+
+              <div class="slider-for" ng-if="store.product.colors.length==1 && store.products.length > 1">
+                  <div ng-repeat="product in store.products" id="{{product.id}}">
+                    <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%> ">
+                      <a ng-href="{{product.image_large || store.no_image }}">
+                        <img alt="{{product.name}}" ng-src="{{product.image || store.no_image }}" >       
+                      </a>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="slider-for" ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
+                <div ng-if="store.product.master.image_mini" id='{{store.product.master.id}}'>
+                  
+                  <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%>">
+                    <a ng-href="{{store.product.master.image_large || store.no_image }}">
+                      <img alt="{{store.product.name}}" ng-src="{{store.product.master.image || store.no_image }}" >       
+                    </a>
+                  </div>
+
+                </div>
+                <div ng-repeat="variant in store.product.variants" id="{{variant.id}}">
+                  
+                  <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%>">
+                    <a ng-href="{{variant.image_large || store.no_image }}">
+                      <img alt="{{store.product.name}}" ng-src="{{variant.image || store.no_image }}" >       
+                    </a>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
           <!-- Controls -->
           <!-- <a class="left carousel-control fui-arrow-left" href="#homepage-carousel" data-slide="prev"></a>
           <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a> -->
-        </div>
+          
 
-        <div class="row">
+          <div class="alert" style="z-index:5;background:white;text-align:center;bottom:70px;width:100%;">
+            click/swipe above to zoom or change
+          </div>
 
-          <div class="col-lg-12">
 
-            <div class="jcarousel-wrapper hide hidden">
-              <div class="jcarousel multiplex-items" id="multiplex-items">
-                <ul>
-                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-1.jpg", class: "img-responsive" %></li>
-                  <li><%= image_tag "product-page/small-2.jpg", class: "img-responsive" %></li>
-                </ul>
-              </div>
+          <div class="row thumb-row">
 
-              <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-              <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+            <div class="col-lg-12">
 
-              <p class="jcarousel-pagination"></p>
-            </div>
+                  <div class="slider-nav" ng-if="store.product.colors.length==1 && store.products.length > 1">
+                      <div ng-repeat="product in store.products" id="t_{{product.id}}">
+                        <a href="" ng-click="store.thumb_clicked(product,'product')">
+                          <img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="" title="{{product.colors[0]}}"/>
+                        </a>
+                      </div>
+                  </div>
 
-            <div class="jcarousel-wrapper">
-              <div class="jcarousel multiple-items" id="multiple-items">
-                <ul ng-if="store.product.colors.length==1 && store.products.length > 1">
-                    <li ng-repeat="product in store.products" >
-                      <a href="" ng-click="store.thumb_clicked(product,'product')"><img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/></a>
-                    </li>
-                </ul>
-                <ul ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
-                  <li ng-show="store.product.master.image_mini">
-                    <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')"><img ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color img-responsive" title="{{product.colors[0]}}"/></a>
-                  </li>
-                  <li ng-repeat="variant in store.product.variants">
-                    <a href="" ng-click="store.thumb_clicked(variant,'variant')" ><img ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color img-responsive" title="{{variant.color}}"/></a>
-                  </li>
-                </ul>
-              </div>
+                  <div class="slider-nav" ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
+                    <div ng-show="store.product.variant_images_count == 1" id='t_{{store.product.master.id}}'>
+                      <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')">
+                        <img style="height:60px;" ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color" title="{{product.colors[0]}}"/>
+                      </a>
+                    </div>
+                    <div ng-repeat="variant in store.product.variants" id='t_{{variant.id}}'>
+                      <a href="" ng-click="store.thumb_clicked(variant,'variant')" >
+                        <img style="height:60px;" ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color" title="{{variant.color}}"/>
+                      </a>
+                    </div>
+                  </ul>
+                </div>
 
-              <span ng-show="(store.product.colors.length == 1 && store.products.length > 3) || store.product.variant_images_count > 3">
-                  <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-                  <a href="#" class="jcarousel-control-next">&rsaquo;</a>
-              </span>
-
-              <p class="jcarousel-pagination"></p>
             </div>
 
           </div>
+
 
         </div>
 
@@ -417,7 +499,8 @@
           <div class="jcarousel related-items" id="related-items">
             <ul>
               <li ng-repeat="related_product in store.related_products">
-                <a title="{{related_product.name}}" ng-href="{{related_product.url}}"><img ng-src="{{related_product.image}}"  class = "img-responsive" /></a>
+                <a title="{{related_product.name}}" ng-href="{{related_product.url}}">
+                <img ng-src="{{related_product.image}}"  class = "img-responsive" /></a>
               </li>
             </ul>
           </div>
@@ -440,72 +523,177 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/javascript">
+  var mobile_agent = <%= mobile_agent? ? 'true' : 'false' %>;
+
+  function setup_sliders(){
+    setTimeout(function(){
+      console.log('============================ ///////////////////////');
+      $('.slider-for').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slider-nav',
+      });
+
+      
+      $('.slider-nav').slick({
+        // centerMode: true,
+        slidesToShow: 5,
+        slidesToScroll: 5,
+        dots: false,
+        // focusOnSelect: false,
+        swiptToSlide:true,
+        arrows:true,
+        infinit:true
+      });
+
+      $('.slider-for').on('afterChange', function(event, slick, currentSlide){
+        e = event;
+        s = slick;
+
+        console.log(event)
+        console.log(slick);
+        console.log(currentSlide);
+        // check if product is same if not then switch product
+        if(product.colors.length == 1){
+          var indx = get_product_index(slug);
+          if(currentSlide != indx){
+            t_id = $(slick.$slides[slick.currentSlide]).attr('id');
+            $('#t_'+t_id+' a').trigger('click');                  
+          //   console.log('change product')
+          //   var p = products[currentSlide];
+          //   $('.colors').val(p.colors[0]);
+          //   $('.colors').trigger('change');
+          } 
+        }else{
+          console.log(currentSlide);
+
+          if(v_offset == 0){
+            currentSlide=currentSlide-v_offset;
+            if(currentSlide==-1) product.variants.length-1;
+          }
+
+          var v = product.variants[currentSlide];
+    
+          if(v && variant.id != v.id)
+          {
+            t_id = $(slick.$slides[slick.currentSlide]).attr('id');
+            $('#t_'+t_id+' a').trigger('click');
+          }
+          //$('.colors').val(v.color);
+          //$('.colors').trigger(v.color);
+        }
+
+      });
+
+      if(!mobile_agent)
+        setTimeout(function(){$('.slider-for .zoom').easyZoom();},100);
+      
+      if(mobile_agent && window.innerWidth < 500){
+          setTimeout(function(){$("html, body").animate({ scrollTop: "435px" },function(){
+            $(window).scrollTop(435);
+          });},1000);  
+        }
+    
+    },200);
+  }
+  
+  function find_product_by_color(color){
+    for(var i=0;i<products.length;i++){
+      if(products[i].colors.indexOf(color) != -1)
+        return products[i]
+    }
+  }
+
+  function get_variant_index(variant){
+    for(var i =0;i<product.variants.length;i++){
+      if(variant.id == product.variants[i].id)
+        return i;
+    }
+    return -1;
+  }
+  function get_product_index(slug){
+    for(var i=0; i<products.length;i++){
+      if(products[i].slug == product.slug)
+        return i; 
+    }
+    return -1;
+  }
+
+  function set_main_slider(product_index){
+    if(product_index != $('.slider-for').slick('slickCurrentSlide'))
+      $('.slider-for').slick('slickGoTo',product_index)
+  }
 
   thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
+  
   function change_variant(event,ui){
     // console.log('=============================')
     // console.log(product.master.id);
-    if(variants.length >0 ){
-      var width_index = $("#width-slider").slider("value")*1-1;
-      var diameter_index = $("#diameter-slider").slider("value")*1-1;
-      var tote_index = $("#tote-slider").slider("value")*1-1;
-      var putup_index = $("#putup-slider").slider("value")*1-1;
-      var length_index = $("#length-slider").slider("value")*1-1;
-      var count_index = $("#count-slider").slider("value")*1-1;
-      // var colors_index = colors.indexOf($(".colors_variant").val());
-      
+    setTimeout(function(){
+      if(variants.length >0 ){
+        var width_index = $("#width-slider").slider("value")*1-1;
+        var diameter_index = $("#diameter-slider").slider("value")*1-1;
+        var tote_index = $("#tote-slider").slider("value")*1-1;
+        var putup_index = $("#putup-slider").slider("value")*1-1;
+        var length_index = $("#length-slider").slider("value")*1-1;
+        var count_index = $("#count-slider").slider("value")*1-1;
+        // var colors_index = colors.indexOf($(".colors_variant").val());
+        
 
-      selected_width = widths.length > 1 ? widths[width_index] : (widths.length==0 ? '' : widths[0]);
-      selected_diameter = diameters.length>1 ? diameters[diameter_index] : (diameters.length==0 ? '' : diameters[0]);
-      selected_tote = totes.length > 1 ? totes[tote_index] : (totes.length==0 ? '' : totes[0]);
-      selected_putup = putups.length > 1 ? putups[putup_index] : (putups.length==0 ? '' : putups[0]);
-      selected_length = lengths.length > 1 ? lengths[length_index] : (lengths.length==0 ? '' : lengths[0]);
-      selected_count = counts.length > 1 ? counts[count_index] : (counts.length==0 ? '' : counts[0]);
-      
-      // selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : $('#color-selector').val());//colors[0]);
+        selected_width = widths.length > 1 ? widths[width_index] : (widths.length==0 ? '' : widths[0]);
+        selected_diameter = diameters.length>1 ? diameters[diameter_index] : (diameters.length==0 ? '' : diameters[0]);
+        selected_tote = totes.length > 1 ? totes[tote_index] : (totes.length==0 ? '' : totes[0]);
+        selected_putup = putups.length > 1 ? putups[putup_index] : (putups.length==0 ? '' : putups[0]);
+        selected_length = lengths.length > 1 ? lengths[length_index] : (lengths.length==0 ? '' : lengths[0]);
+        selected_count = counts.length > 1 ? counts[count_index] : (counts.length==0 ? '' : counts[0]);
+        
+        // selected_color = colors.length > 1 ? $('#color-selector').val() : (colors.length==0 ? '' : $('#color-selector').val());//colors[0]);
 
-      // console.log('selected_width: '+selected_width);
-      // console.log('selected_putup: '+selected_putup);
-      selected_variant = -1;
-      $.each(variants,function(index,value){
-        if( value[1].toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-') && 
-            value[2].toLowerCase().replace(' ','-')==selected_putup.toLowerCase().replace(' ','-') && 
-            value[6].toLowerCase().replace(' ','-')==selected_diameter.toLowerCase().replace(' ','-') && 
-            value[7].toLowerCase().replace(' ','-')==selected_length.toLowerCase().replace(' ','-') && 
-            value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase().replace(' ','-') && 
-            value[9].toLowerCase().replace(' ','-') == selected_color.toLowerCase().replace(' ','-') &&
-            value[10].toLowerCase().replace(' ','-') == selected_count.toLowerCase().replace(' ','-')){
-          selected_variant = index;
+        // console.log('selected_width: '+selected_width);
+        // console.log('selected_putup: '+selected_putup);
+        selected_variant = -1;
+        $.each(variants,function(index,value){
+          if( value[1].toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-') && 
+              value[2].toLowerCase().replace(' ','-')==selected_putup.toLowerCase().replace(' ','-') && 
+              value[6].toLowerCase().replace(' ','-')==selected_diameter.toLowerCase().replace(' ','-') && 
+              value[7].toLowerCase().replace(' ','-')==selected_length.toLowerCase().replace(' ','-') && 
+              value[8].toLowerCase().replace(' ','-')==selected_tote.toLowerCase().replace(' ','-') && 
+              value[9].toLowerCase().replace(' ','-') == selected_color.toLowerCase().replace(' ','-') &&
+              value[10].toLowerCase().replace(' ','-') == selected_count.toLowerCase().replace(' ','-')){
+            selected_variant = index;
+          }
+        });
+
+        if(selected_variant==-1){
+          $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
+          $('#add-to-cart-button').hide();
+          $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+        }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
+          $('#variant_id').val(variants[selected_variant][0]);
+          $('.price span').html(variants[selected_variant][3]);
+          $('#add-to-cart-button').show();
+          $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
+          // for(var i = 0; i < product.variants.length; i++){
+          //   if(product.variants[i].id == variants[selected_variant][0]){
+          //     if(product.variants[i].image)
+          //       $('.product_main img').attr('ng-src',product.variants[i].image);
+          //   }
+          // }
+          // console.log("variant_found");
+        }else{ // out of stock
+          $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
+          $('#add-to-cart-button').hide();
+          $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
         }
-      });
-
-      if(selected_variant==-1){
-        $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
-        $('#add-to-cart-button').hide();
-        $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
-      }else if(variants[selected_variant][4]){ // can supply (i.e not out of stock)
-        $('#variant_id').val(variants[selected_variant][0]);
-        $('.price span').html(variants[selected_variant][3]);
+      }else{
+        $('#variant_id').val(product.master.id);
+        $('.price span').html(product.master.price);
         $('#add-to-cart-button').show();
-        $('.product-details ul #sku').html('<strong>SKU</strong> : '+variants[selected_variant][5]);
-        // for(var i = 0; i < product.variants.length; i++){
-        //   if(product.variants[i].id == variants[selected_variant][0]){
-        //     if(product.variants[i].image)
-        //       $('.product_main img').attr('ng-src',product.variants[i].image);
-        //   }
-        // }
-        // console.log("variant_found");
-      }else{ // out of stock
-        $('.price span').html('<span style="color:red;font-size:24px">'+out_of_stock_text+'</span>');
-        $('#add-to-cart-button').hide();
-        $('.product-details ul #sku').html('<strong>SKU</strong> : NA');
+        $('.product-details ul #sku').html('<strong>SKU</strong> : '+product.master.sku);
       }
-    }else{
-      $('#variant_id').val(product.master.id);
-      $('.price span').html(product.master.price);
-      $('#add-to-cart-button').show();
-      $('.product-details ul #sku').html('<strong>SKU</strong> : '+product.master.sku);
-    }
+    },100);
 
   }
 
@@ -526,6 +714,8 @@
         break;
       }
     }
+
+    variant = product.variants[selected_variant_index];
 
     value = variants[selected_variant_index];
     var windex = find_option_from_labels(widths,value[1])+1;
@@ -633,12 +823,6 @@
         FbLikeUrl:''
       };
 
-      this.find_product_by_color = function(color){
-        for(var i=0;i<store.products.length;i++){
-          if(store.products[i].colors.indexOf(color) != -1)
-            return store.products[i]
-        }
-      };
 
       this.find_variant_by_color = function(color){
         for(var i=0;i<store.product.variants.length;i++){
@@ -667,6 +851,7 @@
       this.related_products=null;
 
       this.thumb_clicked = function(item, item_type){
+        console.log('in thumb_clicked');
         i = item;
         store.selected_image = store.myModel.ImageUrl = item.image;
         store.selected_image_large = item.image_large;
@@ -675,6 +860,8 @@
           slug = item.slug;
           store.setProduct();
           setTimeout(function(){$('#colors_page').select2('val',selected_color,false);},100);
+          var indx = get_product_index(item.slug);
+          set_main_slider(indx);
             //setTimeout(function(){$('.colors').trigger('change')},1000);
         }
 
@@ -687,12 +874,15 @@
 
           change_variant_by_id(item.id);
           store.myModel.FbLikeUrl = fblikeurl + '&variant_id='+item.id;
-          jQuery('#multiple-items').jcarousel('reload');   
+          jQuery('#multiple-items1').jcarousel('reload');
+          var indx = get_variant_index(item);
+          set_main_slider(indx+v_offset);
+          //$('.slider-nav').slick('slickGoTo',indx+v_offset);
 
         }
-        setTimeout(function(){
-          $('a.zoom').easyZoom({parent: '.product-display'});
-        },100);
+        // setTimeout(function(){
+        //   $('.zoom').easyZoom({parent: '.product-display'});
+        // },100);
 
         // if(p.variants){ // check if product or variant;
         //   store.selected_color = p.colors[0];
@@ -708,37 +898,51 @@
         if($('.colors').hasClass('colors_page')){
 
                 selected_color = store.selected_color;
-                slug = store.find_product_by_color(selected_color).slug;
+                // instead of selected_color change, pick the index and goto that slide
+
+                // $('.slider-nav').slick('slickGoTo',idx);
+
+                slug = find_product_by_color(selected_color).slug;
                 store.setProduct();
                 setTimeout(function(){$('.colors').trigger('change')},100);
-                setTimeout(function(){
-                  $('a.zoom').easyZoom({parent: '.product-display'});
-                },100);
+
+                var indx = get_product_index(product.slug);
+
+                $('.slider-nav').slick('slickGoTo',indx);
+                $('.slider-for').slick('slickGoTo',indx);  
+                // setTimeout(function(){
+                //   $('.zoom').easyZoom({parent: '.product-display'});
+                // },100);
 
         }else{
-                
-                selected_color = store.selected_color; //$(this).val();
-                variant = store.find_variant_by_color(selected_color);
+                console.log('in color change for variant');
 
+                selected_color = store.selected_color; //$(this).val();
+
+                variant = store.find_variant_by_color(selected_color);
+              
+                var indx = get_variant_index(variant);
+                $('.slider-nav').slick('slickGoTo',indx+v_offset);
+                $('.slider-for').slick('slickGoTo',indx+v_offset);
+                
                 if(variant.image){
                   store.selected_image = store.myModel.ImageUrl = variant.image;
                   selected_img_large = store.selected_image_large = variant.image_large;
                     
                   // update zoom plugin
-                  setTimeout(function(){
-                    $('a.zoom').easyZoom({parent: '.product-display'});
-                  },100);
+                  // setTimeout(function(){
+                  //   $('.zoom').easyZoom({parent: '.product-display'});
+                  // },100);
                 }
               
-                change_variant();
-                
+                change_variant_by_id(variant.id); 
+
                 store.myModel.FbLikeUrl = fblikeurl + '&variant_id=' + $('#variant_id').val();
                 if(store.product.variant_images_count > 1)
-                  jQuery('#multiple-items').jcarousel('reload');
+                  jQuery('#multiple-items1').jcarousel('reload');
         }
 
       }
-
 
       this.set_options_for_color_select = function(){
         if(store.product.colors == 0) 
@@ -793,9 +997,14 @@
 
             // setup variants array
             variants=[];
+            
+            v_offset = 0;
+            // if(product.master.image)
+              // v_offset = 1
+
             for(var j=0; j<store.product.variants.length;j++){
               variant = store.product.variants[j];
-              variants.push([variant.id,variant.width,variant.putup, variant.price, variant.can_supply,variant.sku,variant.diameter,variant.length, variant.tote, variant.color, variant.count])
+              variants.push([variant.id,variant.width, variant.putup, variant.price, variant.can_supply,variant.sku,variant.diameter,variant.length, variant.tote, variant.color, variant.count])
             }
             
             // setup options array
@@ -918,7 +1127,7 @@
               set_slider_width('#count-slider',counts);
 
               // images carousel
-              setTimeout(function(){jQuery('#multiple-items').jcarousel('reload')},100);   
+              setTimeout(function(){jQuery('#multiple-items1').jcarousel('reload')},100);   
 
 
             },100);
@@ -933,14 +1142,70 @@
       this.products = [
         <%= raw render :partial =>  'show.html.jbuilder', :locals => {:product => @product} %>
       ];
+      // slug is already set
       this.setProduct();
-      setTimeout(function(){
-        jQuery('#multiple-items').jcarousel('reload');   
-      },100);
-      setTimeout(function(){
-        $('a.zoom').easyZoom({parent: '.product-display'});
-      },3000);
+      setTimeout(function(){$('.colors').trigger('change')},100);
 
+      setTimeout(function(){
+        jQuery('#multiple-items1').jcarousel('reload');   
+      },100);
+      
+      if(mobile_agent && window.innerWidth < 500){
+
+        $(document).on('click', '.slick-active .zoom a', function(event){
+          event.preventDefault();
+
+          if($('#homepage-carousel').hasClass('h')) return;
+
+          v_scroll_position = $(window).scrollTop();
+
+          $(window).scrollTop(0);
+
+          $('.product-display').attr('style','position:inherit;margin:0px;padding:0px;')
+          $('.container.ng-scope').attr('style','margin-left:0px;');
+          $('#homepage-carousel').removeClass('click');
+          $('#homepage-carousel').addClass('h');
+          $('.thumb-row').addClass('b');
+          //disable scroll
+          $(document).bind('touchmove', function(e) {
+            e.preventDefault();
+          });
+
+          easyzoom = [];
+          for(var i =0; i<$('.zoom').length;i++){
+            easyzoom.push($($('.zoom')[i]).easyZoom().data('easyZoom'));
+          }
+
+        });
+
+        $(document).on('click', '.back-btn', function(){
+          
+          $('.product-display').attr('style','')
+          $('.container.ng-scope').attr('style','');
+          $('#homepage-carousel').addClass('click');
+          $('#homepage-carousel').removeClass('h');
+          $('.thumb-row').removeClass('b');
+          
+          //disable scroll
+          $(document).unbind('touchmove');
+
+          $(window).scrollTop(v_scroll_position);
+
+          for(var i=0;i<easyzoom.length;i++){
+            easyzoom[i].teardown();
+          }
+
+        });
+      }else{
+      
+        setTimeout(function(){
+          $('.image_zoom').easyZoom();
+        },100);
+      
+      }
+
+      if(product.colors.length>1 || product.colors.length ==0)
+          setup_sliders();
 
       <% if params[:variant_id] %>
         setTimeout(function(){
@@ -952,7 +1217,9 @@
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
           store.products = data;
           store.setProduct();
-          setTimeout(function(){$('.colors').trigger('change')},100);
+          setup_sliders();
+          setTimeout(function(){$('#t_'+product.id+' a').trigger('click')},300);
+          // setTimeout(function(){$('.colors').trigger('change')},100);
 
         }).
           error(function(data, status, headers, config) {
@@ -965,6 +1232,7 @@
         setTimeout(function(){
           jQuery('#related-items').jcarousel('reload');   
         },100);
+        //setup_sliders();
       })
 
     }]);

@@ -25,6 +25,11 @@ Spree::ProductsHelper.module_eval do
   		height = 470
   	end
 
+  	if(width <= 200)
+  		width = width = 250
+  		height = height = 165
+  	end
+
   	return [width,height]
   end
 

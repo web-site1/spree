@@ -162,41 +162,41 @@ $.fn.addSliderSegments = function (amount, orientation) {
 	    carousel: carousel2
 	});
 
-    carousel3 = jQuery('#multiple-items');
+ //    carousel3 = jQuery('#multiple-items');
 
-    carousel3
-    	.on('jcarousel:reload jcarousel:create ', function () {
-                var carousel = jQuery(this),
-                    width = carousel.innerWidth();
+ //    carousel3
+ //    	.on('jcarousel:reload jcarousel:create ', function () {
+ //                var carousel = jQuery(this),
+ //                    width = carousel.innerWidth();
 
-                    // alert (width);
+ //                    // alert (width);
 
-                if (width >= 600) {
-                    width = 174; // width / 3;
-                } else if (width >= 350) {
-                    width = 174; // width / 2;
-                }
+ //                if (width >= 600) {
+ //                    width = 174; // width / 3;
+ //                } else if (width >= 350) {
+ //                    width = 174; // width / 2;
+ //                }
 
-                width = 80;
+ //                width = 80;
 
-                carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');                
-                // alert ("test");
-            })
-            .jcarousel({
-		    	wrap: 'circular'
-		    });
+ //                carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');                
+ //                // alert ("test");
+ //            })
+ //            .jcarousel({
+	// 	    	wrap: 'circular'
+	// 	    });
     
 
 
-    jQuery('.multiple-items .jcarousel-control-prev').jcarouselControl({
-	    target: '-=1',
-	    carousel: carousel3
-	});
+ //    jQuery('.multiple-items .jcarousel-control-prev').jcarouselControl({
+	//     target: '-=1',
+	//     carousel: carousel3
+	// });
 
-	jQuery('.multiple-items .jcarousel-control-next').jcarouselControl({
-	    target: '-=1',
-	    carousel: carousel3
-	});
+	// jQuery('.multiple-items .jcarousel-control-next').jcarouselControl({
+	//     target: '-=1',
+	//     carousel: carousel3
+	// });
 
      
 })(jQuery);

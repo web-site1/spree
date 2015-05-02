@@ -28,6 +28,8 @@
 
 		json.image product.master.images.first.attachment.url(:product) rescue ''
 		json.image_mini product.master.images.first.attachment.url(:mini) rescue '' 
+		json.image_large product.master.images.first.attachment.url(:large) rescue '' 
+
 	end
 
 	json.variants product.variants do |variant|

@@ -157,6 +157,9 @@ button.add-to-cart {
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.alert{
+		display:none;
+	}
 }
 @media (max-width: 1199px) {
 	.product-settings .select2-choice {
@@ -173,6 +176,7 @@ button.add-to-cart {
 				top: 17px;
 				position: absolute;
 				left: -17px;
+				z-index:-1;
 			}
 		}
 	}
@@ -223,16 +227,43 @@ button.add-to-cart {
 			padding-left: 20px;
 		}
 	}
+
+  	.product-display {
+  		.alert{
+  			display:block;
+  		}
+  	}
+
   	.social-icons {
   		margin: 10px auto 20px auto;
+  		margin-bottom: 20px !important;
+
   		display: table;
   		label {
 	  		width: auto;
 	  		line-height:69px;
   			text-align: center;
-  			display: block;
+  			display: none;
+  		}
+  		.ng-social{
+  			width: 350px;
+  			margin-left: -42px;
   		}
   	}
+
+  	.h .product_main{
+  		margin-top:40%;
+  		padding-left:15px;
+  	}
+
+  	.h .slick-slide{
+    	height:150%;
+  	}
+
+  	.slider-nav.slick-slider{
+  		margin-bottom:0px;
+  	}
+
 }
 
 

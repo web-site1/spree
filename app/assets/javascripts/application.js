@@ -18,6 +18,7 @@
 //= require jquery.jcarousel.js
 //= require jcarousel.responsive.js
 //= require imagezoom.js
+//= require slick.js
 
 //= require main.js
 //= require src_cntrls.js
