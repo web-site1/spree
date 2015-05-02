@@ -525,6 +525,14 @@
 <script type="text/javascript">
   var mobile_agent = <%= mobile_agent? ? 'true' : 'false' %>;
 
+
+  if(mobile_agent && window.innerWidth < 500){
+          setTimeout(function(){$("html, body").animate({ scrollTop: "152px" },function(){
+            $(window).scrollTop(152);
+          });},1000);  
+        }
+
+        
   function setup_sliders(){
     setTimeout(function(){
       console.log('============================ ///////////////////////');
@@ -589,12 +597,6 @@
 
       if(!mobile_agent)
         setTimeout(function(){$('.slider-for .zoom').easyZoom();},100);
-      
-      if(mobile_agent && window.innerWidth < 500){
-          setTimeout(function(){$("html, body").animate({ scrollTop: "435px" },function(){
-            $(window).scrollTop(435);
-          });},1000);  
-        }
     
     },200);
   }
@@ -1152,7 +1154,7 @@
       
       if(mobile_agent && window.innerWidth < 500){
 
-        $(document).on('click', '.slick-active .zoom a', function(event){
+        function image_click_handler(event){
           event.preventDefault();
 
           if($('#homepage-carousel').hasClass('h')) return;
@@ -1172,11 +1174,19 @@
           });
 
           easyzoom = [];
-          for(var i =0; i<$('.zoom').length;i++){
-            easyzoom.push($($('.zoom')[i]).easyZoom().data('easyZoom'));
+          if($('.image_zoom').length==1){
+            easyzoom.push($($('.image_zoom')[0]).easyZoom().data('easyZoom'));
+          }else{
+            for(var i =0; i<$('.zoom').length;i++){
+              easyzoom.push($($('.zoom')[i]).easyZoom().data('easyZoom'));
+            }
           }
+        }
+        
+        $(document).on('click', '.image_zoom a', image_click_handler);
 
-        });
+        $(document).on('click', '.slick-active .zoom a', image_click_handler);
+
 
         $(document).on('click', '.back-btn', function(){
           
@@ -1215,6 +1225,8 @@
 
       <% if @product.colors.uniq.length == 1 %>
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
+          if($('#homepage-carousel').hasClass('h'))
+            $('.back-btn').trigger('click');
           store.products = data;
           store.setProduct();
           setup_sliders();
