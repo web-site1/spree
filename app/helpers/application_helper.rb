@@ -180,8 +180,7 @@ module ApplicationHelper
         if (calculator && (calculator.type =="Spree::Calculator::FlatPercentItemTotal"))
           percent = calculator.preferences[:flat_percent].to_i
           promo_dsply =
-              %Q{<span class='promo-text'>#{percent}% <span style='color: red;'>SALE</span> on all items Code:#{promo.code}</span>   <span class='small-promo'>USE
-                COUPON CODE #{promo.code} AT CHECKOUT</span> }
+              %Q{<span class='promo-text'>#{percent}% <span style='color: red;'>SALE</span> on all items. Code:#{promo.code}</span>}
         end
       end
     rescue Exception => e
