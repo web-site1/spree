@@ -9,6 +9,16 @@
     height:<%= height.to_s %>px; 
   }
 
+  <% diff = (@product.variant_images.first.attachment_width - @product.variant_images.first.attachment_height rescue 50)
+    diff = diff * -1 if diff < 0
+    if diff < 25 %>
+  
+  .product_main .easyzoom{
+      width:320px;
+      height:320px;
+    }
+
+  <% end %>
   .easyzoom-flyout{
     border:5px solid #eee;
     background:#fff;
@@ -86,6 +96,7 @@
     position:absolute;
     margin-left:0px;
     width:100%;
+    z-index:401;
   }
 
 </style>
@@ -246,7 +257,7 @@
           <a class="right carousel-control fui-arrow-right" href="#homepage-carousel" data-slide="next"></a> -->
           
 
-          <div class="alert" style="z-index:5;background:white;text-align:center;bottom:70px;width:100%;">
+          <div class="zoom-msg">
             click/swipe above to zoom or change
           </div>
 
@@ -258,7 +269,7 @@
                   <div class="slider-nav" ng-if="store.product.colors.length==1 && store.products.length > 1">
                       <div ng-repeat="product in store.products" id="t_{{product.id}}">
                         <a href="" ng-click="store.thumb_clicked(product,'product')">
-                          <img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="" title="{{product.colors[0]}}"/>
+                          <img ng-src="{{product.master.image_mini || store.no_image_mini}}" class="img-responsive" title="{{product.colors[0]}}"/>
                         </a>
                       </div>
                   </div>
@@ -266,12 +277,12 @@
                   <div class="slider-nav" ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
                     <div ng-show="store.product.variant_images_count == 1" id='t_{{store.product.master.id}}'>
                       <a href="" ng-click="store.thumb_clicked(store.product.master,'m_variant')">
-                        <img style="height:60px;" ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color" title="{{product.colors[0]}}"/>
+                        <img ng-src="{{store.product.master.image_mini || store.no_image_mini}}" purl="store.product.master.image" class="v_color img-responsive" title="{{product.colors[0]}}"/>
                       </a>
                     </div>
                     <div ng-repeat="variant in store.product.variants" id='t_{{variant.id}}'>
                       <a href="" ng-click="store.thumb_clicked(variant,'variant')" >
-                        <img style="height:60px;" ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color" title="{{variant.color}}"/>
+                        <img ng-src="{{variant.image_mini || store.no_image_mini}}" purl="{{variant.image}}" class="v_color img-responsive" title="{{variant.color}}"/>
                       </a>
                     </div>
                   </ul>
@@ -532,7 +543,7 @@
           });},1000);  
         }
 
-        
+
   function setup_sliders(){
     setTimeout(function(){
       console.log('============================ ///////////////////////');

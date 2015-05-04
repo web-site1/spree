@@ -96,7 +96,8 @@
         console.log('zw:'+this.$zoom.width()+" zh:"+this.$zoom.height());
 
 
-        if(this.$zoom.width()<w2){
+        if(this.$zoom.width()<w2+50){
+            console.log('scaled');
             dw = w2*1.2 - w2;
             dh = h2*1.2 - h2;
         }else{

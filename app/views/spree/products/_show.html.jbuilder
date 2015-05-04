@@ -36,7 +36,7 @@
 		json.id variant.id
 		json.sku variant.sku
 		json.price display_price(variant)
-		json.image variant.images.first.attachment.url(:large) rescue ''
+		json.image variant.images.first.attachment.url(:product) rescue ''
 		json.image_mini variant.images.first.attachment.url(:mini) rescue '' 
 		json.image_large variant.images.first.attachment.url(:large) rescue '' 
 
