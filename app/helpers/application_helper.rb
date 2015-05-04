@@ -167,4 +167,28 @@ module ApplicationHelper
     end
   end
 
+  def get_promotion_and_display
+    promo_dsply = ''
+    promo_array = Spree::Promotion.active
+
+    begin
+      if !promo_array.empty?
+        #assume always one active promo
+        promo = promo_array.first
+        action = promo.actions.first
+        calculator = action.calculator
+        if (calculator && (calculator.type =="Spree::Calculator::FlatPercentItemTotal"))
+          percent = calculator.preferences[:flat_percent].to_i
+          promo_dsply =
+              %Q{<span class='promo-text'>#{percent}% <span style='color: red;'>SALE</span> on all items Code:#{promo.code}</span>   <span class='small-promo'>USE
+                COUPON CODE #{promo.code} AT CHECKOUT</span> }
+        end
+      end
+    rescue Exception => e
+
+    end
+
+    return promo_dsply.html_safe
+  end
+
 end

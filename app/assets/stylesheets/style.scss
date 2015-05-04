@@ -233,26 +233,23 @@ div.alert-notice{
   font-weight: bolder;
 }
 
-  /*
-  #cart_view{
-    display: block;
-    margin-left: 6%;
-    width: 90%;
-  }
-
-  #cart_view_body{
-      width: 170%;
-  }
-
-  #cart-dialog{
-      width: 100%;
-  }
-  */
   #cart_view .modal-dialog  {width:80%;}
 
   #cart_view .modal-body    {overflow-y: auto;}
 
+.art-src-div {
+  background-color: #d9edf7;
+}
+.promo-text {
+  font-size: 20pt;
+  font-weight: bold;
+}
 
+.small-promo{
+  font-size: 10pt;
+  font-weight: bold;
+  padding-left: 17%;
+}
 /* End */
 
 

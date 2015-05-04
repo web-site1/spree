@@ -7761,9 +7761,14 @@ fieldset[disabled] .navbar-inverse .navbar-btn.active {
 .panel > .panel-body + .table-responsive {
   border-top: 2px solid #eef0f0;
   }
+/* Begin LA Changed spacing in side menu
 .panel-group {
   margin-bottom: 30px;
-  }
+  }*/
+.panel-group {
+  margin-bottom: 5px;
+}
+/*END -LA*/
 .panel-group .panel {
   border-radius: 6px;
   }

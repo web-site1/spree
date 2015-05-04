@@ -65,18 +65,7 @@
           <li class="nav-new-items"><a href="/products?for_new_arrivals=true&per_page=30">New Items</a></li>
           <li class="nav-specials"><a href="/t/categories/closeouts">Specials</a></li>
           <li class="nav-featured"><a href="/t/tags/featured">Featured</a></li>
-          <li class="nav-search">
-            <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
-                <div id="search">
-                    <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
-                      <button type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                </div>
 
-            <% end %>
-
-          </li>
         </ul>
 
       </div>
@@ -85,3 +74,20 @@
     <!--/.nav-collapse -->
   </div>
 </nav>
+<div class="row art-src-div">
+  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+  </div>
+  <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+    <%=get_promotion_and_display%>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      <form class="navbar-form navbar-left" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+        <div id="search">
+          <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
+          <button type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </form>
+  </div>
+</div>
