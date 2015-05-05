@@ -250,6 +250,87 @@ div.alert-notice{
   font-weight: bold;
   padding-left: 5%;
 }
+
+/* Begin navbar */
+@media (min-width: 768px) {
+  .navbar-header {
+    float: left; } }
+
+.navbar-collapse2 {
+  overflow-x: visible;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-top: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  -webkit-overflow-scrolling: touch; }
+.navbar-collapse2:before, .navbar-collapse2:after {
+  content: " ";
+  display: table; }
+.navbar-collapse2:after {
+  clear: both; }
+.navbar-collapse2.in {
+  overflow-y: auto; }
+@media (min-width: 768px) {
+  .navbar-collapse2 {
+    width: auto;
+    border-top: 0;
+    box-shadow: none; }
+  .navbar-collapse2.collapse {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important; }
+  .navbar-collapse2.in {
+    overflow-y: visible; }
+  .navbar-fixed-top .navbar-collapse2, .navbar-static-top .navbar-collapse2, .navbar-fixed-bottom .navbar-collapse2 {
+    padding-left: 0;
+    padding-right: 0; } }
+
+.navbar-fixed-top .navbar-collapse2,
+.navbar-fixed-bottom .navbar-collapse2 {
+  max-height: 340px; }
+@media (max-device-width: 480px) and (orientation: landscape) {
+  .navbar-fixed-top .navbar-collapse2,
+  .navbar-fixed-bottom .navbar-collapse2 {
+    max-height: 200px; } }
+
+.container > .navbar-header,
+.container > .navbar-collapse2,
+.container-fluid > .navbar-header,
+.container-fluid > .navbar-collapse2 {
+  margin-right: -15px;
+  margin-left: -15px; }
+@media (min-width: 768px) {
+  .container > .navbar-header,
+  .container > .navbar-collapse2,
+  .container-fluid > .navbar-header,
+  .container-fluid > .navbar-collapse2 {
+    margin-right: 0;
+    margin-left: 0; } }
+
+
+.navbar-toggle1 {
+  position: relative;
+  float: left;
+  margin-right: 15px;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px; }
+.navbar-toggle1:focus {
+  outline: 0; }
+@media (min-width: 768px) {
+  .navbar-toggle1 {
+    display: none; } }
+
+/* end navbar */
+
+
+
 /* End */
 
 
