@@ -74,33 +74,39 @@
     <!--/.nav-collapse -->
   </div>
 </nav>
-<div class="row art-src-div">
-  <div class="row hidden-md hidden-lg">
-    <div class="nav-search col-sm-12 col-xs-12 mbl">
-      <form class="navbar-form navbar-left mobile-src-frm" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
-        <div id="search">
-          <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
-          <button type="submit">
-            <i class="fa fa-search"></i>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
 
-  <div class="col-lg-2 col-md-2">
-  </div>
-  <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
-    <%=get_promotion_and_display%>
-  </div>
-  <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
-      <form class="navbar-form navbar-left" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
-        <div id="search">
-          <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
-          <button type="submit">
-            <i class="fa fa-search"></i>
-          </button>
+
+<section class="quick-search">
+    <div class="container">
+        <div class="row art-src-div">
+          <div class="row hidden-md hidden-lg">
+            <div class="nav-search col-sm-12 col-xs-12 mbl">
+              <form class="navbar-form navbar-left mobile-src-frm" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                <div id="search">
+                  <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
+                  <button type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-2">
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+            <%=get_promotion_and_display%>
+          </div>
+          <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+              <form class="navbar-form navbar-left" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                <div id="search">
+                  <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
+                  <button type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </form>
+          </div>
         </div>
-      </form>
-  </div>
-</div>
+    </div>
+</section>
