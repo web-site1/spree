@@ -17,7 +17,7 @@
   <%
      type_selected = !selected_hash[:type].blank? rescue false
      cat_not_selected = selected_hash[:cat].blank? rescue true
-     mobile_hdr = (cat_not_selected) ? "Menu" : selected_hash[:cat]
+     mobile_hdr = (cat_not_selected) ? "Menu" : @taxon.name
 
      col_mobile = 'collapse'
      if (type_selected && cat_not_selected)
@@ -27,12 +27,14 @@
   %>
 
   <nav class="navbar navbar-default sidenavbar">
-    <div class="navbar-header side-mobile-hdr">
-        <span class="navbar-toggle1 collapsed"><%=mobile_hdr%></span>
-        <button type="button" class="navbar-toggle1 collapsed mob-button" data-toggle="collapse" data-target=".navbar-collapse2">
-            <span class="mobile-side"></span>
-        </button>
-    </div>
+    <a data-toggle="collapse" data-target=".navbar-collapse2">
+        <div class="navbar-header side-mobile-hdr">
+            <span class="navbar-toggle1 collapsed"><%=mobile_hdr%></span>
+            <button type="button" class="navbar-toggle1 collapsed mob-button" data-toggle="collapse" data-target=".navbar-collapse2">
+                <span class="mobile-side"></span>
+            </button>
+        </div>
+    </a>
 
     <div class="navbar-collapse2 <%=col_mobile%> ">
   <% side_cats.each do |k,v| %>

@@ -70,6 +70,8 @@ module ApplicationHelper
     return type_hash
   end
 
+
+
   def reposition_selected_search_cats(search_cats,selected_hash)
 
     repositioned_hash = {}
