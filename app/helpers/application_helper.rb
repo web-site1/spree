@@ -177,6 +177,8 @@ module ApplicationHelper
       if !promo_array.empty?
         #assume always one active promo
         promo = promo_array.first
+        promo_dsply =  promo.description
+=begin
         action = promo.actions.first
         calculator = action.calculator
         if (calculator && (calculator.type =="Spree::Calculator::FlatPercentItemTotal"))
@@ -184,6 +186,7 @@ module ApplicationHelper
           promo_dsply =
               %Q{<span class='promo-text'>#{percent}% <span style='color: red;'>SALE</span> on all items. Code:#{promo.code}</span>}
         end
+=end
       end
     rescue Exception => e
 

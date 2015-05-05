@@ -241,8 +241,11 @@ div.alert-notice{
  /* background-color: #d9edf7;*/
 }
 .promo-text {
-  font-size: 20pt;
+  font-size: 17pt;
   font-weight: bold;
+}
+.promo-div-displ{
+  padding-top: 8px;
 }
 
 .small-promo{
@@ -357,6 +360,17 @@ div.alert-notice{
 }
 .mobile-fix-refine {
   margin-left: -15px;
+}
+
+#search input {
+  width: 250px;
+}
+
+@media (max-width: 768px) {
+  #search input {
+    width: 100%;
+  }
+
 }
 /* end navbar */
 
