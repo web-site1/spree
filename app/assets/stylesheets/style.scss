@@ -327,6 +327,7 @@ div.alert-notice{
   .navbar-toggle1 {
     display: none; } }
 .sidenavbar {
+  margin-top: -35px;
   background-color: transparent;
   border-color: transparent;
 }
@@ -335,6 +336,25 @@ div.alert-notice{
   background-color:#ecf0f1;
 }
 
+.mobile-src-frm{
+  margin: 3px 35px;
+}
+
+.mobile-side {
+  /*padding: 15px 15px;
+  display: block;
+  background-color: #3498db;
+  color: #138cce;*/
+  background-image: url(/assets/elements/arrow-up.png);
+  background-repeat: no-repeat;
+  padding: inherit;
+  padding-top: 0px;
+  /*background-position: calc(100% - 20px) center;*/
+}
+
+.mob-button{
+  float: right;
+}
 /* end navbar */
 
 
