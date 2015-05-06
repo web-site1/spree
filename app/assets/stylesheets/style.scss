@@ -241,11 +241,11 @@ div.alert-notice{
  /* background-color: #d9edf7;*/
 }
 .promo-text {
-  font-size: 17pt;
+  font-size: 14pt;
   font-weight: bold;
 }
 .promo-div-displ{
-  padding-top: 8px;
+  padding-top: 10px;
 }
 
 .small-promo{
@@ -330,7 +330,7 @@ div.alert-notice{
   .navbar-toggle1 {
     display: none; } }
 .sidenavbar {
-  margin-top: -35px;
+  margin-top: 5px;
   background-color: transparent;
   border-color: transparent;
 }
@@ -371,6 +371,11 @@ div.alert-notice{
     width: 100%;
   }
 
+}
+
+.src-form{
+  padding-top: 8px;
+  padding-bottom: 0px;
 }
 /* end navbar */
 
