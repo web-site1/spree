@@ -377,6 +377,16 @@ div.alert-notice{
   padding-top: 8px;
   padding-bottom: 0px;
 }
+
+.container {
+  @media (min-width: 768px) {
+    .homepage{
+      width: 104%;
+    }
+  }
+}
+
+
 /* end navbar */
 
 
