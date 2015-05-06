@@ -133,7 +133,7 @@
 #search input {
     width: 170px;
     border: 0;
-    color: #c9cccf;
+    color: #000000;/*#c9cccf;*/
     background: none;
     padding-left: 10px;
     padding-right: 40px;
@@ -200,7 +200,8 @@ section.quick-search .nav-search {
 		}
 	}
 	#search input {
-		max-width: 100px;
+		/*max-width: 100px;
+        max-width: 300px;*/
 		font-size: 14px;
 		padding-right: 0px;
 	}

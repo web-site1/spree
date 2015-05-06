@@ -13,6 +13,30 @@
 
   <% side_cats = reposition_selected_search_cats(side_search_cats,selected_hash) %>
   <%cntr = 0%>
+
+  <%
+     type_selected = !selected_hash[:type].blank? rescue false
+     cat_not_selected = selected_hash[:cat].blank? rescue true
+     mobile_hdr = (cat_not_selected) ? "Menu" : @taxon.name
+
+     col_mobile = 'collapse'
+     if (type_selected && cat_not_selected)
+       col_mobile = 'collapse in'
+     end
+
+  %>
+
+  <nav class="navbar navbar-default sidenavbar">
+    <a data-toggle="collapse" data-target=".navbar-collapse2">
+        <div class="navbar-header side-mobile-hdr">
+            <span class="navbar-toggle1 collapsed"><%=mobile_hdr%></span>
+            <button type="button" class="navbar-toggle1 collapsed mob-button" data-toggle="collapse" data-target=".navbar-collapse2">
+                <span class="mobile-side"></span>
+            </button>
+        </div>
+    </a>
+
+    <div class="navbar-collapse2 <%=col_mobile%> ">
   <% side_cats.each do |k,v| %>
       <%
          this_type_selected = false
@@ -28,87 +52,90 @@
              end
          end
       %>
+          <div class="panel-group homepage nav" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="headingMenu<%=cntr%>">
+                <h4 class="panel-title">
+                  <!-- top-panel class triggers a click -->
+                  <a class="top-pane cat-click" data-toggle="collapse" data-parent="#accordion" href="#collapseMenu<%=cntr%>"
+                        aria-expanded="<%=this_type_selected%>" aria-controls="collapseMenu<%=cntr%>" data-hrefa="<%= %Q{/t/#{v.first}} %>">
+                    <%= k %>
+                  </a>
+                </h4>
+              </div>
 
+              <div id="collapseMenu<%=cntr%>" class="panel-collapse collapse <%="in" if this_type_selected %>" role="tabpanel" aria-labelledby="headingMenu<%=cntr%>"
+              aria-expanded= "<%=this_type_selected%>"
+              >
+                <div class="panel-body">
+                  <!-- Here we insert another nested accordion -->
+                  <div class="row">
+              <% v.last.each do |sk,sv| %>
 
-      <div class="panel-group homepage" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-          <div class="panel-heading" role="tab" id="headingMenu<%=cntr%>">
-            <h4 class="panel-title">
-              <!-- top-panel class triggers a click -->
-              <a class="top-pane cat-click" data-toggle="collapse" data-parent="#accordion" href="#collapseMenu<%=cntr%>"
-                    aria-expanded="<%=this_type_selected%>" aria-controls="collapseMenu<%=cntr%>" data-hrefa="<%= %Q{/t/#{v.first}} %>">
-                <%= k %>
-              </a>
-            </h4>
-          </div>
-
-          <div id="collapseMenu<%=cntr%>" class="panel-collapse collapse <%="in" if this_type_selected %>" role="tabpanel" aria-labelledby="headingMenu<%=cntr%>"
-          aria-expanded= "<%=this_type_selected%>"
-          >
-            <div class="panel-body">
-              <!-- Here we insert another nested accordion -->
-              <div class="row">
-          <% v.last.each do |sk,sv| %>
-
-              <%
-                this_cat_selected = false
-                if this_type_selected
-                    cat_from_link = sv.first.split('/').last
-                    if cat_from_link == cat_selection
-                      this_cat_selected = true
+                  <%
+                    this_cat_selected = false
+                    if this_type_selected
+                        cat_from_link = sv.first.split('/').last
+                        if cat_from_link == cat_selection
+                          this_cat_selected = true
+                        end
                     end
-                end
-              %>
+                  %>
 
-              <% uniq_id = sk.downcase.gsub(' ','_') %>
-                     <div class="col-xs-12">
-                      <div class="panel-group sub-panel" id="accordion<%=uniq_id%>">
-                        <div class="panel panel-default">
-                          <div class="panel-heading">
-                            <h5 class="panel-title">
+                  <% uniq_id = sk.downcase.gsub(' ','_') %>
+                         <div class="col-xs-12">
+                          <div class="panel-group sub-panel" id="accordion<%=uniq_id%>">
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                <h5 class="panel-title">
 
-                              <%
-                                if sk.strip.downcase == 'newest'
-                                  if k.downcase == 'ribbons'
-                                    sk_link = "/products?for_new_ribbons=true&per_page=30"
-                                  else
-                                    sk_link = "/products?for_new_flowers=true&per_page=30"
-                                  end
-                                else
-                                    sk_link =  %Q{/t/#{sv.first}}
-                                end
-                              %>
+                                  <%
+                                    if sk.strip.downcase == 'newest'
+                                      if k.downcase == 'ribbons'
+                                        sk_link = "/products?for_new_ribbons=true&per_page=30"
+                                      else
+                                        sk_link = "/products?for_new_flowers=true&per_page=30"
+                                      end
+                                    else
+                                        sk_link =  %Q{/t/#{sv.first}}
+                                    end
+                                  %>
 
-                              <a data-toggle="collapse" class="<%= "collapsed" if !this_cat_selected%> cat-click" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"
-                                 aria-expanded="<%=this_cat_selected%>" data-hrefa="<%=sk_link%>">
-                                <%= sk %>
-                              </a>
-                            </h5>
-                          </div>
-                          <div id="collapseInnerOne<%=uniq_id%>" class="panel-collapse collapse <%="in" if this_cat_selected %>" <%= "aria-expanded='true'" if this_cat_selected %> >
-                            <div class="panel-body">
-                              <ul>
-                                <% sv.last.each do |ocv| %>
-                                    <li><a href="/t/<%=ocv.first%>"><%= ocv.last%></a></li>
-                                <% end %>
-                              </ul>
+                                  <a data-toggle="collapse" class="<%= "collapsed" if !this_cat_selected%> cat-click" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"
+                                     aria-expanded="<%=this_cat_selected%>" data-hrefa="<%=sk_link%>">
+                                    <%= sk %>
+                                  </a>
+                                </h5>
+                              </div>
+
+                              <!--
+                              <div id="collapseInnerOne<%#uniq_id%>" class="panel-collapse collapse <%#"in" if this_cat_selected %>" <%# "aria-expanded='true'" if this_cat_selected %> >
+                                <div class="panel-body">
+                                  <ul>
+                                    <%# sv.last.each do |ocv| %>
+                                        <li><a href="/t/<%#ocv.first%>"><%# ocv.last%></a></li>
+                                    <%# end %>
+                                  </ul>
+                                </div>
+                              </div>
+                              -->
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
 
 
-                <% cntr += 1 %>
-          <% end %>
+                    <% cntr += 1 %>
+              <% end %>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
   <% end %>
-
-
-  <%= render partial: 'spree/shared/ads' %>
-
+    </div>
+</nav>
+  <div class="hidden-xs hidden-sm">
+    <%= render partial: 'spree/shared/ads' %>
+  </div>
 </div>
