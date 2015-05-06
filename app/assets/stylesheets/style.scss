@@ -378,11 +378,10 @@ div.alert-notice{
   padding-bottom: 0px;
 }
 
-.container {
-  @media (min-width: 768px) {
-    .homepage{
-      width: 104%;
-    }
+
+@media (min-width: 768px) {
+  .homepage{
+    width: 104%;
   }
 }
 
