@@ -70,11 +70,16 @@
 	}
 }
 
-.ui-slider .ui-slider-range {
-	background-color: #3498db;
-}
-.ui-slider .ui-slider-handle {
-	background-color: #2c81ba;
+.ui-slider{
+	.ui-slider-range {
+		background-color: #3498db;
+	}
+	.ui-slider-handle {
+		background-color: #2c81ba;
+	}
+	strike{
+		color:lightgray;
+	}
 }
 
 .ui-slider-value-x {

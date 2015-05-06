@@ -13,7 +13,7 @@
     diff = diff * -1 if diff < 0
     if diff < 25 %>
   
-  .product_main .easyzoom{
+  .product_main .easyzoom-overlay{
       width:320px;
       height:320px;
     }
@@ -73,13 +73,13 @@
     z-index:500;
   }
 
-<% if (@product.variant_images.first.attachment_width rescue 0) <= 300 or (@product.variant_images.first.attachment_height rescue 0) <= 200  %>
+<% #if (@product.variant_images.first.attachment_width rescue 0) <= 300 or (@product.variant_images.first.attachment_height rescue 0) <= 200  %>
  
   .easyzoom-flyout img{
     width:150%;
     height:150%;
   }
-<% end %>
+<% #5r5end %>
 
   .h{
     position: absolute;
@@ -98,6 +98,25 @@
     width:100%;
     z-index:401;
   }
+
+  .imageHolder{
+    display:none;
+  }
+
+  .h .imageHolder{
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:300;
+    background: white;
+    display:block;
+  }
+
+  .h .imageHolder img{
+    /*width:100%;*/
+    height:150%;
+  }
+
 
 </style>
 <div class="main-content search-results-content" itemscope itemtype="http://schema.org/Product" ng-app="spreeStore">
@@ -193,7 +212,7 @@
 
 
 
-  <div class="container" ng-controller="StoreController as store">
+  <div class="container controller" ng-controller="StoreController as store">
 
     <div class="row">
 
@@ -201,7 +220,10 @@
 
         <div id="homepage-carousel" class="carousel slide" data-interval="false">
           <button class="btn back-btn">Back</button>
-
+          <div class="imageHolder" style=""> 
+            <img ng-src="{{store.selected_image_large}}"  />
+          </div>
+          
           <!-- Indicators -->
           <ol class="carousel-indicators">
             <li data-target="#homepage-carousel" data-slide-to="0" class="active"></li>
@@ -213,7 +235,7 @@
             <div class="item active product_main">
               <meta itemprop="image" content="<%=@product.variant_images.first.attachment.url rescue ''%>" />
               
-              <div ng-if="(store.product.colors.length<=1 || store.product.variant_images_count==0)&& store.products.length==1" class="image_zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent' %>" style="margin-top:60px;">
+              <div ng-if="(store.product.variant_images_count<=1)&& store.products.length==1" class="image_zoom easyzoom easyzoom--adjacent" style="line-height:11;">
                 <a ng-href="{{store.product.image_large || store.no_image }}">
                   <img alt="{{store.product.name}}" ng-src="{{store.product.image || store.no_image }}" >       
                 </a>
@@ -222,7 +244,7 @@
 
               <div class="slider-for" ng-if="store.product.colors.length==1 && store.products.length > 1">
                   <div ng-repeat="product in store.products" id="{{product.id}}">
-                    <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%> ">
+                    <div class ="zoom easyzoom easyzoom--adjacent ">
                       <a ng-href="{{product.image_large || store.no_image }}">
                         <img alt="{{product.name}}" ng-src="{{product.image || store.no_image }}" >       
                       </a>
@@ -233,7 +255,7 @@
               <div class="slider-for" ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
                 <div ng-if="store.product.master.image_mini" id='{{store.product.master.id}}'>
                   
-                  <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%>">
+                  <div class ="zoom easyzoom easyzoom--adjacent">
                     <a ng-href="{{store.product.master.image_large || store.no_image }}">
                       <img alt="{{store.product.name}}" ng-src="{{store.product.master.image || store.no_image }}" >       
                     </a>
@@ -242,7 +264,7 @@
                 </div>
                 <div ng-repeat="variant in store.product.variants" id="{{variant.id}}">
                   
-                  <div class ="zoom easyzoom <%= mobile_agent? ? 'easyzoom--overlay' : 'easyzoom--adjacent'%>">
+                  <div class ="zoom easyzoom easyzoom--adjacent">
                     <a ng-href="{{variant.image_large || store.no_image }}">
                       <img alt="{{store.product.name}}" ng-src="{{variant.image || store.no_image }}" >       
                     </a>
@@ -401,7 +423,7 @@
                 <h3>Putup</h3>
                 <div id="putup-slider">
                   <ol class="labels">
-                      <li ng-repeat="putup in store.product.putups">{{putup}}</li>                    
+                      <li ng-repeat="putup in store.product.putups" ng-bind-html="store.valid_putup_text(putup)"></li>                    
                   </ol>
                 </div>
               </div>
@@ -534,7 +556,7 @@
 <!-- Non Reusable page specific Javascript -->
   
 <script type="text/javascript">
-  var mobile_agent = <%= mobile_agent? ? 'true' : 'false' %>;
+  var mobile_agent = window.innerWidth<500;//<%= mobile_agent? ? 'true' : 'false' %>;
 
 
   if(mobile_agent && window.innerWidth < 500){
@@ -641,8 +663,41 @@
 
   thirty_days_ago = new Date(new Date() - (30*24*60*60*1000));
   
+  function set_valid_putups(){
+    var controllerElement = document.querySelector('.controller');
+    var controllerScope = angular.element(controllerElement).scope();
+    setTimeout(function(){controllerScope.$apply()},0);
+    return;
+
+
+        var tmp_valid_putups=[];
+        for(var i = 0; i<product.variants.length; i++){
+          v=product.variants[i];
+          if(v.width.toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-')) 
+            if(tmp_valid_putups.indexOf(v.putup.toLowerCase().replace(' ','-'))==-1)
+              tmp_valid_putups.push(v.putup.toLowerCase().replace(' ','-'));
+        }
+
+      
+
+      product.valid_putups.length=0;
+      for(var i=0;i<putups.length;i++) 
+        if(tmp_valid_putups.indexOf(putups[i].toLowerCase().replace(' ','-'))!=-1)
+          product.valid_putups.push(putups[i]);
+        
+
+    // pslider.slider({
+    //       min: 1,
+    //       max: product.valid_putups.length,
+    //       value: putups.indexOf(selected_putup)+1,
+    //       orientation: "horizontal",
+    //       range: "min",
+    //       change: change_variant
+    //     })//.addSliderSegments(product.valid_putups.length);
+
+  }
   function change_variant(event,ui){
-    // console.log('=============================')
+    console.log('================ CHANGE VARIANT =============')
     // console.log(product.master.id);
     setTimeout(function(){
       if(variants.length >0 ){
@@ -678,6 +733,12 @@
             selected_variant = index;
           }
         });
+
+
+        // 
+
+        set_valid_putups();
+
 
         if(selected_variant==-1){
           $('.price span').html('<span style="color:red;font-size:24px">Not Available</span>');
@@ -721,6 +782,7 @@
 
 
   function change_variant_by_id(variant_id){
+    console.log("Change Variant By ID");
     for(var i = 0; i < variants.length; i++){
       if(variants[i][0]==variant_id){
         selected_variant_index = i;
@@ -759,6 +821,7 @@
     if(value[10]!='')
       $('#count-slider').slider("value",cindex);
     
+    set_valid_putups();
 
     // change_variant();
     $('#variant_id').val(variants[selected_variant_index][0]);
@@ -821,7 +884,7 @@
   fblikeurl = '<%="#{request.protocol}#{request.host_with_port}"%>'+'/products/' + slug + '<%= @taxon ? "?taxon_id=#{@taxon.id}" : "" %>';
     
   (function(){
-    var app = angular.module('spreeStore', ['ngSocial'])
+    var app = angular.module('spreeStore', ['ngSocial','ngSanitize'])
     
     app.controller('StoreController',['$http',function($http){
       var store = this;
@@ -836,6 +899,32 @@
         FbLikeUrl:''
       };
 
+
+      this.valid_putup_text= function(putup){
+        if(product.widths.length == 0) return putup;
+
+        for(var i = 0; i<product.variants.length; i++){
+          v=product.variants[i];
+          if(v.width.toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-')) 
+            if(putup.toLowerCase().replace(' ','-') == v.putup.toLowerCase().replace(' ','-') )
+              if(v.color==selected_color)
+                return putup;
+        }
+        return '<strike>'+putup+'</strike>';
+      }
+
+
+      this.valid_putups = function(){
+        
+        var tmp_valid_putups=[];
+        for(var i = 0; i<product.variants.length; i++){
+          v=product.variants[i];
+          if(v.width.toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-')) 
+            if(tmp_valid_putups.indexOf(v.putup.toLowerCase().replace(' ','-'))==-1)
+              tmp_valid_putups.push(v.putup.toLowerCase().replace(' ','-'));
+        }
+
+      }
 
       this.find_variant_by_color = function(color){
         for(var i=0;i<store.product.variants.length;i++){
@@ -905,6 +994,7 @@
         // store.color_changed();
 
       };
+
 
       this.color_changed = function(){
 
@@ -1012,8 +1102,8 @@
             variants=[];
             
             v_offset = 0;
-            // if(product.master.image)
-              // v_offset = 1
+            if(product.master.image)
+              v_offset = 1
 
             for(var j=0; j<store.product.variants.length;j++){
               variant = store.product.variants[j];
@@ -1028,7 +1118,6 @@
             lengths = store.product.lengths;
             colors = store.product.colors;
             counts = store.product.counts;
-
 
             //sharing plugins
             store.myModel.ImageUrl = store.product.image;
@@ -1163,7 +1252,7 @@
         jQuery('#multiple-items1').jcarousel('reload');   
       },100);
       
-      if(mobile_agent && window.innerWidth < 500){
+      if(mobile_agent){// && window.innerWidth < 500){
 
         function image_click_handler(event){
           event.preventDefault();
@@ -1179,6 +1268,13 @@
           $('#homepage-carousel').removeClass('click');
           $('#homepage-carousel').addClass('h');
           $('.thumb-row').addClass('b');
+          
+          myScroll = new IScroll('.imageHolder',{zoom:true,zoomMin:1,zoomStart:2, zoomMax:4,scrollX:true,mouseWheel: true, wheelAction: 'zoom'});
+
+          // setTimeout(function(){
+            myScroll.scrollTo(myScroll.maxScrollX/2,myScroll.maxScrollY/2);
+          // },100);
+
           //disable scroll
           $(document).bind('touchmove', function(e) {
             e.preventDefault();
@@ -1186,10 +1282,10 @@
 
           easyzoom = [];
           if($('.image_zoom').length==1){
-            easyzoom.push($($('.image_zoom')[0]).easyZoom().data('easyZoom'));
+            //easyzoom.push($($('.image_zoom')[0]).easyZoom().data('easyZoom'));
           }else{
             for(var i =0; i<$('.zoom').length;i++){
-              easyzoom.push($($('.zoom')[i]).easyZoom().data('easyZoom'));
+              //easyzoom.push($($('.zoom')[i]).easyZoom().data('easyZoom'));
             }
           }
         }
