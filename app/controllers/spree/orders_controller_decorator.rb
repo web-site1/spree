@@ -9,13 +9,13 @@ Spree::OrdersController.class_eval do
   # Shows the current incomplete order from the session
   # Now go back to last item on order when user says "Continue Shopping...Dan"
   def edit
-    @order = current_order || Order.incomplete.find_or_initialize_by(guest_token: cookies.signed[:guest_token])
+    @order = current_order || Spree::Order.incomplete.find_or_initialize_by(guest_token: cookies.signed[:guest_token])
     @continue_shopping_path = product_path(@order.line_items.last.variant.product) rescue products_path
     associate_user
   end
 
   def ajax_cart
-    @order = current_order || Order.incomplete.find_or_initialize_by(guest_token: cookies.signed[:guest_token])
+    @order = current_order || Spree::Order.incomplete.find_or_initialize_by(guest_token: cookies.signed[:guest_token])
     @continue_shopping_path = product_path(@order.line_items.last.variant.product) rescue products_path
     associate_user
     render partial: 'ajax_cart',layout: false
