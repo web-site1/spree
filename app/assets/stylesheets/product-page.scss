@@ -21,6 +21,7 @@
 	}
 }
 .product-settings {
+
 	margin: 30px auto;
 	h3 {
 		text-transform: uppercase;
@@ -33,6 +34,9 @@
 	}
 	.row {
 		margin-bottom: 20px;
+		.slider-col{
+			overflow:hidden;
+		}
 	}
 	.select2-choice {
 		background-color: #a1a6a9;
@@ -71,6 +75,7 @@
 }
 
 .ui-slider{
+	z-index: 5;
 	.ui-slider-range {
 		background-color: #3498db;
 	}

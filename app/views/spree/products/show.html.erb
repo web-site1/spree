@@ -117,6 +117,9 @@
     height:150%;
   }
 
+  img.img-responsive.thumb-active{
+    border: 1px solid red;
+  }
 
 </style>
 <div class="main-content search-results-content" itemscope itemtype="http://schema.org/Product" ng-app="spreeStore">
@@ -568,7 +571,7 @@
 
   function setup_sliders(){
     setTimeout(function(){
-      console.log('============================ ///////////////////////');
+      console.log('setup Sliders ============================ ///////////////////////');
       $('.slider-for').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -667,6 +670,7 @@
     var controllerElement = document.querySelector('.controller');
     var controllerScope = angular.element(controllerElement).scope();
     setTimeout(function(){controllerScope.$apply()},0);
+  
     return;
 
 
@@ -736,8 +740,19 @@
 
 
         // 
-
-        set_valid_putups();
+        if(selected_variant!=-1){
+          variant = product.variants[selected_variant];        
+          $('.thumb-active').removeClass('thumb-active');
+          var t_id;
+          if(products.length==1){
+            t_id=variant.id;
+          }else{
+            t_id=product.id;
+          }
+          jQuery(".slider-nav #t_"+t_id+" a img").addClass('thumb-active');
+        }
+        
+        set_valid_putups()
 
 
         if(selected_variant==-1){
@@ -767,7 +782,7 @@
         $('#add-to-cart-button').show();
         $('.product-details ul #sku').html('<strong>SKU</strong> : '+product.master.sku);
       }
-    },100);
+    },50);
 
   }
 
@@ -791,6 +806,13 @@
     }
 
     variant = product.variants[selected_variant_index];
+
+    selected_width = variant.width;
+    selected_diameter = variant.diameter;
+    selected_tote = variant.tote;
+    selected_putup = variant.putup;
+    selected_length = variant.length;
+    selected_count = variant.count;
 
     value = variants[selected_variant_index];
     var windex = find_option_from_labels(widths,value[1])+1;
@@ -821,7 +843,7 @@
     if(value[10]!='')
       $('#count-slider').slider("value",cindex);
     
-    set_valid_putups();
+    
 
     // change_variant();
     $('#variant_id').val(variants[selected_variant_index][0]);
@@ -997,6 +1019,7 @@
 
 
       this.color_changed = function(){
+        console.log('color_changed called');
 
         if($('.colors').hasClass('colors_page')){
 
@@ -1092,7 +1115,7 @@
       };
 
       this.setProduct = function(){
-        //console.log('set product called');
+        console.log('setProduct called: '+slug);
         products = store.products;
         for(var i=0;i<store.products.length;i++){
           if(store.products[i].slug==slug){
@@ -1149,7 +1172,31 @@
                   value: widths.indexOf(selected_width)+1,
                   orientation: "horizontal",
                   range: "min",
-                  change: change_variant
+                  change: function(){
+
+                    
+                    
+
+                    change_variant()
+                    
+                    setTimeout(function(){
+
+                      if(selected_variant==-1){
+                        for(var i = 0; i<product.variants.length; i++){
+                              v=product.variants[i];
+                              if(v.width.toLowerCase().replace(' ','-')==selected_width.toLowerCase().replace(' ','-'))
+                                if(v.color == selected_color)
+                                    if(v.putup!='' && v.putup!=selected_putup){              
+                                      var pindex = putups.indexOf(v.putup.replace(' ','-'))+1;
+                                      $('#putup-slider').slider("value",pindex);
+                                      return;
+                                    }
+                        }
+                      }
+                    },200);
+
+                    
+                  }
                 }).addSliderSegments(widths.length);
               }
 
@@ -1215,10 +1262,9 @@
 
               store.set_options_for_color_select();
 
-
-              change_variant_by_id(variants[0][0]);
+              // change_variant_by_id(variants[0][0]);
       
-              if($('.price span span').text()=="Not Available")
+              if($('.price span span').text()=="" || $('.price span span').text()=="Not Available")
                 change_variant_by_id(variants[0][0]);
               
               set_slider_width('#width-slider',widths);
@@ -1334,9 +1380,12 @@
         $http.get('/products/'+slug+'.json?taxon_id=<%=@taxon.id%>').success(function(data){
           if($('#homepage-carousel').hasClass('h'))
             $('.back-btn').trigger('click');
+          var v_id = variant.id;
           store.products = data;
           store.setProduct();
           setup_sliders();
+          setTimeout(function(){console.log('reset old variant'); console.log(v_id); change_variant_by_id(v_id)},2000);
+
           setTimeout(function(){$('#t_'+product.id+' a').trigger('click')},300);
           // setTimeout(function(){$('.colors').trigger('change')},100);
 

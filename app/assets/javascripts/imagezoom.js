@@ -133,6 +133,8 @@
             e.preventDefault();
             this.show(e, true);
         }
+
+        $('.ui-slider').css('z-index','3');
     };
 
     /**
@@ -154,6 +156,7 @@
     EasyZoom.prototype._onLeave = function() {
         this.isMouseOver = false;
         this.isOpen && this.hide();
+        $('.ui-slider').css('z-index','5');
     };
 
     /**
