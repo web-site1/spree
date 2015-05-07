@@ -166,13 +166,13 @@ button.add-to-cart {
 		margin-right: auto;
 	}
 	.zoom-msg{
-		display:none;
 		z-index:4;
 		background:white;
 		text-align:center;
 		bottom:80px;
 		width:100%;
 		font-size:12px;
+		margin-bottom: 10px;
 	}
 }
 
@@ -233,9 +233,9 @@ button.add-to-cart {
 }
 @media (max-width: 480px) {
 	.product_main{
-		height: 320px !important;
+		/*height:240px !important;*/
 		a img{
-			max-height:320px !important;
+			max-height:240px !important;
 		}
 	}
 
@@ -257,6 +257,7 @@ button.add-to-cart {
   	.product-display {
   		.zoom-msg{
   			display:block;
+  			margin-bottom: 5px;
   		}
 
   		.h {

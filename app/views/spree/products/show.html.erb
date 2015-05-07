@@ -114,7 +114,7 @@
 
   .h .imageHolder img{
     /*width:100%;*/
-    height:150%;
+    height:120%;
   }
 
   img.img-responsive.thumb-active{
@@ -283,7 +283,11 @@
           
 
           <div class="zoom-msg">
-            click/swipe above to zoom or change
+            <% if mobile_agent? %>
+              Touch Image above to Zoom, Swipe to browse
+            <% else %>
+              Roll over Image above to Zoom
+            <% end %>
           </div>
 
 
@@ -563,10 +567,11 @@
 
 
   if(mobile_agent && window.innerWidth < 500){
+    $(".zoom-msg").html("Tap Image above to Zoom, Swipe to browse")
           setTimeout(function(){$("html, body").animate({ scrollTop: "152px" },function(){
             $(window).scrollTop(152);
           });},1000);  
-        }
+  }
 
 
   function setup_sliders(){
