@@ -42,7 +42,7 @@
                        product = product.results.first
                    end
                 %>
-                <% url = product_url(product, :taxon_id => @taxon.try(:id)) %>
+                <% url = product_url(product, :taxon_id => Spree::Product.cat_taxon.try(:id)) %>
                 <% cache [I18n.locale, product] do %>
                     <li class="col-lg-3 col-md-4 col-sm-4 col-xs-3">
                         <%= link_to small_image(product, :itemprop => "image",class: "img-responsive",width: '148px', height: '148px'), url, :itemprop => 'url',

@@ -256,7 +256,7 @@
               </div>
 
               <div class="slider-for" ng-if="store.product.colors.length != 1 && store.product.variant_images_count > 1">
-                <div ng-if="store.product.master.image_mini" id='{{store.product.master.id}}'>
+                <div ng-if="store.product.variant_images_count == 1" id='{{store.product.master.id}}'>
                   
                   <div class ="zoom easyzoom easyzoom--adjacent">
                     <a ng-href="{{store.product.master.image_large || store.no_image }}">
@@ -1000,7 +1000,7 @@
           store.myModel.FbLikeUrl = fblikeurl + '&variant_id='+item.id;
           jQuery('#multiple-items1').jcarousel('reload');
           var indx = get_variant_index(item);
-          set_main_slider(indx+v_offset);
+          set_main_slider(indx)//+v_offset);
           //$('.slider-nav').slick('slickGoTo',indx+v_offset);
 
         }
@@ -1048,8 +1048,8 @@
                 variant = store.find_variant_by_color(selected_color);
               
                 var indx = get_variant_index(variant);
-                $('.slider-nav').slick('slickGoTo',indx+v_offset);
-                $('.slider-for').slick('slickGoTo',indx+v_offset);
+                $('.slider-nav').slick('slickGoTo',indx);//+v_offset);
+                $('.slider-for').slick('slickGoTo',indx);//+v_offset);
                 
                 if(variant.image){
                   store.selected_image = store.myModel.ImageUrl = variant.image;
