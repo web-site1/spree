@@ -62,7 +62,7 @@
       <% if @order.promotions.empty? %>
           <%= form.text_field :coupon_code, :class => 'form-control' %>
       <% else %>
-          <%= %Q{#{@order.promotions.first.code applied}} rescue '' %>
+          <%= %Q{#{@order.promotions.first.code} applied} rescue '' %>
       <% end %>
     </p>
   </div>
