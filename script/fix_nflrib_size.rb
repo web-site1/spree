@@ -13,7 +13,9 @@ r.each do |s|
 
   ovs = v.option_values
   keep = ovs.select{|o| !(o.option_type_id == 7)}
-  keep.each{|v| v.option_values << v}
+  v.option_values = []
+  v.save!
+  keep.each{|vv| v.option_values << vv}
   v.option_values << ov_to_change
   v.save!
 
