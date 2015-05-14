@@ -5,6 +5,8 @@ module Spree
     has_one :new_item,class_name: NewItem ,foreign_key: :new_pbs_item, primary_key: :item_no
     has_one :itmfil, foreign_key: :item_no, primary_key: :item_no
 
+    after_save :update_solr_index
+
     Spree::OptionType.all.map{|p| p.name.downcase.gsub(' ','_').gsub('-','9')}.reject{|vn| vn == 'color'|| vn == 'width'}.each do |p|
       define_method(%Q{variant_#{p}}) do
         self.option_values.select{|ov| ov.option_type.name.downcase == p.gsub('_',' ').gsub('9','-')}.first.name rescue ''
@@ -54,6 +56,11 @@ module Spree
       p = Itmfil.find(item_no).get_price
       return Spree::Money.new(999999.99, :currency => currency).to_s unless p
       Spree::Money.new(p, :currency => currency).to_s
+    end
+
+    def update_solr_index
+      self.product.index
+      #Sunspot.commit
     end
 
   end

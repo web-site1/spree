@@ -67,4 +67,4 @@ end
 Spree::PrintInvoice::Config.set(logo_path: 'logo.png')
 Spree::PrintInvoice::Config.set(print_buttons: 'invoice,picking_ticket')
 
-puts "!!! #{Spree::Image.attachment_definitions[:attachment].inspect}"
+# puts "!!! #{Spree::Image.attachment_definitions[:attachment].inspect}"
