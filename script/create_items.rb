@@ -217,7 +217,7 @@ CSV.open(csv_error_file, "wb") do |csv|
     #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
     #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
     #r = RcPbs.where(ws_subcat: "CQA-62.")
-     r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
+     r = MisSku.all
     r.each do |rcpbs|
 
       web_item = WebItem.find_by_item(rcpbs.item)
