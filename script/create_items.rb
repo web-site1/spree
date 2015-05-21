@@ -9,16 +9,6 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'csv'
 #local run code
 
-=begin
-Spree::Product.where('id > 23').delete_all
-Spree::Variant.where('id > 51').delete_all
-Spree::ProductProperty.where('id > 17').delete_all
-Spree::Asset.where('id > 6').delete_all
-Spree::Price.delete_all
-Spree::ProductTaxon.delete_all
-Spree::spree_option_values.delete_all
-spree_option_values_variants
-=end
 
 
 log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
