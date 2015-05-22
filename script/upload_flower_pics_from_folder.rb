@@ -17,16 +17,19 @@ Dir[%Q{#{images_path}/*}].each do |image_file|
   v = Spree::Variant.find_by_sku(lookup.gsub('CQA-17_SK','CQA-17/SK')) if v.nil?
   v = Spree::Variant.find_by_sku(lookup.gsub('CQA-17_SK-lt.-purple_moss','CQA-17/SK-lt.-purple/moss')) if v.nil?
   if !v
-    puts "No picture found!"
+    puts "No picture found! #{lookup}"
   else
     p = v.product
     if p.images.empty?
-      p.images <<  Spree::Image.create!(:attachment => File.open(%Q{#{images_path}/#{image_file}}))
+      p.images <<  Spree::Image.create!(:attachment => File.open(%Q{#{image_file}}))
       p.save!
     end
 
-    v.images = []
-    v.images <<  Spree::Image.create!(:attachment => File.open(%Q{#{images_path}/#{image_file}}))
-    v.save!
+    if v.images.empty?
+        v.images <<  Spree::Image.create!(:attachment => File.open(%Q{#{image_file}}))
+        v.save!
+        puts "Image loaded #{v.sku}!"
+    end
+
   end
 end

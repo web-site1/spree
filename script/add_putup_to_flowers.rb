@@ -40,7 +40,8 @@ prod.variants.each do |v|
   flower_variants << v
 end
 =end
-
+skus = MisSku.all.map{|m|m.new_pbs_desc_1}
+flower_variants = Spree::Variant.where("sku in (?)",skus)
 
 flower_variants.each do |v|
   p = v.product
