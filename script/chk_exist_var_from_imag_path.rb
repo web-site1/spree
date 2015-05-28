@@ -20,9 +20,6 @@ Dir[%Q{#{images_path}/*}].each do |image_file|
     puts lookup
   end
 =begin
-
-
-
   if v
     v.images <<  Spree::Image.create!(:attachment => File.open(image_file))
     v.save!
