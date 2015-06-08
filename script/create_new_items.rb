@@ -196,7 +196,7 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r =  NewestFlower.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false

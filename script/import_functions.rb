@@ -223,13 +223,12 @@ BEGIN{
     width = width.split('/')
     first =  width.first.scan(/./).join('-')
     second = width.last
-    new_width = %Q{#{first}-#{second}}
+    new_width = %Q{#{first}_#{second}}
     if find_by_des
       rcpbs.new_pbs_desc_1.gsub(rcpbs.item_prod_sub_cat,new_width)
     else
       rcpbs.item.gsub(rcpbs.item_prod_sub_cat,new_width)
     end
-
   end
 
   def get_image_path(rcpbs)
@@ -286,6 +285,13 @@ BEGIN{
       src_image = replaced_item.sub(/-/,'')
       src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
     end
+
+    if !File.file?(src_image)
+      src_image = get_replaced_inches_name(rcpbs,false)
+      src_image = %Q{#{@local_site_path}images/#{src_image.strip.gsub(' ','-')}.jpg} rescue ''
+    end
+
+
 
     if !File.file?(src_image)
       src_image = rcpbs.new_pbs_desc_1.gsub('/','-')
