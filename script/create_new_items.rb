@@ -240,6 +240,13 @@ CSV.open(csv_error_file, "wb") do |csv|
           # find main cat taxon record
           main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
 
+          if main_cat_src == 'designer'
+            main_cat_src = 'Leading Designer'
+          end
+
+          if main_cat_src == 'grosgrain'
+            main_cat_src = 'grosgrain ribbon'
+          end
 
           if @item_type == 'Flower' || @item_type == 'tulle & trim'
             main_cat = type_taxon
@@ -249,6 +256,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src.pluralize,type_taxon.id)
             end
           end
+
 
           if main_cat.nil?
             logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)}"
@@ -307,7 +315,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 taxonrec.save
               end
             rescue Exception => e
-              puts "#{e.to_s} error loading taxon image image id #{taxon.name}"
+              puts "#{e.to_s} error loading taxon image image id #{taxonrec.name}"
             end
 
           end
