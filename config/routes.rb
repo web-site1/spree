@@ -136,6 +136,9 @@ Rails.application.routes.draw do
   get 'why_shop/:id' => 'spree/home#why_shop'
   get 'site/:id' => 'spree/home#why_shop'
   post 'change_art_state' => 'spree/orders#change_art_state'
+
+  get 'index', to: redirect('/')
+
   # get '1-:prod-description', to: redirect  { |path_params|
   #         Rails.logger.debug "!!! /products/#{path_params[:prod]}"
   #         "/products/#{path_params[:prod]}"
