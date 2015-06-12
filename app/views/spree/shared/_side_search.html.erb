@@ -99,6 +99,10 @@
                                     else
                                         sk_link =  %Q{/t/#{sv.first}}
                                     end
+
+                                    if sk.strip.downcase == 'custom bows'
+                                      sk_link = "/page/custom_bows"
+                                    end
                                   %>
 
                                   <a data-toggle="collapse" class="<%= "collapsed" if !this_cat_selected%> cat-click" data-parent="#accordion<%=uniq_id%>" href="#collapseInnerOne<%=uniq_id%>"

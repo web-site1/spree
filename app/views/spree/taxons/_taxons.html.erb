@@ -22,7 +22,7 @@
     <ul>
           <%
              if ((@taxon.parent_id.nil? || @taxon.products.empty? || @taxon.parent_id < 2) &&
-                  !(@taxon.name.downcase == 'newest'))
+                  !(@taxon.name.downcase == 'newest') &&  !(@taxon.name.downcase ==  'custom bows'))
           %>
             <% subcats = get_taxons_subcats(@taxon) %>
             <% subcats.each do |sct| %>
@@ -36,6 +36,9 @@
                     end
                   else
                    t_link = %Q{/t/#{sct.permalink}}
+                  end
+                  if sct.name.downcase ==  'custom bows'
+                    t_link = "/page/custom_bows"
                   end
                 %>
 
