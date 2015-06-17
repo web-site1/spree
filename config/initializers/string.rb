@@ -42,7 +42,12 @@ class String
     'wild' => 'WLD',
     'williamsberg' => 'WLSMBRG',
     'willow' => 'WLW',
-    'yellow' => 'YEL'
+    'yellow' => 'YEL',
+    'babymaize' => 'BBYMAIZ',
+    'baby' => 'BBY',
+    'maize' => 'MAIZ',
+    'williamsburg' => 'WILMSBRG',
+    'soft' => 'SFT'
   }
 
 

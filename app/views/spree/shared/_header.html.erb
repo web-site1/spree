@@ -1,13 +1,13 @@
-<!--<section class="topbar">-->
-  <!--<div class="container">-->
-    <!--<ul>-->
-      <!--<li class="connect"><a href="#">Connect With Us!</a></li>-->
-      <!--<li><a href="#"><span class="fa fa-pinterest"></span></a></li>-->
-      <!--<li><a href="#"><span class="fa fa-facebook-official"></span></a></li>-->
-      <!--<li><a href="#"><span class="fa fa-twitter"></span></a></li>-->
-    <!--</ul>-->
-  <!--</div>-->
-<!--</section>-->
+<section class="topbar">
+  <div class="container">
+    <ul>
+      <li class="connect"><a href="#">Connect With Us!</a></li>
+      <li><a href="//pinterest.com/artisticribbon" target="_blank"><span class="fa fa-pinterest"></span></a></li>
+      <li><a href="//www.facebook.com/pages/Artistic-Ribbon-Inc/192678021022?ref=search&sid=539378516.1359065251..1" target="_blank"><span class="fa fa-facebook-official"></span></a></li>
+      <li><a href="//twitter.com/ArtisticRibbon"><span class="fa fa-twitter"></span></a></li>
+    </ul>
+  </div>
+</section>
 
 <nav class="navbar navbar-default navbar-ar">
   <div class="container">
@@ -63,20 +63,9 @@
           <li class="nav-home active"><%= link_to Spree.t(:home), spree.root_path %></li>
           <li class="nav-ribbons"><a href="/t/categories/ribbons">Ribbons</a></li>
           <li class="nav-new-items"><a href="/products?for_new_arrivals=true&per_page=30">New Items</a></li>
-          <li class="nav-specials"><a href="/t/categories/closeouts">Specials</a></li>
+          <li class="nav-specials"><a href="/t/categories/wholesale-ribbon">Specials</a></li>
           <li class="nav-featured"><a href="/t/tags/featured">Featured</a></li>
-          <li class="nav-search">
-            <%= form_tag spree.products_path,class: "navbar-form navbar-left" ,:method => :get do %>
-                <div id="search">
-                    <%= search_field_tag :keywords, params[:keywords], :placeholder => Spree.t(:search),:class => "input-md" %>
-                      <button type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                </div>
 
-            <% end %>
-
-          </li>
         </ul>
 
       </div>
@@ -85,3 +74,39 @@
     <!--/.nav-collapse -->
   </div>
 </nav>
+
+
+<section class="quick-search">
+    <div class="container">
+        <div class="row art-src-div">
+          <div class="row hidden-md hidden-lg">
+            <div class="nav-search col-sm-12 col-xs-12 mbl">
+              <form class="navbar-form navbar-left mobile-src-frm" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                <div id="search">
+                  <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
+                  <button type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-1 col-md-1">
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 promo-div-displ">
+            <span class='promo-text'><%=get_promotion_and_display%></span>
+          </div>
+          <div class="col-lg-4 col-md-4 hidden-xs hidden-sm">
+              <form class="navbar-form navbar-left src-form" action="/products" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="✓">
+                <div id="search">
+                  <input type="search" name="keywords" id="keywords" placeholder="Search" class="input-md">
+                  <button type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </form>
+          </div>
+        </div>
+    </div>
+</section>

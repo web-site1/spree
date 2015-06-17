@@ -14,7 +14,7 @@ puts "Starting to Check images"
 if Rails.env == 'staging'
   @local_site_path =   "/var/www/artspree3/"
 else
-  @local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
+  @local_site_path = "/home/louie/Dropbox/DEV/"
   #@local_site_path = "/tmp/t/"
 end
 

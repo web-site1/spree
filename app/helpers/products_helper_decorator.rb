@@ -5,6 +5,35 @@ Spree::ProductsHelper.module_eval do
     end
   end
 
+  def calculate_product_image_dimensions(product)
+  	width = (product.variant_images.first.attachment_width*2.0 rescue 0)
+  	height = (product.variant_images.first.attachment_height*2.0 rescue 0)
+  	if width ==0
+  		width = 500
+  	end
+  	if height==0
+  		height = 330
+  	end
+
+  	if width > 700 
+  		height = height * 700/width
+  		width = 700
+  	end
+
+  	if height>470
+  		width = width * 400/height
+  		height = 470
+  	end
+
+  	if(width <= 200)
+  		width = width * 1.2;
+  		height = height * 1.2; 
+  	end
+
+  	return [width,height]
+  end
+
+
   def compare_lengths(a,b)
   	aa = a.split('-')
 	na=0

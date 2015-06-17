@@ -17,6 +17,7 @@ Spree.user_class = "Spree::User"
 Spree::Config.set(logo: "artistic-logo-white.png")
 Spree::Config.set(:products_per_page => 10)
 Spree::Config.set(:require_master_price => false)
+Spree::Config.set(:company => true)
 
 
 # Use S3 for product images
@@ -66,4 +67,4 @@ end
 Spree::PrintInvoice::Config.set(logo_path: 'logo.png')
 Spree::PrintInvoice::Config.set(print_buttons: 'invoice,picking_ticket')
 
-puts "!!! #{Spree::Image.attachment_definitions[:attachment].inspect}"
+# puts "!!! #{Spree::Image.attachment_definitions[:attachment].inspect}"

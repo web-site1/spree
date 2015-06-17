@@ -28,7 +28,8 @@ Version: 1.0-artribbon
 @import "search-results";
 @import "cart";
 @import "product-page";
-
+@import "slick";
+@import "slick-theme";
 
 /*CSS Changes by Fahad*/
 
@@ -66,8 +67,8 @@ Version: 1.0-artribbon
 }
 
 
-.jcarousel li{
-  width:106px;
+.jcarousel.related-items li{
+  width:106px !important;
 }
 
 .multiple-items.jcarousel img{
@@ -80,7 +81,6 @@ Version: 1.0-artribbon
 
 .product_main{
   height:240px;
-  line-height: 240px;
   text-align:center;
 }
 
@@ -92,8 +92,8 @@ Version: 1.0-artribbon
 }
 
 .social-icons{
-  margin-top: 25px !important;
-  margin-bottom: 100px !important;
+  margin-top: 25px;
+  margin-bottom: 100px;
 }
 
 .social-icons label{
@@ -108,6 +108,75 @@ Version: 1.0-artribbon
 ul.ng-social li{
   display:block;
   float:left;
+}
+
+.quick-search{
+  padding-top:0px!important;
+  padding-bottom:12px;
+
+  h3{
+    padding-top:15px;
+  }
+  .quick-search-form{
+    padding-top:15px;
+    
+    .form-control, .select2-search input[type="text"]{
+      height:30px;
+    }
+    .select2-choice{
+      line-height:1.0;
+      min-height:30px;
+      padding:5px 39px 5px 15px;
+    }
+    #quickclear{
+      line-height: 0.8;
+    }
+  }
+}
+
+
+@media (min-width: 990px) {
+
+  footer{
+    margin-top:30px !important;
+  }
+
+  body.home .main-content.ng-scope {
+    margin-top:0px;
+  }
+
+  .container.ng-scope{
+    margin-top:-50px;
+  }
+
+  .product-display{
+    margin-top:20px;
+  }
+
+  .product-information{
+    margin-top:-5px;
+  }
+
+  .product-information{
+    h1, h2, h3 {
+      margin-top: 15px;
+      margin-bottom: 10px;  
+    }
+
+    .product-settings{
+      margin-top:15px;
+    
+      .row{
+        margin-bottom:10px;
+      }
+
+      #add_to_cart_form{
+        margin-top:-10px;
+      }
+
+    }
+  }
+
 }
 
 
@@ -143,9 +212,185 @@ span.rate-cost{
 }
 
 footer{
-  margin-top: 65px;
+  margin-top: 70px;
 }
 
-/* End */
+div.alert-notice{
+  color: darkgreen;
+}
+#art_message {
+  color: darkgreen;
+  /*float: right;
+  margin-right: 25%;
+  margin-top: -37px;*/
+  font-size: 16pt;
+  font-weight: bold;
+}
 
+.continue_shop{
+  font-size: 17pt;
+  /*color: #000000;*/
+  font-weight: bolder;
+}
+
+  #cart_view .modal-dialog  {width:80%;}
+
+  #cart_view .modal-body    {overflow-y: auto;}
+
+.art-src-div {
+ /* background-color: #d9edf7;*/
+}
+.promo-text {
+  font-size: 14pt;
+  font-weight: bold;
+}
+.promo-div-displ{
+  padding-top: 10px;
+}
+
+.small-promo{
+  font-size: 10pt;
+  font-weight: bold;
+  padding-left: 5%;
+}
+
+/* Begin navbar */
+@media (min-width: 768px) {
+  .navbar-header {
+    float: left; } }
+
+.navbar-collapse2 {
+  overflow-x: visible;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-top: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  -webkit-overflow-scrolling: touch; }
+.navbar-collapse2:before, .navbar-collapse2:after {
+  content: " ";
+  display: table; }
+.navbar-collapse2:after {
+  clear: both; }
+.navbar-collapse2.in {
+  overflow-y: auto; }
+@media (min-width: 768px) {
+  .navbar-collapse2 {
+    width: auto;
+    border-top: 0;
+    box-shadow: none; }
+  .navbar-collapse2.collapse {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    padding-bottom: 0;
+    overflow: visible !important; }
+  .navbar-collapse2.in {
+    overflow-y: visible; }
+  .navbar-fixed-top .navbar-collapse2, .navbar-static-top .navbar-collapse2, .navbar-fixed-bottom .navbar-collapse2 {
+    padding-left: 0;
+    padding-right: 0; } }
+
+.navbar-fixed-top .navbar-collapse2,
+.navbar-fixed-bottom .navbar-collapse2 {
+  max-height: 340px; }
+@media (max-device-width: 480px) and (orientation: landscape) {
+  .navbar-fixed-top .navbar-collapse2,
+  .navbar-fixed-bottom .navbar-collapse2 {
+    max-height: 200px; } }
+
+.container > .navbar-header,
+.container > .navbar-collapse2,
+.container-fluid > .navbar-header,
+.container-fluid > .navbar-collapse2 {
+  margin-right: -15px;
+  margin-left: -15px; }
+@media (min-width: 768px) {
+  .container > .navbar-header,
+  .container > .navbar-collapse2,
+  .container-fluid > .navbar-header,
+  .container-fluid > .navbar-collapse2 {
+    margin-right: 0;
+    margin-left: 0; } }
+
+
+.navbar-toggle1 {
+  position: relative;
+  float: left;
+  margin-right: 15px;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px; }
+.navbar-toggle1:focus {
+  outline: 0; }
+@media (min-width: 768px) {
+  .navbar-toggle1 {
+    display: none; } }
+.sidenavbar {
+  margin-top: 5px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.side-mobile-hdr{
+  background-color:#ecf0f1;
+}
+
+.mobile-src-frm{
+  margin: 0px 0px;
+}
+
+.mobile-side {
+  /*padding: 15px 15px;
+  display: block;
+  background-color: #3498db;
+  color: #138cce;*/
+  background-image: image-url('elements/arrow-up.png');
+  background-repeat: no-repeat;
+  padding: inherit;
+  padding-top: 0px;
+  /*background-position: calc(100% - 20px) center;*/
+}
+
+.mob-button{
+  float: right;
+}
+.mobile-fix-refine {
+  margin-left: -15px;
+}
+
+#search input {
+  width: 250px;
+}
+
+@media (max-width: 768px) {
+  #search input {
+    width: 100%;
+  }
+
+}
+
+.src-form{
+  padding-top: 8px;
+  padding-bottom: 0px;
+}
+/* end navbar */
+
+/* End */
+/* LA Start CSS Simone */
+.line-separator2 {
+  height: 5px;
+  width: 100%;
+  background: lightgray;
+  margin-bottom: 20px;
+}
+
+
+.custom-img{
+  clear: both;
+}
+/* LA End CSS Simone */
 

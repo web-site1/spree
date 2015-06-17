@@ -5,6 +5,7 @@
 	json.taxon product.taxons.first.name rescue ''
 	json.taxon_parent product.taxons.first.parent.name rescue ''
 	json.image product.images.first.attachment.url(:product) rescue ''
+	json.image_large product.images.first.attachment.url(:large) rescue ''
 	json.variant_images_count product.variant_images.count
 	json.colors product.colors.uniq
 	json.counts product.counts.uniq.sort{ |a,b| a.to_f <=> b.to_f }
@@ -12,6 +13,7 @@
 	json.diameters product.diameters.uniq.sort{ |a,b| compare_lengths(a,b) }
 	json.totes product.tote_sizes.uniq.sort{ |a,b| a.to_f <=> b.to_f }.uniq
 	json.putups product.ribbon_putups.uniq.sort{ |a,b| a.to_f <=> b.to_f }
+	json.valid_putups []
 	json.lengths product.lengths.uniq.sort{ |a,b| compare_lengths(a,b) }
 	json.is_new product.available_on > (Time.now - 30.days) rescue false
 
@@ -27,6 +29,8 @@
 
 		json.image product.master.images.first.attachment.url(:product) rescue ''
 		json.image_mini product.master.images.first.attachment.url(:mini) rescue '' 
+		json.image_large product.master.images.first.attachment.url(:large) rescue '' 
+
 	end
 
 	json.variants product.variants do |variant|
@@ -35,7 +39,8 @@
 		json.price display_price(variant)
 		json.image variant.images.first.attachment.url(:product) rescue ''
 		json.image_mini variant.images.first.attachment.url(:mini) rescue '' 
-		
+		json.image_large variant.images.first.attachment.url(:large) rescue '' 
+
 		json.can_supply variant.can_supply?	
 		json.width variant.option_value('width') || ''
 		json.putup variant.option_value('ribbon-putup') || ''

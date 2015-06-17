@@ -3,22 +3,11 @@
 #
 # Run from scripts directory  ruby
 
-
 require File.expand_path('../../config/environment', __FILE__)
 #require '../config/environment'
 require 'csv'
 #local run code
 
-=begin
-Spree::Product.where('id > 23').delete_all
-Spree::Variant.where('id > 51').delete_all
-Spree::ProductProperty.where('id > 17').delete_all
-Spree::Asset.where('id > 6').delete_all
-Spree::Price.delete_all
-Spree::ProductTaxon.delete_all
-Spree::spree_option_values.delete_all
-spree_option_values_variants
-=end
 
 
 log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
@@ -167,6 +156,7 @@ end
 
 @flower_option_hash.merge!(width: flower_width_option)
 @flower_option_hash.merge!(color: all_color_option)
+@flower_option_hash.merge!(putup: ribbon_putup_option)
 
 
 
@@ -214,13 +204,13 @@ previous_page = " "
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    #r = RcPbs.joins( "left JOIN web_items on web_items.item = rc_pbs.item").order('web_items.page').limit(30)
-    #r = RcPbs.find(186691,186743,186795,186847,186899,186951,187003)
-    #r = RcPbs.where(ws_subcat: "CQA-62.")
-     r = RcPbs.find(190593, 190594, 190595, 190596, 190597, 190598, 190599, 190600, 190601, 190602, 190603, 190604, 190605, 190606, 190608, 190609, 190610, 190611, 190612, 190613, 190614, 190615, 190616, 190617, 190618, 190619, 190620, 190621, 190622, 190623, 190624)
+    # missing sku import r = MisSku.all
+    r = RcPbsFlower.all
+
     r.each do |rcpbs|
 
-      web_item = WebItem.find_by_item(rcpbs.item)
+      web_item = CqfItem.find_by_item(rcpbs.item) # WebItem.find_by_item(rcpbs.item)
+
       item_with_multiple_variants = false
       product_created = false
 
@@ -638,6 +628,7 @@ BEGIN{
                     val = rcpbs.new_pbs_desc_3.split(",").last rescue ''
                     srcval = val
                   end
+
 
                   if !val.empty?
                     sov = Spree::OptionValue.find_by_option_type_id_and_name(
