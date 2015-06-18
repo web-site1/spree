@@ -48,6 +48,7 @@ group :development, :test do
   gem 'spring'
 
   gem 'sunspot_solr'
+  gem 'bootstrap-generators', '~> 3.3.4'
 end
 
 
