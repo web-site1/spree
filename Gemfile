@@ -78,7 +78,4 @@ gem 'spree_mail_settings', github: 'spree-contrib/spree_mail_settings', branch: 
 
 gem 'spree_sitemap', github: 'spree-contrib/spree_sitemap', branch: '3-0-stable'
 
-
-
-
-#gem 'activemerchant', '~> 1.47'
+gem 'constantcontact', '~> 2.0.1'
