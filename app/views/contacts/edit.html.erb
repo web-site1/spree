@@ -1,13 +1,16 @@
-<div class="page-header">
-  <%= link_to contacts_path, class: 'btn btn-default' do %>
-    <span class="glyphicon glyphicon-list-alt"></span>
-    Back
-  <% end %>
-  <%= link_to @contact, class: 'btn btn-primary' do %>
-    <span class="glyphicon glyphicon-info-sign"></span>
-    Show
-  <% end %>
-  <h1>Editing contact</h1>
+<div class="col-md-6 col-md-offset-3">
+  <div class="panel panel-default">
+    <%= link_to contacts_path, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>
+        Back
+    <% end %>
+    <%= link_to @contact, class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-info-sign"></span>
+        Show
+    <% end %>
+    <div class="panel-heading">
+      <h3 class="panel-title">Editing contact</h3>
+    </div>
+    <%= render 'form' %>
+  </div>
 </div>
-
-<%= render 'form' %>

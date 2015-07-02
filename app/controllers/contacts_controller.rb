@@ -1,5 +1,6 @@
-class ContactsController < ActionController::Base
+class ContactsController < Spree::StoreController
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
+  layout 'spree/layouts/spree_application'
 
   # GET /contacts
   # GET /contacts.json
@@ -14,7 +15,8 @@ class ContactsController < ActionController::Base
 
   # GET /contacts/new
   def new
-    @contact = Contact.new
+    email = spree_current_user ? spree_current_user.email : ''
+    @contact = Contact.new(email_address: email)
   end
 
   # GET /contacts/1/edit

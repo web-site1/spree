@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_current_user
 
   def set_current_user
-    @current_user = current_user rescue nil
+    @current_user = spree_current_user rescue nil
   end
 
   # Not currently used.  Using NGINX instead
