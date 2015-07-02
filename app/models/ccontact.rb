@@ -45,7 +45,7 @@ class Ccontact
   end
 
   def in_list?(contact, list_id)
-    contact.lists.map(&:id).include?(list_id.to_s)
+    contact.lists.map(&:id).include?(list_id.to_s) rescue false
   end
 
   def get_lists(params = {})

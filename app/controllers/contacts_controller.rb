@@ -1,4 +1,4 @@
-class ContactsController < ApplicationController
+class ContactsController < ActionController::Base
   before_action :set_contact, only: [:show, :edit, :update, :destroy]
 
   # GET /contacts
@@ -19,6 +19,14 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1/edit
   def edit
+  end
+
+  def subscribe
+
+  end
+  # Passed params[:list_id] to unsubscribe from
+  def unsubscribe
+
   end
 
   # POST /contacts

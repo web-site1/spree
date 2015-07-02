@@ -1,5 +1,17 @@
-class Contact < ConstantContact::Components::Contact
-  # Defined in parent
+class Contact
+  include ActiveAttr::Model
+
+  attribute :first_name
+  attribute :last_name
+  attribute :email_address
+  attribute :company_name
+  attribute :lists
+
+  validates_presence_of :email_address, :lists
+  validates_format_of :email, :with => /\A[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,4}\z/i
+
+  # Constant Contact contact object fields:
+
   # attr_accessor :id, :status, :first_name, :middle_name, :last_name, :confirmed, :email_addresses,
   #               :prefix_name, :job_title, :addresses, :company_name, :home_phone,
   #               :work_phone, :cell_phone, :fax, :custom_fields, :lists,
@@ -14,25 +26,25 @@ class Contact < ConstantContact::Components::Contact
 
   # To save a record, email_addresses and lists are required
 
- include ActiveModel::Model
+ # include ActiveModel::Model
+ # include ActiveModel::Naming
 
 
- def self.find(id)
-   cc = Ccontact.new().find(id)
-   cc.email_address = cc.email_addresses.first.email_address
-   cc
- end
+  # minimum attributes to initialize this object:  email_address
+  def initialize(attrs)
+    @ccapi = Ccontact.new()
+    @cc = @ccapi.get_contact_by_email(attrs[:email_address])
+    if @cc
+      self.first_name = @cc.first_name
+      self.last_name = @cc.last_name
+      self.lists = @cc.lists.map(&:id) rescue []
+    end
+  end
 
- def self.find_by_email(email)
-   Ccontact.new().get_contact_by_email(email)
- end
-
- def self.column_names
-   [ :id, :status, :first_name, :middle_name, :last_name, :confirmed, :email_addresses,
-                 :prefix_name, :job_title, :addresses, :company_name, :home_phone,
-                 :work_phone, :cell_phone, :fax, :custom_fields, :lists,
-                 :source_details, :notes, :source ]
- end
+  def in_list?(list_id)
+    return false unless @cc
+    @ccapi.in_list?(@cc, list_id)
+  end
 
  def validate!
 

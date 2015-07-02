@@ -80,3 +80,4 @@ gem 'spree_mail_settings', github: 'spree-contrib/spree_mail_settings', branch: 
 gem 'spree_sitemap', github: 'spree-contrib/spree_sitemap', branch: '3-0-stable'
 
 gem 'constantcontact', '~> 2.0.1'
+gem 'active_attr'

@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :contacts
-
   # This line mounts Spree's routes at the root of your application.
   # This means, any requests to URLs such as /products, will go to Spree::ProductsController.
   # If you would like to change where this engine is mounted, simply change the :at option to something different.
@@ -71,7 +69,9 @@ Rails.application.routes.draw do
   get '/1-velvet-grosgrain-ribbon-category', to: redirect('t/categories/ribbons/velvet/velvet-grosgrain')
   get '/1-:subcat-grosgrain-ribbon-category', to: redirect('/t/categories/ribbons/grosgrain/%{subcat}-grosgrain')
   get 'grosgrain_ribbon', to: redirect('t/categories/ribbons/grosgrain')
+  get '/watermelon_grosgrain_ribbon', to: redirect('https://www.artisticribbon.com/products/watermelon-polyester-grosgrain-ribbon?taxon_id=357')
 
+  get '/acetate-satin-ribbon', to: redirect('/t/categories/ribbons/floral/acetate-satin')
   get '/1-dotted-ribbon-category', to: redirect('/t/categories/ribbons/dot-ribbon')
   get '/1-:subcat-velvet-ribbon-category', to: redirect('/t/categories/ribbons/velvet/%{subcat}-velvet')
   get 'Velvet', to: redirect('/t/categories/ribbons/velvet')
@@ -128,6 +128,8 @@ Rails.application.routes.draw do
   # Tulle & Trims
   get '1-:cat-category', to: redirect('/t/categories/%{cat}')
 
+  get '/1-:color-cruise-stripe-ribbon-description', to: redirect('/products/%{color}-cruise-bi-stripe-ribbon?taxon_id=193')
+
   # Redirect all old product requests to new url
   # #Ex: Old: /1-venetian-blue-nyvalour-velvet-ribbon-description.htm
   #      New: /products/venetian-blue-nyvalour-velvet-ribbon
@@ -142,18 +144,6 @@ Rails.application.routes.draw do
 
   get 'index', to: redirect('/')
 
-  # get '1-:prod-description', to: redirect  { |path_params|
-  #         Rails.logger.debug "!!! /products/#{path_params[:prod]}"
-  #         "/products/#{path_params[:prod]}"
-  #       }
-
-  # get '/1-black-stitches-grosgrain-ribbon-description', to: redirect { |path_params|
-  #                                                       Rails.logger.debug "!!! /products/eatme"
-  #                                                       '/products/black-stitches-grosgrain-ribbon'
-  #                                                     }
-  # get '1-*anything', :to => redirect  { |path_params|
-  #                  Rails.logger.debug "!!! /1-*product-description #{path_params.inspect}"
-  #                  "#{path_params[:anything]}"
-  #                }
+  resources :contacts
 
 end
