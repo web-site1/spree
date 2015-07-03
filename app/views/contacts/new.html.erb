@@ -1,19 +1,10 @@
+<% content_for :otherbread do %>
+    <%= render :partial => "breadcrumbs" %>
+<% end %>
+
 <div class="container">
 
     <div class="col-md-8 col-md-offset-2">
-      <div class="row">
-        <div class="col-lg-12">
-          <ol class="breadcrumb">
-            <li itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb">
-              <span itemprop="title"><a itemprop="url" href="/">Home</a></span>
-            </li>
-            <li class = 'active' itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"
-                style="  width: 200px;">
-              <span itemprop="title">Mailing List</span>
-            </li>
-          </ol>
-        </div>
-      </div>
 
       <div class="row">
         <div class="panel panel-default">

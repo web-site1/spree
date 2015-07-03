@@ -20,11 +20,23 @@ class ContactsController < Spree::StoreController
     if spree_current_user
       email = spree_current_user.email
       @allow_change_to_email = spree_current_user.has_spree_role?('admin')
+      @contact = Contact.find_by_email(email)
     else
       email = ''
       @allow_change_to_email = false
     end
-    @contact = Contact.new(email_address: email, lists: MASTER_LIST_ID)
+    @contact = Contact.new(email_address: email, lists: MASTER_LIST_ID) unless @contact
+    respond_to do |format|
+      if @contact.cc && @contact.in_list?(MASTER_LIST_ID)  # email address found at Constant Contact
+        @allow_change_to_email = false
+        format.html { render :edit }
+      else
+        format.html { render :new }
+      end
+    end
+
+
+    # See if user already on mailing list.  If so, edit
   end
 
   # GET /contacts/1/edit
@@ -47,7 +59,7 @@ class ContactsController < Spree::StoreController
     respond_to do |format|
       if @contact.save
         # format.html { redirect_to @contact, notice: 'Contact was successfully created.' }
-        flash[:notice] = 'Thank You for Signing Up.'
+        flash.now[:notice] = 'Thank You for Signing Up.'
         format.html { render :show }
         format.json { render :show, status: :created, location: @contact }
       else

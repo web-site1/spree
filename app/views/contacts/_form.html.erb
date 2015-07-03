@@ -1,6 +1,8 @@
 <% email_disabled =  @allow_change_to_email ? false : true %>
+<% button_label = @contact.cc ? 'Update' : 'Sign Up' %>
+
    <div style="padding: 5px; padding-top: 10px;">
-  <%= form_for(@contact, url: '/contacts', html: { class: "form-horizontal", role: "form" }) do |f| %>
+  <%= form_for(@contact, html: { class: "form-horizontal", role: "form" }) do |f| %>
       <% if @contact.errors.any? %>
           <div class="alert alert-danger alert-dismissable" role="alert">
             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -41,7 +43,7 @@
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <%= f.submit "Sign Up", class: "btn btn-primary" %>
+          <%= f.submit button_label, class: "btn btn-primary" %>
         </div>
       </div>
   <% end %>

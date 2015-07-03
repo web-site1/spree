@@ -74,8 +74,8 @@ class Contact
   end
 
   def in_list?(list_id)
-    return false unless @cc
-    @ccapi.in_list?(@cc, list_id)
+    return false unless cc
+    @ccapi.in_list?(cc, list_id)
   end
 
   def validate!

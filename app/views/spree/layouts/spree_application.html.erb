@@ -52,6 +52,7 @@
 
 
 <%= render partial: 'spree/products/breadcrumbs' if (@product||@taxon) %>
+<%= yield :otherbread %>
 
 <div class="main-content">
     <span ><%= flash_messages %></span>
