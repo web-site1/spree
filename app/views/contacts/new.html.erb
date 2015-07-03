@@ -1,21 +1,33 @@
 <div class="container">
-  <div class="row">
+
     <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Mailing List Signup</h3>
-          <br />
-          <h7>Subscribe to Our Mailing List to receive notice of discounts and promotions as soon as they are available.<br />We promise not to share your address with anyone
-            and you can opt-out at anytime.
-          </h7>
+      <div class="row">
+        <div class="col-lg-12">
+          <ol class="breadcrumb">
+            <li itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb">
+              <span itemprop="title"><a itemprop="url" href="/">Home</a></span>
+            </li>
+            <li class = 'active' itemscope="itemscope" itemtype="http://data-vocabulary.org/Breadcrumb"
+                style="  width: 200px;">
+              <span itemprop="title">Mailing List</span>
+            </li>
+          </ol>
         </div>
-        <%= render 'form' %>
       </div>
-      <%= link_to '/', class: 'btn btn-default' do %>
-          <span class="glyphicon glyphicon-list-alt"></span>
-          Back
-      <% end %>
+
+      <div class="row">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Mailing List Signup</h3>
+            <br />
+            <h7>Subscribe to Our Mailing List to receive notice of discounts and promotions as soon as they are available.<br />We promise not to share your address with anyone
+              and you can opt-out at anytime.
+            </h7>
+          </div>
+          <%= render 'form' %>
+        </div>
+      </div>
+
     </div>
 
-  </div>
 </div>
