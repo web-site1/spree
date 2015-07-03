@@ -145,5 +145,5 @@ Rails.application.routes.draw do
   get 'index', to: redirect('/')
 
   resources :contacts
-
+  get '/contacts/edit' => 'contacts#edit'
 end

@@ -1,11 +1,13 @@
 class Contact
   include ActiveAttr::Model
 
+  attribute :id
   attribute :first_name
   attribute :last_name
   attribute :email_address
   attribute :company_name
   attribute :lists
+  attribute :cc
 
   validates_presence_of :email_address, :lists
   validates_format_of :email, :with => /\A[-a-z0-9_+\.]+\@([-a-z0-9]+\.)+[a-z0-9]{2,4}\z/i
@@ -32,13 +34,43 @@ class Contact
 
   # minimum attributes to initialize this object:  email_address
   def initialize(attrs)
+    super
     @ccapi = Ccontact.new()
-    @cc = @ccapi.get_contact_by_email(attrs[:email_address])
-    if @cc
-      self.first_name = @cc.first_name
-      self.last_name = @cc.last_name
-      self.lists = @cc.lists.map(&:id) rescue []
-    end
+  end
+
+  def find
+    @ccapi.find(id)
+  end
+
+  def find_by_email
+    return nil if email_address.to_s.empty?
+    @ccapi.get_contact_by_email(email_address)
+  end
+
+  def self.find_by_email(email = nil)
+    return nil unless email
+    contact = Contact.new(email_address: email)
+    contact.cc = contact.find_by_email
+    return nil unless contact.cc
+    contact.ccontact_to_contact
+    contact
+  end
+
+  def self.find(id)
+    contact = Contact.new(id: id)
+    contact.cc = contact.find
+    return nil unless contact.cc
+    ccontact_to_contact
+    contact
+  end
+
+  def ccontact_to_contact
+    self.id = cc.id
+    self.email_address = cc.email_addresses.first.email_address
+    self.first_name = cc.first_name
+    self.last_name = cc.last_name
+    self.company_name = cc.company_name
+    self.lists = cc.lists.map(&:id) rescue []
   end
 
   def in_list?(list_id)
@@ -46,14 +78,27 @@ class Contact
     @ccapi.in_list?(@cc, list_id)
   end
 
- def validate!
-
-    errors.add(:email_addresses, "cannot be empty") unless email_addresses
+  def validate!
+    errors.add(:email_address, "cannot be empty") unless (email_address and !email_address.empty?)
     errors.add(:lists, "cannot be empty") unless lists
- end
+  end
 
   def save
-
+    validate!
+    unless errors.any?
+      begin
+        self.cc = @ccapi.get_contact_by_email(email_address) unless email_address.to_s.empty?
+        if !cc
+          self.cc = @ccapi.add_contact(self)
+        else
+          self.cc = @ccapi.update_contact(self)
+        end
+        ccontact_to_contact
+      rescue Exception => e
+        errors.add(:email_address, e.to_s)
+        return false
+      end
+    end
   end
 
 end

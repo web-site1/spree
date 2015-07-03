@@ -1,74 +1,27 @@
-<div class="page-header">
-  <%= link_to contacts_path, class: 'btn btn-default' do %>
-    <span class="glyphicon glyphicon-list-alt"></span>
-    Back
-  <% end %>
-  <%= link_to edit_contact_path(@contact), class: 'btn btn-primary' do %>
-    <span class="glyphicon glyphicon-pencil"></span>
-    Edit
-  <% end %>
-  <h1>Show contact</h1>
+<div class="col-md-6 col-md-offset-3">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Contact</h3>
+    </div>
+    <dl class="dl-horizontal">
+      <dt>Id:</dt>
+      <dd><%= @contact.id %></dd>
+
+      <dt>Email address:</dt>
+      <dd><%= @contact.email_address %></dd>
+
+      <dt>First name:</dt>
+      <dd><%= @contact.first_name %></dd>
+
+      <dt>Last name:</dt>
+      <dd><%= @contact.last_name %></dd>
+
+      <dt>Company name:</dt>
+      <dd><%= @contact.company_name %></dd>
+
+      <dt>Lists:</dt>
+      <dd><%= @contact.lists.include?('3') ? 'Master List' : @contact.lists.join(",") %></dd>
+    </dl>
+
+  </div>
 </div>
-
-<dl class="dl-horizontal">
-  <dt>Id:</dt>
-  <dd><%= @contact.id %></dd>
-
-  <dt>Status:</dt>
-  <dd><%= @contact.status %></dd>
-
-  <dt>First name:</dt>
-  <dd><%= @contact.first_name %></dd>
-
-  <dt>Middle name:</dt>
-  <dd><%= @contact.middle_name %></dd>
-
-  <dt>Last name:</dt>
-  <dd><%= @contact.last_name %></dd>
-
-  <dt>Confirmed:</dt>
-  <dd><%= @contact.confirmed %></dd>
-
-  <dt>Email addresses:</dt>
-  <dd><%= @contact.email_addresses %></dd>
-
-  <dt>Prefix name:</dt>
-  <dd><%= @contact.prefix_name %></dd>
-
-  <dt>Job title:</dt>
-  <dd><%= @contact.job_title %></dd>
-
-  <dt>Addresses:</dt>
-  <dd><%= @contact.addresses %></dd>
-
-  <dt>Company name:</dt>
-  <dd><%= @contact.company_name %></dd>
-
-  <dt>Home phone:</dt>
-  <dd><%= @contact.home_phone %></dd>
-
-  <dt>Work phone:</dt>
-  <dd><%= @contact.work_phone %></dd>
-
-  <dt>Cell phone:</dt>
-  <dd><%= @contact.cell_phone %></dd>
-
-  <dt>Fax:</dt>
-  <dd><%= @contact.fax %></dd>
-
-  <dt>Custom fields:</dt>
-  <dd><%= @contact.custom_fields %></dd>
-
-  <dt>Lists:</dt>
-  <dd><%= @contact.lists %></dd>
-
-  <dt>Source details:</dt>
-  <dd><%= @contact.source_details %></dd>
-
-  <dt>Notes:</dt>
-  <dd><%= @contact.notes %></dd>
-
-  <dt>Source:</dt>
-  <dd><%= @contact.source %></dd>
-
-</dl>
