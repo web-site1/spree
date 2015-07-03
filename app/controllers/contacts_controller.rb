@@ -28,8 +28,7 @@ class ContactsController < Spree::StoreController
     @contact = Contact.new(email_address: email, lists: MASTER_LIST_ID) unless @contact
     respond_to do |format|
       if @contact.cc && @contact.in_list?(MASTER_LIST_ID)  # email address found at Constant Contact
-        @allow_change_to_email = false
-        format.html { render :edit }
+        redirect_to edit_contact_path(@contact.id) and return
       else
         format.html { render :new }
       end
@@ -41,6 +40,7 @@ class ContactsController < Spree::StoreController
 
   # GET /contacts/1/edit
   def edit
+    @allow_change_to_email = false
   end
 
   def subscribe

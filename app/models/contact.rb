@@ -38,6 +38,10 @@ class Contact
     @ccapi = Ccontact.new()
   end
 
+  def persisted?
+    cc
+  end
+
   def find
     @ccapi.find(id)
   end
@@ -60,7 +64,7 @@ class Contact
     contact = Contact.new(id: id)
     contact.cc = contact.find
     return nil unless contact.cc
-    ccontact_to_contact
+    contact.ccontact_to_contact
     contact
   end
 
