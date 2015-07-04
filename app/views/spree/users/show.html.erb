@@ -7,53 +7,15 @@
   </dl>
   <dl id="mailing-list-info">
     <dt>Mailing Lists</dt>
-    <dd>Master List: <% if @contact && @contact.in_list?(3) %>
-                         Subscribed
-                    <% else %>
-                         Not Subscribed
-                    <% end %>
-      <%= form_for(@contact, url: '/contacts', html: { class: "form-horizontal", role: "form" }) do |f| %>
-          <% if @contact.errors.any? %>
-              <div class="alert alert-danger alert-dismissable" role="alert">
-                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being saved:</h4>
-
-                <ul>
-                  <% @contact.errors.full_messages.each do |msg| %>
-                      <li><%= msg %></li>
-                  <% end %>
-                </ul>
-              </div>
+    <dd>
+      <% if @contact && @contact.in_list?(MASTER_LIST_ID) %>
+          <%= button_to "/contacts/#{@contact.id}/edit", method: :get, class: 'btn btn-primary' do %>
+              <i class="glyphicon glyphicon-edit"></i> Manage Subscription
           <% end %>
-          <div class="form-group">
-            <%= f.label :email_addresses, class: "col-sm-2 control-label" %>
-            <div class="col-sm-10">
-              <%= f.text_field :email_address, value: @user.email, disabled: true, class: "form-control" %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :first_name, class: "col-sm-2 control-label" %>
-            <div class="col-sm-10">
-              <%= f.text_field :first_name, class: "form-control" %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :last_name, class: "col-sm-2 control-label" %>
-            <div class="col-sm-10">
-              <%= f.text_field :last_name, class: "form-control" %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :company_name, class: "col-sm-2 control-label" %>
-            <div class="col-sm-10">
-              <%= f.text_field :company_name, class: "form-control" %>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <%= f.submit class: "btn btn-primary" %>
-            </div>
-          </div>
+      <% else %>
+          <%= button_to '/contacts/new', method: :get, class: 'btn btn-primary' do %>
+              <i class="glyphicon glyphicon-plus"></i> Subscribe
+          <% end %>
       <% end %>
 
     </dd>
