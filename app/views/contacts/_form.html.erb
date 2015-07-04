@@ -1,5 +1,5 @@
 <% email_disabled =  @allow_change_to_email ? false : true %>
-<% button_label = @contact.cc ? 'Update' : 'Sign Up' %>
+<% button_label = @contact.persisted? ? 'Update' : 'Sign Up' %>
 
    <div style="padding: 5px; padding-top: 10px;">
   <%= form_for(@contact, html: { class: "form-horizontal", role: "form" }) do |f| %>
@@ -42,8 +42,17 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <%= f.submit button_label, class: "btn btn-primary" %>
+        <div class="col-sm-offset-2 col-sm-10" style="max-height: 30px">
+          <button type="submit" class="btn btn-primary">
+            <i class="glyphicon glyphicon-save"></i> <%= button_label %>
+          </button>
+          <% if @contact.persisted? && @contact.in_list?(MASTER_LIST_ID) %>
+            &nbsp;OR&nbsp;
+            <button type="submit" class="btn btn-warning" name="commit" value="Unsubscribe">
+              <i class="glyphicon glyphicon-remove"></i> Unsubscribe
+            </button>
+            <%#= f.submit('Unsubscribe', class: "btn btn-warning")  %>
+          <% end %>
         </div>
       </div>
   <% end %>

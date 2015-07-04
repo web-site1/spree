@@ -1,3 +1,5 @@
+MASTER_LIST_ID='3'
+
 ConstantContact::Util::Config.configure do |config|
   config[:auth][:api_key] = Rails.application.secrets.cc_access_key
   config[:auth][:api_secret] = Rails.application.secrets.cc_secret_access_key

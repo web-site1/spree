@@ -1,8 +1,6 @@
 class ContactsController < Spree::StoreController
-  before_action :set_contact, only: [:show, :edit, :update, :destroy]
+  before_action :set_contact, only: [:show, :edit, :update, :destroy, :unsubscribe]
   layout 'spree/layouts/spree_application'
-
-  MASTER_LIST_ID='3'
 
   # GET /contacts
   # GET /contacts.json
@@ -19,28 +17,27 @@ class ContactsController < Spree::StoreController
   def new
     if spree_current_user
       email = spree_current_user.email
-      @allow_change_to_email = spree_current_user.has_spree_role?('admin')
       @contact = Contact.find_by_email(email)
     else
       email = ''
-      @allow_change_to_email = false
     end
     @contact = Contact.new(email_address: email, lists: MASTER_LIST_ID) unless @contact
     respond_to do |format|
-      if @contact.cc && @contact.in_list?(MASTER_LIST_ID)  # email address found at Constant Contact
+      if @contact.cc && @contact.in_list?(MASTER_LIST_ID)  # already subscribed to master list
         redirect_to edit_contact_path(@contact.id) and return
       else
+        # Do this in case exists at constant contact but not on master list.
+        @contact.lists = MASTER_LIST_ID if @contact.lists.empty?
+        @allow_change_to_email = true
         format.html { render :new }
       end
     end
-
-
-    # See if user already on mailing list.  If so, edit
   end
 
   # GET /contacts/1/edit
   def edit
     @allow_change_to_email = false
+    @contact.lists = MASTER_LIST_ID if @contact.lists.empty?
   end
 
   def subscribe
@@ -48,7 +45,18 @@ class ContactsController < Spree::StoreController
   end
   # Passed params[:list_id] to unsubscribe from
   def unsubscribe
-
+    respond_to do |format|
+      if @contact.unsubscribe(params[:list_id])
+        # format.html { redirect_to @contact, notice: 'Contact was successfully created.' }
+        flash.now[:notice] = 'Unsubscribe successful.'
+        format.html { render :show }
+        format.json { render :show, status: :created, location: @contact }
+      else
+        @allow_change_to_email = true
+        flash.now[:notice] = 'Unsubscribe successful.'
+        redirect_to request.referer
+      end
+    end
   end
 
   # POST /contacts
@@ -73,13 +81,17 @@ class ContactsController < Spree::StoreController
   # PATCH/PUT /contacts/1
   # PATCH/PUT /contacts/1.json
   def update
-    respond_to do |format|
-      if @contact.update(contact_params)
-        format.html { redirect_to @contact, notice: 'Contact was successfully updated.' }
-        format.json { render :show, status: :ok, location: @contact }
-      else
-        format.html { render :edit }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
+    if params[:commit] == 'Unsubscribe'
+      redirect_to contact_unsubscribe_path(id: @contact.id, list_id: MASTER_LIST_ID) and return
+    else
+      respond_to do |format|
+        if @contact.update(contact_params)
+          format.html { redirect_to @contact, notice: 'Contact was successfully updated.' }
+          format.json { render :show, status: :ok, location: @contact }
+        else
+          format.html { render :edit }
+          format.json { render json: @contact.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

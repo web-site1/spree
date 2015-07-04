@@ -66,3 +66,12 @@ body.home .main-content {
 .hide, .hidden {
 	display: none;
 }
+
+.horiz-buttons {
+  ul {
+    list-style-type: none;
+    li {
+      display: inline;
+    }
+  }
+}

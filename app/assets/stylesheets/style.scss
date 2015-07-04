@@ -188,12 +188,13 @@ Start
 
 .alert-error{
   color: red;
-  font-size: 20pt;
+  font-size: 14pt;
 }
 
 .alert-notice, .alert-success{
-  font-size: 12pt;
-  padding-left: 190px;
+  font-size: 14pt;
+  color: green;
+  //padding-left: 190px;
 }
 
 span.rate-cost{

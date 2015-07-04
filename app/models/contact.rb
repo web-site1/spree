@@ -51,6 +51,7 @@ class Contact
     @ccapi.get_contact_by_email(email_address)
   end
 
+  # Return a Contact object if found at constant contact.  Otherwise, nil.
   def self.find_by_email(email = nil)
     return nil unless email
     contact = Contact.new(email_address: email)
@@ -80,11 +81,24 @@ class Contact
   def in_list?(list_id)
     return false unless cc
     @ccapi.in_list?(cc, list_id)
+
+  end
+
+  def unsubscribe(list_id)
+    @ccapi.delete_contact_from_list(cc, list_id)
+    self.cc = find
+    ccontact_to_contact
+    true
   end
 
   def validate!
     errors.add(:email_address, "cannot be empty") unless (email_address and !email_address.empty?)
     errors.add(:lists, "cannot be empty") unless lists
+  end
+
+  def update(attrs)
+    assign_attributes(attrs)
+    save
   end
 
   def save
