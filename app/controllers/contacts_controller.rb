@@ -28,7 +28,7 @@ class ContactsController < Spree::StoreController
       else
         # Do this in case exists at constant contact but not on master list.
         @contact.lists = MASTER_LIST_ID if @contact.lists.empty?
-        @allow_change_to_email = spree_current_user.has_spree_role?('admin')
+        @allow_change_to_email = spree_current_user.nil? || spree_current_user.has_spree_role?('admin')
         format.html { render :new }
       end
     end
