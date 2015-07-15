@@ -101,6 +101,8 @@ class Contact
     save
   end
 
+  # Create or update a constant contact record.  If email is found at CC, update otherwise add.
+  # Do not use to remove a contact from a list.  It won't work.  Instead use unsubscribe.
   def save
     validate!
     unless errors.any?

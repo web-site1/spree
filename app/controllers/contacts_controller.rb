@@ -41,8 +41,9 @@ class ContactsController < Spree::StoreController
   end
 
   def subscribe
-
+    # Just use create
   end
+
   # Passed params[:list_id] to unsubscribe from
   def unsubscribe
     respond_to do |format|

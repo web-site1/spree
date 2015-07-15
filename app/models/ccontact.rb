@@ -44,14 +44,16 @@ class Ccontact
 
   # Update attributes of contact and return updated object
   # Does not update email address
-  # If my_contact.cc is nil, skip since contact does not exist.  In this case, call add_contact instead
+  # If my_contact.cc is nil, skip since contact does not exist.  Use add_contact for existing.
+  # my_contact.lists can be comma separated string of list ids or array of list ids
   def update_contact(my_contact)
     return false if !my_contact.kind_of?(Contact) or !my_contact.cc
+    my_contact.lists = my_contact.lists.split(',') unless my_contact.lists.kind_of?(Array)
     contact = my_contact.cc
     contact.first_name =  my_contact.first_name
     contact.last_name  =   my_contact.last_name
     contact.company_name = my_contact.company_name
-    add_to_list(contact, my_contact.lists)
+    my_contact.lists.each {|l| add_to_list(contact, l) }
     @api.update_contact(contact)
   end
 
