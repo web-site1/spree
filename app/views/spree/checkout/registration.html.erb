@@ -18,11 +18,10 @@
             <p>
               <%= f.email_field :email, :class => 'form-control title', :placeholder => Spree.t(:email) %>
             </p>
-              <div class="form-group">
-                <label class="checkbox-inline" style="font-size: 16px; padding-left: 0px;">
+                <label class="checkbox-inline" style="font-size: 16px;">
                   <%= f.check_box :allow_mailings, :class => 'form-control', :style => 'margin-top: 8px; height: 24px;', :checked => true %> Notify me of promotions via email
                 </label>
-              </div>
+
             <p><%= f.submit Spree.t(:continue), :class => 'btn btn-lg btn-success btn-block' %></p>
           <% end %>
         </div>
