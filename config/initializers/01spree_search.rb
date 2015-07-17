@@ -8,7 +8,9 @@ module Spree::Search
       @search_result =
           Sunspot.search(Spree::Product) do
             # execute your search here
-            puts params
+            #puts params
+
+            with(:available_on).less_than_or_equal_to(DateTime.now)
 
             fulltext params[:keywords] unless params[:keywords].blank?
 
