@@ -61,10 +61,12 @@
                  end
               %>
               <% prods.each do |product| %>
+
                 <%
                    if @taxon.name.downcase == 'newest'
                      product = product.results.first
                    end
+                   next if !product.available? rescue false
                 %>
 
                   <% cache [I18n.locale, product] do %>
