@@ -48,6 +48,7 @@ group :development, :test do
   gem 'spring'
 
   gem 'sunspot_solr'
+  gem 'bootstrap-generators', '~> 3.3.4'
 end
 
 
@@ -78,7 +79,5 @@ gem 'spree_mail_settings', github: 'spree-contrib/spree_mail_settings', branch: 
 
 gem 'spree_sitemap', github: 'spree-contrib/spree_sitemap', branch: '3-0-stable'
 
-
-
-
-#gem 'activemerchant', '~> 1.47'
+gem 'constantcontact', '~> 2.0.1'
+gem 'active_attr'

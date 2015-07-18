@@ -1,0 +1,60 @@
+<% email_disabled =  @allow_change_to_email ? false : true %>
+<% button_label = @contact.persisted? ? 'Update' : 'Sign Up' %>
+
+   <div style="padding: 5px; padding-top: 10px;">
+  <%= form_for(@contact, html: { class: "form-horizontal", role: "form" }) do |f| %>
+      <% if @contact.errors.any? %>
+          <div class="alert alert-danger alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h6><%= pluralize(@contact.errors.count, "error") %> prohibited this contact from being saved:</h6>
+
+            <ul>
+              <% @contact.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+      <%= f.hidden_field :lists, value: @contact.lists %>
+      <%= f.hidden_field :id, value: @contact.id %>
+      <%= f.hidden_field :email_address, value: @contact.email_address if email_disabled %>
+      <div class="form-group">
+        <%= f.label 'Email', class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :email_address, disabled: email_disabled, class: "form-control", required: true, pattern: '[^@]+@[^@]+\.[a-zA-Z]{2,6}' %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :first_name, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :first_name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label :last_name, class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :last_name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label 'Company', class: "col-sm-2 control-label" %>
+        <div class="col-sm-10">
+          <%= f.text_field :company_name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10" style="max-height: 30px">
+          <button type="submit" class="btn btn-primary">
+            <i class="glyphicon glyphicon-save"></i> <%= button_label %>
+          </button>
+          <% if @contact.persisted? && @contact.in_list?(MASTER_LIST_ID) %>
+            &nbsp;OR&nbsp;
+            <button type="submit" class="btn btn-warning" name="commit" value="Unsubscribe">
+              <i class="glyphicon glyphicon-remove"></i> Unsubscribe
+            </button>
+            <%#= f.submit('Unsubscribe', class: "btn btn-warning")  %>
+          <% end %>
+        </div>
+      </div>
+  <% end %>
+</div>
