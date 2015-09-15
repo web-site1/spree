@@ -48,7 +48,7 @@ module Spree::Search
 
             if (params.has_key?(:for_new_arrivals) || params.has_key?(:for_new_flowers) ||
                 params.has_key?(:for_new_ribbons) )
-              date = 60.days.ago
+              date = 180.days.ago
               with(:available_on).between(date..Date.today)
 
               if params.has_key?(:for_new_flowers)
