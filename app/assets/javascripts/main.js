@@ -34,6 +34,9 @@ jQuery(document).ready(function ($) {
       $("#contact_first_name").focus()
     }
   }
+
+  $('.holiday_mess').fadeIn(3000,function(){});
+
 });
 
 // Add segments to a slider
