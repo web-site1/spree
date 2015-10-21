@@ -7,11 +7,16 @@
   </dl>
   <dl id="mailing-list-info">
     <dt>Mailing Lists</dt>
-    <dd>Master List: <% if @contact && @contact.in_list?(3) %>
-                         Subscribed
-                    <% else %>
-                         Not Subscribed
-                    <% end %>
+    <dd>
+      <% if @contact && @contact.in_list?(MASTER_LIST_ID) %>
+          <%= button_to "/contacts/#{@contact.id}/edit", method: :get, class: 'btn btn-primary' do %>
+              <i class="glyphicon glyphicon-edit"></i> Manage Subscription
+          <% end %>
+      <% else %>
+          <%= button_to '/contacts/new', method: :get, class: 'btn btn-primary' do %>
+              <i class="glyphicon glyphicon-plus"></i> Subscribe
+          <% end %>
+      <% end %>
 
     </dd>
   </dl>

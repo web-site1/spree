@@ -26,6 +26,17 @@ jQuery(document).ready(function ($) {
 
 	var spinner = $( ".spinner" ).spinner();
 
+  // If contact form is present
+  if ($("#contact_first_name").length > 0) {
+    if ($("#contact_email_address").val().length == 0) {
+      $("#contact_email_address").focus()
+    } else {
+      $("#contact_first_name").focus()
+    }
+  }
+
+  $('.holiday_mess').fadeIn(3000,function(){});
+
 });
 
 // Add segments to a slider
