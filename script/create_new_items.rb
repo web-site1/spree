@@ -198,7 +198,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
     #r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     #r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
-    r = NewItem.where("id = 9393 ")
+    r = NewItem.where("id = 9510 ")
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -265,6 +265,18 @@ CSV.open(csv_error_file, "wb") do |csv|
             main_cat_src = 'grosgrain ribbon'
           end
 
+          if main_cat_src == 'harvest'
+            main_cat_src = 'harvest ribbon'
+          end
+
+          if main_cat_src == 'christmas'
+            main_cat_src = 'christmas ribbon'
+          end
+
+          if main_cat_src == 'packaging'
+            main_cat_src = 'packaging ribbon products'
+          end
+
           if @item_type == 'Flower' || @item_type == 'tulle & trim'
             main_cat = type_taxon
           else
@@ -304,7 +316,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 name: @rcpbs.ws_subcat.titleize,
                 taxonomy_id:main_cat_taxon.id,
                 meta_description: tdes[0..254],
-                meta_title: meta_title,
+                meta_title: meta_title[0..254],
                 meta_keywords: meta_keywords,
                 description: tdes
             )
