@@ -197,7 +197,8 @@ CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
     #r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
-    r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
+    #r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
+    r = NewItem.where("id = 9393 ")
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -302,7 +303,7 @@ CSV.open(csv_error_file, "wb") do |csv|
                 parent_id: main_cat.id,
                 name: @rcpbs.ws_subcat.titleize,
                 taxonomy_id:main_cat_taxon.id,
-                meta_description: tdes,
+                meta_description: tdes[0..254],
                 meta_title: meta_title,
                 meta_keywords: meta_keywords,
                 description: tdes
@@ -375,7 +376,7 @@ CSV.open(csv_error_file, "wb") do |csv|
               end
 
               p_meta = taxonrec.description
-              p_key =  taxonrec.permalink.split('/').join(',')
+              p_key =  taxonrec.permalink.split('/').join(',') rescue ''
 
 
 
