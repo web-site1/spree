@@ -219,6 +219,10 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           prod_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
 
+          !File.file?(prod_image)
+            prod_image = %Q{#{@local_site_path}images/#{prod_sku.gsub('/','_')}.jpg}
+          end
+
           @item_type = item_type(rcpbs) ||  ''
 
           #if !(@item_type == 'Flower')
