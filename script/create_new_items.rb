@@ -219,7 +219,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           prod_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
 
-          !File.file?(prod_image)
+          if !File.file?(prod_image)
             prod_image = %Q{#{@local_site_path}images/#{prod_sku.gsub('/','_')}.jpg}
           end
 
@@ -233,7 +233,7 @@ CSV.open(csv_error_file, "wb") do |csv|
             next
           elsif !File.file?(prod_image)
             logger.info "Skipped no Product image #{rcpbs.new_pbs_desc_1}"
-            puts "Skipped no Product image #{rcpbs.new_pbs_desc_1}"
+            puts "Skipped no Product image #{rcpbs.new_pbs_desc_1} image #{prod_image}"
             next
           end
           #
@@ -490,6 +490,11 @@ CSV.open(csv_error_file, "wb") do |csv|
               if !File.file?(src_image)
                 src_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
               end
+
+              if !File.file?(src_image)
+                src_image = %Q{#{@local_site_path}images/#{prod_sku.gsub('/','_')}.jpg}
+              end
+
 
 
               if File.file?(src_image)
