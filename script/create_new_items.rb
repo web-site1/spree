@@ -12,14 +12,14 @@ require 'csv'
 require %Q{#{Rails.root.to_s}/script/import_functions}
 
 =begin
-Spree::Product.where('id > 23').delete_all
-Spree::Variant.where('id > 51').delete_all
-Spree::ProductProperty.where('id > 17').delete_all
-Spree::Asset.where('id > 6').delete_all
-Spree::Price.delete_all
-Spree::ProductTaxon.delete_all
-Spree::spree_option_values.delete_all
-spree_option_values_variants
+#Spree::Product.where('id > 23').delete_all
+#Spree::Variant.where('id > 51').delete_all
+#Spree::ProductProperty.where('id > 17').delete_all
+#Spree::Asset.where('id > 6').delete_all
+#Spree::Price.delete_all
+#Spree::ProductTaxon.delete_all
+#Spree::spree_option_values.delete_all
+#spree_option_values_variants
 =end
 
 
@@ -45,8 +45,8 @@ csv_error_file =  %Q{#{Rails.root}/log/item_import_errors.csv}
 if Rails.env == 'staging'
   @local_site_path =   "/var/www/artspree3/"
 else
-  @local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
-  #@local_site_path = "/tmp/t/"
+  @local_site_path = "/home/louie/"
+  #@local_site_path = "/home/louie/Dropbox/DEV/Artistic/sitesucker/www.artisticribbon.com/"
 end
 
 puts "Local image directory is #{@local_site_path}"
@@ -196,7 +196,8 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    #r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -205,26 +206,41 @@ CSV.open(csv_error_file, "wb") do |csv|
 
         begin
 
+          @rcpbs = rcpbs
+
+          flow_sub =  @rcpbs.item.split('-')[0..1].join('-')  #@rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
+
+          prod_sku = suggest_sku(@rcpbs,logger,flow_sub,csv)
+
 
           # Skipping no image records
           src_image = get_image_path(rcpbs)
-          if !File.file?(src_image)
+
+          prod_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
+
+          @item_type = item_type(rcpbs) ||  ''
+
+          #if !(@item_type == 'Flower')
+
+          if !File.file?(src_image) && @item_type == 'Flower'
             logger.info "Skipped no image #{rcpbs.new_pbs_desc_1}"
             puts "Skipped no image #{rcpbs.new_pbs_desc_1}"
+            next
+          elsif !File.file?(prod_image)
+            logger.info "Skipped no Product image #{rcpbs.new_pbs_desc_1}"
+            puts "Skipped no Product image #{rcpbs.new_pbs_desc_1}"
             next
           end
           #
 
-          @rcpbs = rcpbs
 
           @is_master = false
 
           @position = 1
 
-          @item_type = item_type(rcpbs) ||  ''
+          #@item_type = item_type(rcpbs) ||  ''
 
 
-          flow_sub =  @rcpbs.item.split('-')[0..1].join('-')  #@rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
 
 
           # find type taxon
@@ -453,6 +469,11 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
               src_image = get_image_path(rcpbs)
+
+              if !File.file?(src_image)
+                src_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
+              end
+
 
               if File.file?(src_image)
                 @product.images <<  Spree::Image.create!(:attachment => File.open(src_image))
