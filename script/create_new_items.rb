@@ -311,6 +311,10 @@ CSV.open(csv_error_file, "wb") do |csv|
             puts "Cannot determine taxon #{@rcpbs.ws_subcat.titleize} creating"
             tdes = (master_rec) ? master_rec.description.strip.titlecase : ''
 
+            if tdes.blank?
+              tdes = @rcpbs.description.split('--')[0].downcase.gsub(@rcpbs.ws_color.downcase,'') rescue ''
+            end
+
             meta_title = tdes
             meta_keywords = main_cat.permalink.split('/').join(',')
             meta_keywords +=  %Q{,#{@rcpbs.ws_subcat.titleize}}
