@@ -14,7 +14,7 @@ puts "Starting to Check images"
 if Rails.env == 'staging'
   @local_site_path =   "/var/www/artspree3/"
 else
-  @local_site_path = "/home/louie/Dropbox/DEV/"
+  @local_site_path = "/home/louie/"
   #@local_site_path = "/tmp/t/"
 end
 
@@ -28,7 +28,14 @@ r.each do |rcpbs|
 
     @rcpbs = rcpbs
     @item_type = item_type(rcpbs) ||  ''
+
     src_image = get_image_path(rcpbs)
+
+    if !File.file?(src_image) && !(@item_type == 'Flower')
+      flow_sub =  @rcpbs.item.split('-')[0..1].join('-')  #@rcpbs.ws_subcat.downcase.strip.titlecase.gsub('.','')
+      prod_sku = suggest_sku(@rcpbs,logger,flow_sub,[])
+      src_image = %Q{#{@local_site_path}images/#{prod_sku}.jpg}
+    end
 
 
     if !File.file?(src_image)
