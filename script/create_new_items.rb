@@ -211,9 +211,9 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    #r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     #r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
-    r = NewItem.where("id = 9510 ")
+    #r = NewItem.where("id = 9510 ")
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -237,6 +237,12 @@ CSV.open(csv_error_file, "wb") do |csv|
           if !File.file?(prod_image)
             prod_image = %Q{#{@local_site_path}images/#{prod_sku.gsub('/','_')}.jpg}
           end
+
+          # use variant (minion test)
+          if !File.file?(prod_image)
+            prod_image = get_image_path(@rcpbs)
+          end
+
 
           @item_type = item_type(rcpbs) ||  ''
 
