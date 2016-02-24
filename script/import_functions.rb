@@ -162,9 +162,23 @@ BEGIN{
     end
 
     if main_cat.nil?
-      logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)}"
-      puts "Product #{@rcpbs.item} cannot determine main cat taxon"
-      raise Exception.new("No main Taxon")
+      logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)} creating"
+      puts "Product #{@rcpbs.item} cannot determine main cat taxon creating"
+
+      #raise Exception.new("No main Taxon")
+      #create a main taxon if needed
+      tdes = (@master_rec) ? @master_rec.description.strip.titlecase : ''
+      meta_title = tdes
+      meta_keywords =  %Q{#{@rcpbs.ws_subcat.titleize}}
+      main_cat = Spree::Taxon.create(
+          parent_id: type_taxon.id,
+          name: main_cat_src,
+          taxonomy_id:main_cat_taxon.id,
+          meta_description: tdes[0..254],
+          meta_title: meta_title[0..254],
+          meta_keywords: meta_keywords,
+          description: tdes
+      )
     end
 
     taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
@@ -352,7 +366,7 @@ BEGIN{
 
     if @is_closeout == true
       # closeout logic
-      set_variant_to_closeout(variant,logger)
+      set_variant_to_closeout(v,logger)
     end
   end
 
