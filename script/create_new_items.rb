@@ -23,6 +23,21 @@ require %Q{#{Rails.root.to_s}/script/import_functions}
 =end
 
 
+# Code for a close out item
+# if the driving data is all closeout
+# add a taxon to the master product for closeout, uppercase the description
+# if an existing item make sure closeout taxon exsists (add if it doesn't)
+# change description.
+# pass parameter closeout=true
+@is_closeout = false
+
+if ARGV[0] ==  'closeout=true'
+  @is_closeout = true
+end
+#
+##
+
+
 log_file_name = %Q{Item_create-#{Time.now.strftime("%m%d%y%I%M")}.log}
 log_file =  %Q{#{Rails.root}/log/#{log_file_name}}
 logger = Logger.new(log_file)
@@ -196,9 +211,9 @@ main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
 CSV.open(csv_error_file, "wb") do |csv|
   csv << ['rcpbs_id','wi_id','error']
 
-    #r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
+    r =  NewItem.where("new_pbs_item <> 'master'").order(:ws_cat,:ws_subcat) #.limit(10)
     #r = NewItem.where("new_pbs_item <> 'master' and item like 'IKP%' ").order(:ws_cat,:ws_subcat)
-    r = NewItem.where("id = 9510 ")
+    #r = NewItem.where("id = 9510 ")
     r.each do |rcpbs|
 
       item_with_multiple_variants = false
@@ -222,6 +237,12 @@ CSV.open(csv_error_file, "wb") do |csv|
           if !File.file?(prod_image)
             prod_image = %Q{#{@local_site_path}images/#{prod_sku.gsub('/','_')}.jpg}
           end
+
+          # use variant (minion test)
+          if !File.file?(prod_image)
+            prod_image = get_image_path(@rcpbs)
+          end
+
 
           @item_type = item_type(rcpbs) ||  ''
 
@@ -250,6 +271,7 @@ CSV.open(csv_error_file, "wb") do |csv|
 
           # find type taxon
           type_taxon = Spree::Taxon.find_by_name_and_parent_id(@item_type.pluralize,main_cat_taxon.id)
+
           if !type_taxon
             logger.info "No Taxon for type #{@item_type}"
             puts "No Taxon for type #{@item_type}"
@@ -259,7 +281,10 @@ CSV.open(csv_error_file, "wb") do |csv|
 
 
           # find main cat taxon record
+
+=begin
           main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
+
 
           if main_cat_src == 'designer'
             main_cat_src = 'Leading Designer'
@@ -302,13 +327,21 @@ CSV.open(csv_error_file, "wb") do |csv|
             taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat,main_cat.id)
           end
 
+=end
 
           master_rec = NewMaster.find_by_item(master_desc_item(rcpbs))
+          @master_rec = master_rec
+
+          taxonrec = taxon_proc(main_cat_taxon,type_taxon,logger)
 
 
+
+=begin
           if taxonrec.nil?
             logger.info "Cannot determine taxon #{@rcpbs.ws_subcat.titleize} creating"
             puts "Cannot determine taxon #{@rcpbs.ws_subcat.titleize} creating"
+
+
             tdes = (master_rec) ? master_rec.description.strip.titlecase : ''
 
 
@@ -353,6 +386,11 @@ CSV.open(csv_error_file, "wb") do |csv|
             end
 
           end
+
+=end
+
+
+
 
 
 

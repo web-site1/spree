@@ -57,8 +57,165 @@ BEGIN{
     else
       prod_sku = flow_sub
     end
+  end
+
+  def set_variant_to_closeout(variant,logger)
+    # passed variant description gets upcased any
+    # 'closeouts' instances also its product gets added
+    # as a type wholesale-ribbon
+
+    closeout_prod = variant.product
+
+    # get wholesale type
+    main_cat_taxon =  Spree::Taxon.find_by_name('Categories')
+    type_taxon = Spree::Taxon.find_by_name_and_parent_id('Wholesale Ribbon Closeouts',main_cat_taxon.id)
+    taxonrec = taxon_proc(main_cat_taxon,type_taxon,logger)
+
+    cl_taxon_check = closeout_prod.taxons.find_by_id(taxonrec.id)
+
+    if cl_taxon_check.nil?
+      closeout_prod.taxons << taxonrec
+    end
+
+
+    if @master_rec && !@master_rec.description.blank?
+      p_des = %Q{#{@master_rec.description.strip.titlecase} #{@rcpbs.ws_color.titlecase}}
+    else
+      p_des = @rcpbs.description.split('--')[0].downcase.gsub(@rcpbs.width,'').titlecase.strip rescue ''
+    end
+    p_des = p_des.gsub(/closeout/i,"CLOSEOUT").gsub(/closeouts/i,"CLOSEOUTS")
+
+    closeout_prod.description = p_des
+
+    closeout_prod.save
+    #p_meta = taxonrec.description
+    #p_key =  taxonrec.permalink.split('/').join(',') rescue ''
+
+
 
   end
+
+
+  def create_taxon_rec(main_cat_taxon,main_cat)
+
+    tdes = (@master_rec) ? @master_rec.description.strip.titlecase : ''
+
+
+    meta_title = tdes
+    meta_keywords = main_cat.permalink.split('/').join(',')
+    meta_keywords +=  %Q{,#{@rcpbs.ws_subcat.titleize}}
+
+    taxonrec = Spree::Taxon.create(
+        parent_id: main_cat.id,
+        name: @rcpbs.ws_subcat.titleize,
+        taxonomy_id:main_cat_taxon.id,
+        meta_description: tdes[0..254],
+        meta_title: meta_title[0..254],
+        meta_keywords: meta_keywords,
+        description: tdes
+    )
+
+    return taxonrec
+
+  end
+
+
+
+  def main_cat_checks(main_cat_src)
+    # exceptions to the rule
+    rtn_cat = main_cat_src
+
+    if main_cat_src == 'designer'
+      main_cat_src = 'Leading Designer'
+    end
+
+    if main_cat_src == 'grosgrain'
+      main_cat_src = 'grosgrain ribbon'
+    end
+
+    if main_cat_src == 'harvest'
+      main_cat_src = 'harvest ribbon'
+    end
+
+    if main_cat_src == 'christmas'
+      main_cat_src = 'christmas ribbon'
+    end
+
+    if main_cat_src == 'packaging'
+      main_cat_src = 'packaging ribbon products'
+    end
+
+    return rtn_cat
+  end
+
+  def taxon_proc(main_cat_taxon,type_taxon,logger)
+    main_cat_src = get_formed_cat_name(@rcpbs.ws_cat).downcase.gsub('checks','check')
+    main_cat_src = main_cat_checks(main_cat_src)
+
+    if @item_type == 'Flower' || @item_type == 'tulle & trim'
+      main_cat =  type_taxon
+    else
+      main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src,type_taxon.id)
+      if main_cat.nil?
+        main_cat = Spree::Taxon.find_by_name_and_parent_id(main_cat_src.pluralize,type_taxon.id)
+      end
+    end
+
+    if main_cat.nil?
+      logger.info "No Main cat taxon  #{get_formed_cat_name(@rcpbs.ws_cat)} creating"
+      puts "Product #{@rcpbs.item} cannot determine main cat taxon creating"
+
+      #raise Exception.new("No main Taxon")
+      #create a main taxon if needed
+      tdes = (@master_rec) ? @master_rec.description.strip.titlecase : ''
+      meta_title = tdes
+      meta_keywords =  %Q{#{@rcpbs.ws_subcat.titleize}}
+      main_cat = Spree::Taxon.create(
+          parent_id: type_taxon.id,
+          name: main_cat_src,
+          taxonomy_id:main_cat_taxon.id,
+          meta_description: tdes[0..254],
+          meta_title: meta_title[0..254],
+          meta_keywords: meta_keywords,
+          description: tdes
+      )
+    end
+
+    taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat.titleize,main_cat.id)
+    if taxonrec.nil?
+      taxonrec = Spree::Taxon.find_by_name_and_parent_id(@rcpbs.ws_subcat,main_cat.id)
+    end
+
+    if taxonrec.nil?
+      logger.info "Cannot determine taxon #{@rcpbs.ws_subcat.titleize} creating"
+      puts "Cannot determine taxon #{@rcpbs.ws_subcat.titleize} creating"
+      taxonrec = create_taxon_rec(main_cat_taxon,main_cat)
+    else
+      if taxonrec.description.blank? && @master_rec
+        taxonrec.update_attribute(:description,@master_rec.description.strip.titlecase)
+      end
+    end
+
+    if taxonrec.icon_file_name.blank?
+
+      #create product image
+      begin
+
+        src_image = get_image_path(@rcpbs)
+
+        if File.file?(src_image)
+          taxonrec.icon =  File.open(src_image)
+          taxonrec.save
+        end
+      rescue Exception => e
+        puts "#{e.to_s} error loading taxon image image id #{taxonrec.name}"
+      end
+
+    end
+
+    return taxonrec
+  end
+
 
 
   def master_desc_item(rcpbs)
@@ -196,11 +353,20 @@ BEGIN{
       logger.info "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
       puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
       @variants_created += 1
-
-
     else
-      logger.info "Variant #{rcpbs.new_pbs_desc_1} exists"
-      puts "Variant #{rcpbs.new_pbs_desc_1} exists"
+      if @is_closeout == true
+        logger.info "Variant #{rcpbs.new_pbs_desc_1} exists"
+        puts "Variant #{rcpbs.new_pbs_desc_1} exists"
+      else
+        # closeout logic
+        logger.info "Variant #{rcpbs.new_pbs_desc_1} exists Processing as closeout"
+        puts "Variant #{rcpbs.new_pbs_desc_1} exists Processing as closeout"
+      end
+    end
+
+    if @is_closeout == true
+      # closeout logic
+      set_variant_to_closeout(v,logger)
     end
   end
 

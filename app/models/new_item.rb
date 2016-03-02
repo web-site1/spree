@@ -1,5 +1,7 @@
 class NewItem < ActiveRecord::Base
 
+  #self.table_name = 'minions'
+
   before_validation :strip_quotes, :set_new_pbs_item
 
   def strip_quotes
