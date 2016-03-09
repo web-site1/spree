@@ -354,7 +354,8 @@ BEGIN{
       puts "Variant #{rcpbs.new_pbs_desc_1} created in Spree"
       @variants_created += 1
     else
-      if @is_closeout == true
+
+      if (@is_closeout == true || @master_rec.closeout == "Y" )
         logger.info "Variant #{rcpbs.new_pbs_desc_1} exists"
         puts "Variant #{rcpbs.new_pbs_desc_1} exists"
       else
@@ -362,9 +363,10 @@ BEGIN{
         logger.info "Variant #{rcpbs.new_pbs_desc_1} exists Processing as closeout"
         puts "Variant #{rcpbs.new_pbs_desc_1} exists Processing as closeout"
       end
+
     end
 
-    if @is_closeout == true
+    if (@is_closeout == true || @master_rec.closeout == "Y")
       # closeout logic
       set_variant_to_closeout(v,logger)
     end
