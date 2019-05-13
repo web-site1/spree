@@ -8,7 +8,7 @@ gem 'rmagick'
 gem 'aws-sdk', '< 2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.2'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -63,7 +63,7 @@ gem 'open4'
 
 # SQL Stuff
 gem 'activerecord-sqlserver-adapter'
-gem 'tiny_tds'
+gem 'tiny_tds', '~> 0.7'
 
 # Deployment
 gem 'capistrano', '~> 3.3.0'
